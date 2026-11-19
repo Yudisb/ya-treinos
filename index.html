@@ -867,7 +867,7 @@
       width: min(680px, 100%);
       margin: auto;
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
+      grid-template-columns: repeat(5, minmax(0, 1fr));
       padding: 8px 6px 10px;
     }
 
@@ -895,6 +895,73 @@
     }
 
     .nav-item.active { color: var(--green); }
+
+
+    /* ===== MÓDULO DE NUTRIÇÃO (INTEGRADO AO YA TREINOS) ===== */
+    .nutrition-hero {
+      position:relative; overflow:hidden; padding:20px; border:1px solid #344b37;
+      border-radius:20px; margin-bottom:16px;
+      background:radial-gradient(circle at 100% 0%, rgba(163,243,107,.17), transparent 48%),
+                 linear-gradient(135deg,#17251b,#101713 72%);
+    }
+    .nutrition-hero h2 { margin:0 0 6px; font-size:clamp(20px,4vw,25px); }
+    .nutrition-hero p { margin:0; color:var(--muted); font-size:13px; line-height:1.5; }
+    .nutrition-calorie-row { display:flex; align-items:flex-end; justify-content:space-between; gap:12px; margin-top:18px; }
+    .nutrition-calorie-number { color:var(--green); font-size:clamp(34px,8vw,46px); font-weight:950; line-height:1; font-variant-numeric:tabular-nums; }
+    .nutrition-calorie-number small { display:block; color:var(--muted); font-size:11px; font-weight:700; margin-top:7px; }
+    .nutrition-target { text-align:right; color:#d6e1d9; font-size:12px; }
+    .nutrition-progress { height:10px; overflow:hidden; border-radius:999px; background:#26332a; margin-top:14px; }
+    .nutrition-progress > span { display:block; height:100%; width:0; border-radius:inherit; background:var(--green); transition:width .25s ease; }
+    .nutrition-macro-grid { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:8px; margin-top:15px; }
+    .nutrition-macro { background:rgba(5,10,7,.42); border:1px solid rgba(145,161,150,.16); border-radius:12px; padding:11px; min-width:0; }
+    .nutrition-macro strong { display:block; color:var(--green); font-size:18px; font-variant-numeric:tabular-nums; }
+    .nutrition-macro span { display:block; color:var(--muted); font-size:10px; margin-top:4px; }
+    .nutrition-toolbar { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:12px; }
+    .nutrition-toolbar input { max-width:190px; }
+    #aiFoodDescription {
+      width:100%; min-height:92px; resize:vertical; background:#0b120e;
+      border:1px solid #2b3b31; color:var(--text); border-radius:11px;
+      padding:12px 14px; outline:none; font:inherit; line-height:1.5;
+    }
+    #aiFoodDescription:focus { border-color:var(--green); box-shadow:0 0 0 3px #a3f36b18; }
+    .nutrition-form-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:0 12px; }
+    .nutrition-form-grid .full { grid-column:1/-1; }
+    .nutrition-entry-list { display:grid; gap:12px; }
+    .nutrition-meal-card { background:#0d1510; border:1px solid var(--line); border-radius:14px; padding:14px; }
+    .nutrition-meal-head { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:9px; }
+    .nutrition-meal-head h3 { font-size:14px; margin:0; }
+    .nutrition-food-row { display:flex; align-items:flex-start; justify-content:space-between; gap:10px; padding:10px 0; border-top:1px solid #253229; }
+    .nutrition-food-row:first-of-type { border-top:0; }
+    .nutrition-food-info { min-width:0; flex:1; }
+    .nutrition-food-info strong { display:block; font-size:13px; }
+    .nutrition-food-info small { display:block; color:var(--muted); font-size:11px; margin-top:4px; line-height:1.45; }
+    .nutrition-food-actions { display:flex; gap:6px; flex-shrink:0; }
+    .nutrition-food-actions .small-btn { padding:5px 8px; font-size:11px; }
+    .nutrition-preview { margin-top:12px; border:1px solid #3b5a3d; background:#0c1510; border-radius:14px; padding:13px; }
+    .nutrition-preview-item { padding:12px 0; border-top:1px solid var(--line); }
+    .nutrition-preview-item:first-child { border-top:0; }
+    .nutrition-preview-item strong { display:block; font-size:13px; margin-bottom:8px; }
+    .nutrition-preview-fields { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:7px; }
+    .nutrition-preview-fields label { margin:0 0 4px; font-size:10px; }
+    .nutrition-preview-fields input { min-height:38px; padding:8px; font-size:12px; }
+    .nutrition-preview-top { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+    .nutrition-note { color:var(--muted); font-size:11px; line-height:1.5; }
+    .nutrition-settings-result { border:1px solid #2b4030; background:#101a13; border-radius:12px; padding:12px; margin-top:12px; color:#d3e1d6; font-size:12px; line-height:1.5; }
+    .nutrition-settings-result strong { color:var(--green); }
+    .nutrition-empty { color:var(--muted); border:1px dashed var(--line); border-radius:12px; padding:18px; text-align:center; font-size:13px; line-height:1.55; }
+    .nutrition-status { min-height:16px; }
+    @media(max-width:480px) {
+      .nutrition-hero { padding:16px; border-radius:16px; }
+      .nutrition-toolbar { align-items:stretch; flex-direction:column; }
+      .nutrition-toolbar input { max-width:none; }
+      .nutrition-form-grid { grid-template-columns:1fr; }
+      .nutrition-form-grid .full { grid-column:auto; }
+      .nutrition-preview-fields { grid-template-columns:repeat(2,minmax(0,1fr)); }
+      .nutrition-food-actions { flex-direction:column; }
+      .nav-item { font-size:9px; gap:3px; }
+      .nav-item svg { width:20px; height:20px; }
+      .nav-item span { white-space:nowrap; }
+    }
 
     /* ===== ESTILOS DAS TELAS DE GESTÃO ===== */
     .section-title {
@@ -1599,7 +1666,171 @@
     </div>
 
     <!-- ======================================
-         ABA 4: MEU PERFIL
+         ABA 4: NUTRIÇÃO (INTEGRADA AO YA TREINOS)
+    ====================================== -->
+    <div id="nutritionTab" class="tab-view hidden">
+      <h1 class="screen-title">Nutrição</h1>
+
+      <section class="nutrition-hero" aria-labelledby="nutritionHeroTitle">
+        <div class="dashboard-kicker">Seu acompanhamento diário</div>
+        <h2 id="nutritionHeroTitle">Alimente sua evolução.</h2>
+        <p>Registre suas refeições, acompanhe calorias e veja como sua alimentação se aproxima da meta diária.</p>
+        <div class="nutrition-calorie-row">
+          <div>
+            <div class="nutrition-calorie-number"><span id="nutritionCaloriesConsumed">0</span><small>kcal consumidas</small></div>
+          </div>
+          <div class="nutrition-target">
+            <strong id="nutritionCaloriesTarget">Meta: —</strong><br>
+            <span id="nutritionCaloriesRemaining">Defina seu perfil nutricional</span>
+          </div>
+        </div>
+        <div class="nutrition-progress" aria-label="Progresso de calorias"><span id="nutritionCaloriesProgress"></span></div>
+        <div class="nutrition-macro-grid">
+          <div class="nutrition-macro"><strong id="nutritionProteinTotal">0 g</strong><span>Proteínas</span></div>
+          <div class="nutrition-macro"><strong id="nutritionCarbsTotal">0 g</strong><span>Carboidratos</span></div>
+          <div class="nutrition-macro"><strong id="nutritionFatTotal">0 g</strong><span>Gorduras</span></div>
+        </div>
+      </section>
+
+      <div class="stack-gap">
+        <section class="panel">
+          <div class="history-heading">
+            <div>
+              <h2 class="section-title">Meu perfil nutricional</h2>
+              <p class="section-desc" style="margin:0">Usa seu peso, altura e nascimento já cadastrados no Meu Perfil.</p>
+            </div>
+            <span class="tag">CÁLCULO ESTIMADO</span>
+          </div>
+          <form id="nutritionProfileForm">
+            <div class="nutrition-form-grid">
+              <div>
+                <label for="nutritionSex">Cálculo metabólico</label>
+                <select id="nutritionSex" required>
+                  <option value="male" selected>Masculino</option>
+                  <option value="female">Feminino</option>
+                </select>
+              </div>
+              <div>
+                <label for="nutritionActivity">Atividade diária</label>
+                <select id="nutritionActivity" required>
+                  <option value="sedentary">Sedentária</option>
+                  <option value="light">Leve</option>
+                  <option value="moderate" selected>Moderada</option>
+                  <option value="high">Alta</option>
+                </select>
+              </div>
+              <div class="full">
+                <label for="nutritionGoal">Objetivo nutricional</label>
+                <select id="nutritionGoal" required>
+                  <option value="maintenance">Manter o peso</option>
+                  <option value="weight_loss">Perder peso</option>
+                  <option value="muscle_gain">Ganhar massa muscular</option>
+                </select>
+              </div>
+            </div>
+            <div id="nutritionTargetPreview" class="nutrition-settings-result">Preencha data de nascimento, altura e peso em Meu Perfil para calcular sua estimativa.</div>
+            <button class="btn" id="saveNutritionProfileButton" type="submit">Salvar perfil nutricional</button>
+            <div id="nutritionProfileMessage" class="message nutrition-status" role="status" aria-live="polite"></div>
+          </form>
+        </section>
+
+        <section class="panel highlight-panel">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:6px">
+            <h2 class="section-title" style="margin:0">✨ Registrar com IA</h2>
+            <span class="tag">GEMINI AI</span>
+          </div>
+          <p class="section-desc">Descreva o que comeu. A IA estima os alimentos e nutrientes; você revisa e confirma antes de salvar.</p>
+          <label for="aiFoodMealType">Refeição</label>
+          <select id="aiFoodMealType">
+            <option value="breakfast">Café da manhã</option>
+            <option value="lunch">Almoço</option>
+            <option value="dinner">Jantar</option>
+            <option value="snack">Lanche</option>
+          </select>
+          <label for="aiFoodDescription">O que você comeu?</label>
+          <textarea id="aiFoodDescription" rows="3" placeholder="Ex.: 150 g de arroz, uma concha de feijão e um filé médio de frango grelhado."></textarea>
+          <button class="btn" id="analyzeFoodButton" type="button">Analisar refeição com IA</button>
+          <div id="aiFoodMessage" class="message" role="status" aria-live="polite"></div>
+          <div id="aiFoodPreview" class="hidden"></div>
+        </section>
+
+        <section class="panel">
+          <h2 class="section-title">Adicionar alimento manualmente</h2>
+          <p class="section-desc">Você também pode preencher os valores nutricionais conforme o rótulo ou a fonte que estiver usando.</p>
+          <form id="foodEntryForm">
+            <div class="nutrition-form-grid">
+              <div>
+                <label for="foodMealType">Refeição</label>
+                <select id="foodMealType" required>
+                  <option value="breakfast">Café da manhã</option>
+                  <option value="lunch">Almoço</option>
+                  <option value="dinner">Jantar</option>
+                  <option value="snack">Lanche</option>
+                </select>
+              </div>
+              <div>
+                <label for="foodName">Alimento</label>
+                <input id="foodName" required maxlength="120" placeholder="Ex.: Arroz cozido">
+              </div>
+              <div>
+                <label for="foodAmount">Quantidade</label>
+                <input id="foodAmount" type="number" required min="0.1" step="0.1" placeholder="150">
+              </div>
+              <div>
+                <label for="foodUnit">Unidade</label>
+                <select id="foodUnit" required>
+                  <option value="g">Gramas (g)</option>
+                  <option value="ml">Mililitros (ml)</option>
+                  <option value="unidade">Unidade</option>
+                  <option value="porcao">Porção</option>
+                </select>
+              </div>
+              <div>
+                <label for="foodGrams">Peso em gramas (opcional)</label>
+                <input id="foodGrams" type="number" min="0" step="0.1" placeholder="150">
+              </div>
+              <div>
+                <label for="foodCalories">Calorias (kcal)</label>
+                <input id="foodCalories" type="number" required min="0" step="0.1" placeholder="195">
+              </div>
+              <div>
+                <label for="foodProtein">Proteínas (g)</label>
+                <input id="foodProtein" type="number" required min="0" step="0.1" placeholder="4.0">
+              </div>
+              <div>
+                <label for="foodCarbs">Carboidratos (g)</label>
+                <input id="foodCarbs" type="number" required min="0" step="0.1" placeholder="42.0">
+              </div>
+              <div>
+                <label for="foodFat">Gorduras (g)</label>
+                <input id="foodFat" type="number" required min="0" step="0.1" placeholder="0.5">
+              </div>
+            </div>
+            <button class="btn" id="saveFoodEntryButton" type="submit">Adicionar ao diário</button>
+            <button class="btn-secondary hidden" id="cancelFoodEditButton" type="button" style="width:100%;margin-top:8px">Cancelar edição</button>
+            <div id="foodEntryMessage" class="message" role="status" aria-live="polite"></div>
+          </form>
+        </section>
+
+        <section class="panel">
+          <div class="nutrition-toolbar">
+            <div>
+              <h2 class="section-title" style="margin:0">Diário alimentar</h2>
+              <p class="section-desc" style="margin:4px 0 0">Alimentos registrados nesta data.</p>
+            </div>
+            <input id="nutritionSelectedDate" type="date" aria-label="Data do diário alimentar">
+          </div>
+          <div id="foodEntriesList" class="nutrition-entry-list">
+            <div class="nutrition-empty">Carregando diário alimentar...</div>
+          </div>
+        </section>
+
+        <p class="nutrition-note">As calorias e os macronutrientes estimados pela IA podem variar conforme marca, preparo, tamanho da porção e ingredientes. Revise antes de salvar. As metas são estimativas gerais e não substituem orientação de nutricionista ou médico.</p>
+      </div>
+    </div>
+
+    <!-- ======================================
+         ABA 5: MEU PERFIL
     ====================================== -->
     <div id="profileTab" class="tab-view hidden">
 
@@ -1710,6 +1941,11 @@
           <span>Biblioteca</span>
         </button>
 
+        <button type="button" class="nav-item" data-tab="nutritionTab">
+          <svg viewBox="0 0 24 24"><path d="M4 3v7M7 3v7M4 7h3M5.5 10v11M16 3c-2 2-3 4.5-3 7v2h3v9M16 3v9"/></svg>
+          <span>Nutrição</span>
+        </button>
+
         <button type="button" class="nav-item" data-tab="profileTab">
           <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c1.8-3.8 5-5.5 8-5.5s6.2 1.7 8 5.5"/></svg>
           <span>Perfil</span>
@@ -1767,6 +2003,20 @@
 
   let authMode = 'login';
   let currentUser = null;
+  let currentProfileData = null;
+  let nutritionProfile = null;
+  let nutritionEntries = [];
+  let pendingAIFoods = [];
+  let editingFoodEntryId = null;
+  let nutritionSelectedDate = '';
+
+  const mealLabels = {
+    breakfast: 'Café da manhã',
+    lunch: 'Almoço',
+    dinner: 'Jantar',
+    snack: 'Lanches'
+  };
+
 
   const goalLabels = {
     muscle_gain: 'Hipertrofia',
@@ -1995,6 +2245,7 @@
     if (error) throw error;
 
     if (!data) {
+      currentProfileData = { id: user.id, name: user.user_metadata?.name || user.email?.split('@')[0] || '' };
       const { error: insertError } = await client
         .from('profiles')
         .upsert({
@@ -2005,6 +2256,7 @@
       return;
     }
 
+    currentProfileData = data;
     $('profileName').value = data.name || '';
     $('birthDate').value = data.birth_date || '';
     $('height').value = data.height_cm ?? '';
@@ -2043,6 +2295,7 @@
     try {
       await loadProfile(user);
       await loadWorkoutData();
+      await loadNutritionData();
 
       if (!$('profileName').value) {
         $('profileName').value = user.user_metadata?.name || '';
@@ -2121,10 +2374,15 @@
         .single();
       if (error) throw error;
 
+      currentProfileData = data;
       if (data.goal) $('genGoal').value = data.goal;
       if (data.experience) $('genExperience').value = data.experience;
 
       updateStats(data);
+      if (nutritionProfile) {
+        try { await refreshNutritionTargets(true); }
+        catch (nutritionError) { console.warn('Perfil salvo, mas não foi possível recalcular as metas nutricionais:', nutritionError); }
+      }
       showMessage('profileMessage', 'Perfil salvo com sucesso!', 'success');
     } catch (error) {
       showMessage('profileMessage', 'Erro ao salvar: ' + error.message, 'error');
@@ -2132,6 +2390,489 @@
       button.disabled = false;
     }
   });
+
+  // ==========================================
+  // 5B. MÓDULO DE NUTRIÇÃO
+  // Mantido no mesmo app, mesma sessão e mesmo projeto Supabase.
+  // ==========================================
+  function localDateKey(date = new Date()) {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  function getAgeFromBirthDate(value) {
+    if (!value) return null;
+    const birth = new Date(`${value}T00:00:00`);
+    if (Number.isNaN(birth.getTime())) return null;
+    const now = new Date();
+    let age = now.getFullYear() - birth.getFullYear();
+    const monthDiff = now.getMonth() - birth.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && now.getDate() < birth.getDate())) age--;
+    return age;
+  }
+
+  function numberBR(value, digits = 0) {
+    return Number(value || 0).toLocaleString('pt-BR', { maximumFractionDigits: digits, minimumFractionDigits: digits });
+  }
+
+  function calculateNutritionTargets() {
+    const weight = Number($('weight')?.value || currentProfileData?.current_weight || 0);
+    const height = Number($('height')?.value || currentProfileData?.height_cm || 0);
+    const birthDate = $('birthDate')?.value || currentProfileData?.birth_date;
+    const age = getAgeFromBirthDate(birthDate);
+    const sex = $('nutritionSex')?.value || nutritionProfile?.sex || 'male';
+    const activity = $('nutritionActivity')?.value || nutritionProfile?.activity_level || 'moderate';
+    const goal = $('nutritionGoal')?.value || nutritionProfile?.goal || 'maintenance';
+
+    if (!weight || !height || age === null) {
+      return { ready: false, reason: 'Complete data de nascimento, altura e peso em Meu Perfil para calcular sua meta.' };
+    }
+    if (age < 18) {
+      return { ready: false, reason: 'Este cálculo é voltado a adultos. Para menores de 18 anos, defina metas com acompanhamento profissional.' };
+    }
+    if (weight < 30 || weight > 300 || height < 100 || height > 230 || age > 100) {
+      return { ready: false, reason: 'Confira os dados de peso, altura e nascimento cadastrados em Meu Perfil.' };
+    }
+
+    const bmr = (10 * weight) + (6.25 * height) - (5 * age) + (sex === 'female' ? -161 : 5);
+    const activityFactors = { sedentary: 1.2, light: 1.375, moderate: 1.55, high: 1.725 };
+    const tdee = bmr * (activityFactors[activity] || 1.55);
+    let calorieTarget = tdee;
+    if (goal === 'weight_loss') calorieTarget = tdee - 300;
+    if (goal === 'muscle_gain') calorieTarget = tdee + 150;
+    calorieTarget = Math.max(1200, Math.round(calorieTarget / 10) * 10);
+
+    const protein = Math.round(weight * 1.8);
+    const fat = Math.round(weight * 0.8);
+    const carbs = Math.max(0, Math.round((calorieTarget - (protein * 4) - (fat * 9)) / 4));
+    return {
+      ready: true,
+      age,
+      weight,
+      height,
+      bmr: Math.round(bmr),
+      tdee: Math.round(tdee),
+      calorie_target: calorieTarget,
+      protein_target_g: protein,
+      carbs_target_g: carbs,
+      fat_target_g: fat,
+      goal,
+      sex,
+      activity_level: activity
+    };
+  }
+
+  function renderNutritionTargetPreview() {
+    const target = calculateNutritionTargets();
+    const el = $('nutritionTargetPreview');
+    if (!el) return target;
+    if (!target.ready) {
+      el.textContent = target.reason;
+      return target;
+    }
+    el.innerHTML = `
+      <strong>Estimativa calculada</strong><br>
+      Gasto basal (TMB): ${numberBR(target.bmr)} kcal/dia<br>
+      Gasto diário estimado: ${numberBR(target.tdee)} kcal/dia<br>
+      <strong>Meta inicial:</strong> ${numberBR(target.calorie_target)} kcal/dia<br>
+      Proteínas: ${numberBR(target.protein_target_g)} g · Carboidratos: ${numberBR(target.carbs_target_g)} g · Gorduras: ${numberBR(target.fat_target_g)} g
+      <div class="nutrition-note" style="margin-top:7px">Estimativa baseada na equação de Mifflin-St Jeor e no fator de atividade escolhido. Não é uma prescrição nutricional.</div>
+    `;
+    return target;
+  }
+
+  async function refreshNutritionTargets(saveToDatabase = false) {
+    const target = renderNutritionTargetPreview();
+    if (!target.ready) return target;
+    if (saveToDatabase && currentUser) {
+      const payload = {
+        user_id: currentUser.id,
+        sex: target.sex,
+        activity_level: target.activity_level,
+        goal: target.goal,
+        calorie_target: target.calorie_target,
+        protein_target_g: target.protein_target_g,
+        carbs_target_g: target.carbs_target_g,
+        fat_target_g: target.fat_target_g,
+        updated_at: new Date().toISOString()
+      };
+      const { data, error } = await client.from('nutrition_profiles').upsert(payload, { onConflict: 'user_id' }).select().single();
+      if (error) throw error;
+      nutritionProfile = data;
+    }
+    return target;
+  }
+
+  async function loadNutritionData() {
+    if (!currentUser) return;
+    nutritionSelectedDate = nutritionSelectedDate || localDateKey();
+    if ($('nutritionSelectedDate')) $('nutritionSelectedDate').value = nutritionSelectedDate;
+    try {
+      const { data, error } = await client
+        .from('nutrition_profiles')
+        .select('*')
+        .eq('user_id', currentUser.id)
+        .maybeSingle();
+      if (error) throw error;
+
+      if (data) {
+        nutritionProfile = data;
+      } else {
+        const defaultGoal = ['weight_loss', 'muscle_gain'].includes(currentProfileData?.goal)
+          ? currentProfileData.goal
+          : 'maintenance';
+        const { data: created, error: createError } = await client
+          .from('nutrition_profiles')
+          .upsert({
+            user_id: currentUser.id,
+            sex: 'male',
+            activity_level: 'moderate',
+            goal: defaultGoal
+          }, { onConflict: 'user_id' })
+          .select()
+          .single();
+        if (createError) throw createError;
+        nutritionProfile = created;
+      }
+
+      $('nutritionSex').value = nutritionProfile.sex || 'male';
+      $('nutritionActivity').value = nutritionProfile.activity_level || 'moderate';
+      $('nutritionGoal').value = nutritionProfile.goal || 'maintenance';
+      await refreshNutritionTargets(false);
+      await loadNutritionEntries();
+      showMessage('nutritionProfileMessage', 'Perfil nutricional carregado.', 'success');
+    } catch (error) {
+      console.warn('Módulo de nutrição ainda não configurado:', error);
+      showMessage('nutritionProfileMessage', 'Não foi possível carregar o módulo. Confira se executou o SQL de nutrição no Supabase. Detalhe: ' + error.message, 'error');
+      $('foodEntriesList').innerHTML = '<div class="nutrition-empty">O diário será carregado depois que as tabelas de nutrição forem criadas no Supabase.</div>';
+    }
+  }
+
+  $('nutritionProfileForm').addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (!currentUser) return;
+    const button = $('saveNutritionProfileButton');
+    button.disabled = true;
+    showMessage('nutritionProfileMessage', 'Calculando e salvando...');
+    try {
+      const target = await refreshNutritionTargets(true);
+      if (!target.ready) throw new Error(target.reason);
+      showMessage('nutritionProfileMessage', 'Perfil nutricional salvo. Suas metas foram atualizadas.', 'success');
+      renderNutritionDaySummary();
+    } catch (error) {
+      showMessage('nutritionProfileMessage', 'Não foi possível salvar: ' + error.message, 'error');
+    } finally {
+      button.disabled = false;
+    }
+  });
+
+  ['nutritionSex', 'nutritionActivity', 'nutritionGoal'].forEach(id => {
+    $(id).addEventListener('change', () => renderNutritionTargetPreview());
+  });
+
+  function getNutritionDateRange(dateKey) {
+    const start = new Date(`${dateKey}T00:00:00`);
+    const end = new Date(start);
+    end.setDate(end.getDate() + 1);
+    return { start: start.toISOString(), end: end.toISOString() };
+  }
+
+  async function loadNutritionEntries() {
+    if (!currentUser) return;
+    const dateKey = $('nutritionSelectedDate').value || localDateKey();
+    nutritionSelectedDate = dateKey;
+    const { start, end } = getNutritionDateRange(dateKey);
+    $('foodEntriesList').innerHTML = '<div class="nutrition-empty">Carregando refeições...</div>';
+    const { data, error } = await client
+      .from('food_entries')
+      .select('*')
+      .eq('user_id', currentUser.id)
+      .gte('consumed_at', start)
+      .lt('consumed_at', end)
+      .order('consumed_at', { ascending: true });
+    if (error) throw error;
+    nutritionEntries = data || [];
+    renderNutritionEntries();
+    renderNutritionDaySummary();
+  }
+
+  function getNutritionTotals(entries = nutritionEntries) {
+    return entries.reduce((total, item) => {
+      total.calories += Number(item.calories) || 0;
+      total.protein += Number(item.protein_g) || 0;
+      total.carbs += Number(item.carbs_g) || 0;
+      total.fat += Number(item.fat_g) || 0;
+      return total;
+    }, { calories: 0, protein: 0, carbs: 0, fat: 0 });
+  }
+
+  function renderNutritionDaySummary() {
+    const total = getNutritionTotals();
+    const calorieTarget = Number(nutritionProfile?.calorie_target) || Number(calculateNutritionTargets().calorie_target) || 0;
+    const proteinTarget = Number(nutritionProfile?.protein_target_g) || Number(calculateNutritionTargets().protein_target_g) || 0;
+    const carbsTarget = Number(nutritionProfile?.carbs_target_g) || Number(calculateNutritionTargets().carbs_target_g) || 0;
+    const fatTarget = Number(nutritionProfile?.fat_target_g) || Number(calculateNutritionTargets().fat_target_g) || 0;
+    $('nutritionCaloriesConsumed').textContent = numberBR(total.calories);
+    $('nutritionCaloriesTarget').textContent = calorieTarget ? `Meta: ${numberBR(calorieTarget)} kcal` : 'Meta: —';
+    $('nutritionCaloriesRemaining').textContent = calorieTarget
+      ? (calorieTarget - total.calories >= 0 ? `Restam ${numberBR(calorieTarget - total.calories)} kcal` : `${numberBR(total.calories - calorieTarget)} kcal acima da meta`)
+      : 'Defina seu perfil nutricional';
+    $('nutritionCaloriesProgress').style.width = calorieTarget ? `${Math.min(100, (total.calories / calorieTarget) * 100)}%` : '0%';
+    $('nutritionProteinTotal').textContent = `${numberBR(total.protein, 1)} / ${proteinTarget || '—'} g`;
+    $('nutritionCarbsTotal').textContent = `${numberBR(total.carbs, 1)} / ${carbsTarget || '—'} g`;
+    $('nutritionFatTotal').textContent = `${numberBR(total.fat, 1)} / ${fatTarget || '—'} g`;
+  }
+
+  function renderNutritionEntries() {
+    const container = $('foodEntriesList');
+    if (!nutritionEntries.length) {
+      container.innerHTML = '<div class="nutrition-empty">Nenhum alimento registrado nesta data.<br>Use o registro com IA ou adicione manualmente sua primeira refeição.</div>';
+      return;
+    }
+    const mealOrder = ['breakfast', 'lunch', 'dinner', 'snack'];
+    container.innerHTML = mealOrder.map(meal => {
+      const items = nutritionEntries.filter(item => item.meal_type === meal);
+      if (!items.length) return '';
+      const mealCalories = items.reduce((sum, item) => sum + (Number(item.calories) || 0), 0);
+      return `<section class="nutrition-meal-card">
+        <div class="nutrition-meal-head"><h3>${mealLabels[meal]}</h3><span class="tag">${numberBR(mealCalories)} kcal</span></div>
+        ${items.map(item => `
+          <div class="nutrition-food-row">
+            <div class="nutrition-food-info">
+              <strong>${escapeHTML(item.food_name)}</strong>
+              <small>${numberBR(item.amount, 1)} ${escapeHTML(item.unit || 'g')}${item.grams && item.unit !== 'g' ? ` · ${numberBR(item.grams, 1)} g` : ''} · ${numberBR(item.calories)} kcal<br>P ${numberBR(item.protein_g, 1)} g · C ${numberBR(item.carbs_g, 1)} g · G ${numberBR(item.fat_g, 1)} g ${item.source === 'ai' ? '· estimativa IA' : ''}</small>
+            </div>
+            <div class="nutrition-food-actions">
+              <button type="button" class="small-btn" data-food-action="edit" data-id="${item.id}">Editar</button>
+              <button type="button" class="small-btn danger" data-food-action="delete" data-id="${item.id}">Excluir</button>
+            </div>
+          </div>`).join('')}
+      </section>`;
+    }).join('');
+  }
+
+  $('nutritionSelectedDate').addEventListener('change', async () => {
+    nutritionSelectedDate = $('nutritionSelectedDate').value || localDateKey();
+    try { await loadNutritionEntries(); }
+    catch (error) { showMessage('foodEntryMessage', 'Erro ao carregar diário: ' + error.message, 'error'); }
+  });
+
+  function resetFoodForm() {
+    editingFoodEntryId = null;
+    $('foodEntryForm').reset();
+    $('foodMealType').value = 'breakfast';
+    $('saveFoodEntryButton').textContent = 'Adicionar ao diário';
+    $('cancelFoodEditButton').classList.add('hidden');
+  }
+
+  $('cancelFoodEditButton').addEventListener('click', () => resetFoodForm());
+
+  $('foodEntryForm').addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (!currentUser) return;
+    const button = $('saveFoodEntryButton');
+    button.disabled = true;
+    showMessage('foodEntryMessage', editingFoodEntryId ? 'Atualizando alimento...' : 'Salvando alimento...');
+    const selectedDate = $('nutritionSelectedDate').value || localDateKey();
+    const payload = {
+      user_id: currentUser.id,
+      meal_type: $('foodMealType').value,
+      food_name: $('foodName').value.trim(),
+      amount: Number($('foodAmount').value),
+      unit: $('foodUnit').value,
+      grams: $('foodGrams').value === '' ? null : Number($('foodGrams').value),
+      calories: Number($('foodCalories').value),
+      protein_g: Number($('foodProtein').value),
+      carbs_g: Number($('foodCarbs').value),
+      fat_g: Number($('foodFat').value),
+      source: editingFoodEntryId ? undefined : 'manual',
+      consumed_at: new Date(`${selectedDate}T12:00:00`).toISOString()
+    };
+    if (editingFoodEntryId) delete payload.source;
+    try {
+      let result;
+      if (editingFoodEntryId) {
+        result = await client.from('food_entries').update(payload).eq('id', editingFoodEntryId).eq('user_id', currentUser.id);
+      } else {
+        result = await client.from('food_entries').insert(payload);
+      }
+      if (result.error) throw result.error;
+      resetFoodForm();
+      showMessage('foodEntryMessage', 'Alimento salvo no diário!', 'success');
+      await loadNutritionEntries();
+    } catch (error) {
+      showMessage('foodEntryMessage', 'Erro ao salvar alimento: ' + error.message, 'error');
+    } finally {
+      button.disabled = false;
+    }
+  });
+
+  $('foodEntriesList').addEventListener('click', async (event) => {
+    const button = event.target.closest('button[data-food-action]');
+    if (!button) return;
+    const item = nutritionEntries.find(entry => entry.id === button.dataset.id);
+    if (!item) return;
+    if (button.dataset.foodAction === 'edit') {
+      editingFoodEntryId = item.id;
+      $('foodMealType').value = item.meal_type;
+      $('foodName').value = item.food_name;
+      $('foodAmount').value = item.amount;
+      $('foodUnit').value = item.unit || 'g';
+      $('foodGrams').value = item.grams ?? '';
+      $('foodCalories').value = item.calories;
+      $('foodProtein').value = item.protein_g;
+      $('foodCarbs').value = item.carbs_g;
+      $('foodFat').value = item.fat_g;
+      $('saveFoodEntryButton').textContent = 'Salvar alterações';
+      $('cancelFoodEditButton').classList.remove('hidden');
+      $('foodEntryForm').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+    if (button.dataset.foodAction === 'delete') {
+      if (!confirm(`Excluir ${item.food_name} do diário?`)) return;
+      button.disabled = true;
+      try {
+        const { error } = await client.from('food_entries').delete().eq('id', item.id).eq('user_id', currentUser.id);
+        if (error) throw error;
+        await loadNutritionEntries();
+      } catch (error) {
+        alert('Não foi possível excluir: ' + error.message);
+        button.disabled = false;
+      }
+    }
+  });
+
+  function renderAIFoodPreview() {
+    const container = $('aiFoodPreview');
+    if (!pendingAIFoods.length) {
+      container.classList.add('hidden');
+      container.innerHTML = '';
+      return;
+    }
+    container.classList.remove('hidden');
+    container.innerHTML = `<div class="nutrition-preview">
+      <div class="nutrition-preview-top"><strong>Revise os alimentos estimados</strong><span class="tag">${pendingAIFoods.length} itens</span></div>
+      <p class="nutrition-note">Confira porções e valores. Você pode ajustar os campos antes de confirmar o registro.</p>
+      ${pendingAIFoods.map((food, index) => `
+        <div class="nutrition-preview-item" data-ai-item="${index}">
+          <strong>${escapeHTML(food.name || `Alimento ${index + 1}`)} ${food.confidence === 'low' ? '<span class="tag">PORÇÃO INCERTA</span>' : ''}</strong>
+          <div class="nutrition-preview-fields">
+            <div><label>Quantidade / g</label><input type="number" min="0.1" step="0.1" data-ai-index="${index}" data-ai-field="grams" value="${Number(food.grams) || ''}"></div>
+            <div><label>Calorias</label><input type="number" min="0" step="0.1" data-ai-index="${index}" data-ai-field="calories" value="${Number(food.calories) || 0}"></div>
+            <div><label>Proteína (g)</label><input type="number" min="0" step="0.1" data-ai-index="${index}" data-ai-field="protein_g" value="${Number(food.protein_g) || 0}"></div>
+            <div><label>Carboidrato (g)</label><input type="number" min="0" step="0.1" data-ai-index="${index}" data-ai-field="carbs_g" value="${Number(food.carbs_g) || 0}"></div>
+            <div><label>Gordura (g)</label><input type="number" min="0" step="0.1" data-ai-index="${index}" data-ai-field="fat_g" value="${Number(food.fat_g) || 0}"></div>
+            <div><label>Unidade</label><input type="text" readonly value="g" aria-label="Unidade em gramas"></div>
+          </div>
+          ${food.assumption ? `<p class="nutrition-note">Observação: ${escapeHTML(food.assumption)}</p>` : ''}
+          <button type="button" class="small-btn danger" data-ai-remove="${index}" style="margin-top:8px">Remover este alimento</button>
+        </div>`).join('')}
+      <button type="button" class="btn" id="confirmAIFoodButton">Confirmar e salvar no diário</button>
+      <button type="button" class="btn-secondary" id="cancelAIFoodButton" style="width:100%;margin-top:8px">Cancelar análise</button>
+    </div>`;
+  }
+
+  $('aiFoodPreview').addEventListener('input', (event) => {
+    const input = event.target.closest('input[data-ai-index][data-ai-field]');
+    if (!input) return;
+    const index = Number(input.dataset.aiIndex);
+    const field = input.dataset.aiField;
+    if (!pendingAIFoods[index]) return;
+    pendingAIFoods[index][field] = Number(input.value) || 0;
+  });
+
+  $('aiFoodPreview').addEventListener('click', async (event) => {
+    const removeButton = event.target.closest('[data-ai-remove]');
+    if (removeButton) {
+      pendingAIFoods.splice(Number(removeButton.dataset.aiRemove), 1);
+      renderAIFoodPreview();
+      return;
+    }
+    if (event.target.closest('#cancelAIFoodButton')) {
+      pendingAIFoods = [];
+      renderAIFoodPreview();
+      return;
+    }
+    if (event.target.closest('#confirmAIFoodButton')) {
+      if (!currentUser || !pendingAIFoods.length) return;
+      const button = $('confirmAIFoodButton');
+      button.disabled = true;
+      button.textContent = 'Salvando...';
+      try {
+        const selectedDate = $('nutritionSelectedDate').value || localDateKey();
+        const consumedAt = new Date(`${selectedDate}T12:00:00`).toISOString();
+        const rows = pendingAIFoods.map(food => ({
+          user_id: currentUser.id,
+          meal_type: $('aiFoodMealType').value,
+          food_name: String(food.name || 'Alimento estimado').slice(0, 120),
+          amount: Number(food.grams) || 1,
+          unit: 'g',
+          grams: Number(food.grams) || null,
+          calories: Math.max(0, Number(food.calories) || 0),
+          protein_g: Math.max(0, Number(food.protein_g) || 0),
+          carbs_g: Math.max(0, Number(food.carbs_g) || 0),
+          fat_g: Math.max(0, Number(food.fat_g) || 0),
+          source: 'ai',
+          notes: food.assumption || null,
+          consumed_at: consumedAt
+        }));
+        const { error } = await client.from('food_entries').insert(rows);
+        if (error) throw error;
+        pendingAIFoods = [];
+        renderAIFoodPreview();
+        $('aiFoodDescription').value = '';
+        showMessage('aiFoodMessage', 'Refeição confirmada e salva no diário!', 'success');
+        await loadNutritionEntries();
+      } catch (error) {
+        showMessage('aiFoodMessage', 'Erro ao salvar estimativas: ' + error.message, 'error');
+        button.disabled = false;
+        button.textContent = 'Confirmar e salvar no diário';
+      }
+    }
+  });
+
+  $('analyzeFoodButton').addEventListener('click', async () => {
+    if (!currentUser) return;
+    const description = $('aiFoodDescription').value.trim();
+    if (description.length < 4) {
+      showMessage('aiFoodMessage', 'Descreva os alimentos e, sempre que possível, as quantidades.', 'error');
+      return;
+    }
+    const button = $('analyzeFoodButton');
+    button.disabled = true;
+    button.textContent = 'Analisando...';
+    pendingAIFoods = [];
+    renderAIFoodPreview();
+    showMessage('aiFoodMessage', 'A IA está estimando os alimentos. Isso pode levar alguns segundos.');
+    try {
+      const { data, error } = await client.functions.invoke('nutrition-analyze', {
+        body: { description }
+      });
+      if (error) throw error;
+      if (!data?.items?.length) throw new Error(data?.error || 'A IA não encontrou alimentos para registrar.');
+      pendingAIFoods = data.items.map(item => ({
+        name: String(item.name || 'Alimento').slice(0, 120),
+        grams: Number(item.grams) || 0,
+        calories: Number(item.calories) || 0,
+        protein_g: Number(item.protein_g) || 0,
+        carbs_g: Number(item.carbs_g) || 0,
+        fat_g: Number(item.fat_g) || 0,
+        confidence: item.confidence === 'low' ? 'low' : 'medium',
+        assumption: String(item.assumption || '').slice(0, 240)
+      }));
+      renderAIFoodPreview();
+      showMessage('aiFoodMessage', data.note || 'Confira os valores e confirme para salvar.', 'success');
+    } catch (error) {
+      console.error('Erro na análise nutricional:', error);
+      showMessage('aiFoodMessage', 'Não foi possível analisar. Confira se publicou a função nutrition-analyze e configurou GEMINI_API_KEY no Supabase. Detalhe: ' + error.message, 'error');
+    } finally {
+      button.disabled = false;
+      button.textContent = 'Analisar refeição com IA';
+    }
+  });
+
 
   // ==========================================
   // 6. DADOS DE TREINOS E REGISTRO DE SÉRIES
