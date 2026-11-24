@@ -3191,7 +3191,14 @@
           mimeType: pendingFoodPhoto?.mimeType || null
         }
       });
-      if (error) throw error;
+      if (error) {
+        let detail = error.message;
+        try {
+          const errBody = await error.context?.json();
+          if (errBody?.error || errBody?.message) detail = errBody.error || errBody.message;
+        } catch (_) {}
+        throw new Error(detail);
+      }
       if (!data?.items?.length) throw new Error(data?.error || 'A IA não identificou alimentos na imagem/descrição.');
 
       pendingAIFoods = data.items.map(item => ({
@@ -4572,15 +4579,23 @@
         <div class="workout-item" style="margin-bottom:12px">
           <strong>${escapeHTML(day.name)}</strong>
           ${dayItems.length
-            ? dayItems.map(item => {
+            ? dayItems.map((item, idx) => {
                 const ex = exerciseMap.get(item.exercise_id);
+                const isFirst = idx === 0;
+                const isLast = idx === dayItems.length - 1;
                 return `
                   <div style="border-top:1px solid var(--line);margin-top:10px;padding-top:10px">
-                    <strong>${escapeHTML(ex?.name || 'Exercício')}</strong>
+                    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+                      <strong>${idx + 1}. ${escapeHTML(ex?.name || 'Exercício')}</strong>
+                      <div style="display:flex;gap:4px">
+                        <button type="button" class="small-btn" data-action="move-up" data-id="${item.id}" ${isFirst ? 'disabled style="opacity:0.35;cursor:not-allowed"' : ''} title="Subir">↑</button>
+                        <button type="button" class="small-btn" data-action="move-down" data-id="${item.id}" ${isLast ? 'disabled style="opacity:0.35;cursor:not-allowed"' : ''} title="Descer">↓</button>
+                      </div>
+                    </div>
                     <small>${item.sets} séries · ${escapeHTML(item.target_reps)} reps · ${item.rest_seconds}s descanso</small>
                     <div class="workout-actions">
-                      <button class="small-btn" data-action="edit-assignment" data-id="${item.id}">Editar</button>
-                      <button class="small-btn danger" data-action="remove-assignment" data-id="${item.id}">Remover</button>
+                      <button type="button" class="small-btn" data-action="edit-assignment" data-id="${item.id}">Editar</button>
+                      <button type="button" class="small-btn danger" data-action="remove-assignment" data-id="${item.id}">Remover</button>
                     </div>
                   </div>
                 `;
@@ -4638,18 +4653,61 @@
 
   $('workoutExercisesList').addEventListener('click', async event => {
     const button = event.target.closest('button[data-action]');
-    if (!button) return;
+    if (!button || button.disabled) return;
 
     const id = button.dataset.id;
     const action = button.dataset.action;
+
+    if (action === 'move-up' || action === 'move-down') {
+      const item = currentWorkoutItems.find(entry => entry.id === id);
+      if (!item) return;
+
+      const dayItems = currentWorkoutItems.filter(i => i.workout_day_id === item.workout_day_id);
+      const idx = dayItems.findIndex(i => i.id === id);
+      const targetIdx = action === 'move-up' ? idx - 1 : idx + 1;
+      if (idx < 0 || targetIdx < 0 || targetIdx >= dayItems.length) return;
+
+      const reordered = [...dayItems];
+      [reordered[idx], reordered[targetIdx]] = [reordered[targetIdx], reordered[idx]];
+
+      try {
+        const results = await Promise.all(
+          reordered.map((row, orderIdx) =>
+            client
+              .from('workout_exercises')
+              .update({ exercise_order: orderIdx + 1 })
+              .eq('id', row.id)
+          )
+        );
+        const failed = results.find(r => r.error);
+        if (failed) throw failed.error;
+        await loadWorkoutExercises();
+      } catch (error) {
+        alert('Erro ao reordenar: ' + error.message);
+      }
+      return;
+    }
 
     if (action === 'edit-assignment') {
       const item = currentWorkoutItems.find(entry => entry.id === id);
       if (!item) return;
 
+      const currentEx = exerciseMap.get(item.exercise_id);
+      const exerciseOptionsHTML = exerciseLibrary.map(ex => `
+        <option value="${ex.id}" ${ex.id === item.exercise_id ? 'selected' : ''}>
+          ${escapeHTML(ex.name)} (${escapeHTML(ex.muscle_group || 'Outro')})
+        </option>
+      `).join('');
+
       openEditModal({
-        title: 'Editar séries e descanso',
+        title: 'Editar exercício do dia',
         fieldsHTML: `
+          <label for="modalExerciseId">Trocar exercício (da biblioteca)</label>
+          <select id="modalExerciseId" required>${exerciseOptionsHTML}</select>
+
+          <label for="modalNewExerciseName">Ou digite um nome novo para substituir direto</label>
+          <input id="modalNewExerciseName" type="text" placeholder="Ex.: Elevação frontal (opcional)">
+
           <div class="form-grid">
             <div>
               <label for="modalSets">Séries</label>
@@ -4666,15 +4724,45 @@
           </div>
         `,
         onSubmit: async () => {
+          let targetExerciseId = $('modalExerciseId').value;
+          const typedName = $('modalNewExerciseName').value.trim();
+
+          if (typedName) {
+            const existing = exerciseLibrary.find(
+              ex => ex.name.trim().toLowerCase() === typedName.toLowerCase()
+            );
+
+            if (existing) {
+              targetExerciseId = existing.id;
+            } else {
+              const { data: createdEx, error: createErr } = await client
+                .from('exercises')
+                .insert({
+                  user_id: currentUser.id,
+                  name: typedName,
+                  muscle_group: currentEx?.muscle_group || 'Outro',
+                  equipment: currentEx?.equipment || null
+                })
+                .select()
+                .single();
+              if (createErr) throw createErr;
+
+              targetExerciseId = createdEx.id;
+              await loadExerciseLibrary();
+            }
+          }
+
           const { error } = await client
             .from('workout_exercises')
             .update({
+              exercise_id: targetExerciseId,
               sets: Number($('modalSets').value),
               target_reps: $('modalReps').value.trim(),
               rest_seconds: Number($('modalRest').value)
             })
             .eq('id', id);
           if (error) throw error;
+
           await loadWorkoutExercises();
         }
       });
