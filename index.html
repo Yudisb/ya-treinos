@@ -4069,64 +4069,154 @@
     });
   }
 
-  async function saveSetLog(workoutExerciseId, setNumber, patch) {
-    if (!currentWorkoutSessionId) {
-      showMessage('exerciseMessage', 'Abra um treino antes de registrar as séries.', 'error');
-      return;
-    }
+  const setSaveQueue = new Map();
 
-    const item = currentWorkoutItems.find(entry => entry.id === workoutExerciseId);
-    if (!item) throw new Error('Exercício não encontrado nesta ficha.');
-
+  function getOrCreateLocalSetLog(workoutExerciseId, setNumber) {
     const key = `${workoutExerciseId}:${setNumber}`;
-    const existing = workoutLogsMap.get(key) || {
-      workout_exercise_id: workoutExerciseId,
-      set_number: setNumber,
-      reps_done: null,
-      weight_kg: null,
-      completed: false,
-      completed_at: null
-    };
+    let entry = workoutLogsMap.get(key);
+    if (!entry) {
+      entry = {
+        id: null,
+        workout_exercise_id: workoutExerciseId,
+        set_number: setNumber,
+        reps_done: null,
+        weight_kg: null,
+        completed: false,
+        completed_at: null
+      };
+      workoutLogsMap.set(key, entry);
+    }
+    return entry;
+  }
+
+  function updateLocalSetLog(workoutExerciseId, setNumber, patch) {
+    const key = `${workoutExerciseId}:${setNumber}`;
+    const existing = getOrCreateLocalSetLog(workoutExerciseId, setNumber);
     const updated = { ...existing, ...patch };
-    const completedAt = updated.completed
+    updated.completed_at = updated.completed
       ? (existing.completed_at || new Date().toISOString())
       : null;
+    workoutLogsMap.set(key, updated);
+    return updated;
+  }
 
-    const statusEl = $(`saveStatus-${workoutExerciseId}`);
-    if (statusEl) statusEl.textContent = 'Salvando...';
-
-    const { data, error } = await client
-      .from('workout_sets')
-      .upsert({
-        session_id: currentWorkoutSessionId,
-        workout_exercise_id: workoutExerciseId,
-        exercise_id: item.exercise_id,
-        set_number: setNumber,
-        repetitions: updated.reps_done,
-        weight_kg: updated.weight_kg,
-        completed_at: completedAt
-      }, { onConflict: 'session_id,workout_exercise_id,set_number' })
-      .select()
-      .single();
-
-    if (error) {
-      if (statusEl) statusEl.textContent = 'Erro ao salvar';
-      console.error('Erro ao salvar série:', error.message);
-      showMessage('addExerciseMessage', 'Erro ao salvar série: ' + error.message, 'error');
-      return;
+  function syncExerciseCompletedState(weId) {
+    const item = currentWorkoutItems.find(entry => entry.id === weId);
+    if (!item) return;
+    const totalSets = Math.max(1, Number(item.sets) || 3);
+    let allDone = true;
+    for (let s = 1; s <= totalSets; s++) {
+      if (!workoutLogsMap.get(`${weId}:${s}`)?.completed) {
+        allDone = false;
+        break;
+      }
     }
+    if (allDone) {
+      completedSet.add(weId);
+    } else {
+      completedSet.delete(weId);
+    }
+  }
 
-    workoutLogsMap.set(key, {
-      id: data.id,
-      workout_exercise_id: data.workout_exercise_id,
-      set_number: data.set_number,
-      reps_done: data.repetitions,
-      weight_kg: data.weight_kg,
-      completed: Boolean(data.completed_at),
-      completed_at: data.completed_at
+  function saveSetLog(workoutExerciseId, setNumber, patch) {
+    const updated = updateLocalSetLog(workoutExerciseId, setNumber, patch);
+    const key = `${workoutExerciseId}:${setNumber}`;
+
+    const prevTask = setSaveQueue.get(key) || Promise.resolve();
+    const task = prevTask.then(async () => {
+      const statusEl = $(`saveStatus-${workoutExerciseId}`);
+      if (statusEl) {
+        statusEl.style.color = 'var(--muted)';
+        statusEl.textContent = 'Salvando...';
+      }
+
+      try {
+        if (!currentWorkoutSessionId && activeDetailDayId) {
+          await ensureWorkoutSession(activeDetailDayId);
+        }
+        if (!currentWorkoutSessionId) {
+          throw new Error('Sessão de treino não iniciada.');
+        }
+
+        const item = currentWorkoutItems.find(entry => entry.id === workoutExerciseId);
+        if (!item) throw new Error('Exercício não encontrado nesta ficha.');
+
+        const latest = workoutLogsMap.get(key) || updated;
+        const dbPayload = {
+          session_id: currentWorkoutSessionId,
+          workout_exercise_id: workoutExerciseId,
+          exercise_id: item.exercise_id,
+          set_number: setNumber,
+          repetitions: latest.reps_done,
+          weight_kg: latest.weight_kg,
+          completed_at: latest.completed_at
+        };
+
+        let existingId = latest.id;
+        if (!existingId) {
+          const { data: foundRow, error: findErr } = await client
+            .from('workout_sets')
+            .select('id')
+            .eq('session_id', currentWorkoutSessionId)
+            .eq('workout_exercise_id', workoutExerciseId)
+            .eq('set_number', setNumber)
+            .maybeSingle();
+          if (findErr) throw findErr;
+          if (foundRow?.id) existingId = foundRow.id;
+        }
+
+        let savedRow;
+        if (existingId) {
+          const { data, error } = await client
+            .from('workout_sets')
+            .update({
+              repetitions: dbPayload.repetitions,
+              weight_kg: dbPayload.weight_kg,
+              completed_at: dbPayload.completed_at
+            })
+            .eq('id', existingId)
+            .select()
+            .single();
+          if (error) throw error;
+          savedRow = data;
+        } else {
+          const { data, error } = await client
+            .from('workout_sets')
+            .insert(dbPayload)
+            .select()
+            .single();
+          if (error) throw error;
+          savedRow = data;
+        }
+
+        const currentAfterSave = workoutLogsMap.get(key);
+        workoutLogsMap.set(key, {
+          id: savedRow.id,
+          workout_exercise_id: savedRow.workout_exercise_id,
+          set_number: savedRow.set_number,
+          reps_done: currentAfterSave ? currentAfterSave.reps_done : savedRow.repetitions,
+          weight_kg: currentAfterSave ? currentAfterSave.weight_kg : savedRow.weight_kg,
+          completed: currentAfterSave ? currentAfterSave.completed : Boolean(savedRow.completed_at),
+          completed_at: currentAfterSave ? currentAfterSave.completed_at : savedRow.completed_at
+        });
+
+        const freshStatusEl = $(`saveStatus-${workoutExerciseId}`);
+        if (freshStatusEl) {
+          freshStatusEl.style.color = 'var(--green)';
+          freshStatusEl.textContent = 'Salvo ✓';
+        }
+      } catch (error) {
+        console.error('Erro ao salvar série:', error);
+        const freshStatusEl = $(`saveStatus-${workoutExerciseId}`);
+        if (freshStatusEl) {
+          freshStatusEl.style.color = 'var(--danger)';
+          freshStatusEl.textContent = 'Erro ao salvar: ' + (error?.message || 'falha no banco');
+        }
+      }
     });
 
-    if (statusEl) statusEl.textContent = 'Salvo ✓';
+    setSaveQueue.set(key, task);
+    return task;
   }
 
   async function finishWorkoutSession() {
@@ -4161,27 +4251,30 @@
       const weId = setBtn.dataset.toggleSet;
       const setNum = Number(setBtn.dataset.setNum);
       const key = `${weId}:${setNum}`;
+
+      // Lê diretamente os valores atuais dos inputs da linha para evitar qualquer atraso de blur/change
+      const rowEl = setBtn.closest('[data-set-row]');
+      const weightInput = rowEl?.querySelector('[data-log-field="weight"]');
+      const repsInput = rowEl?.querySelector('[data-log-field="reps"]');
+
       const current = workoutLogsMap.get(key);
+      const weightVal = weightInput
+        ? (weightInput.value === '' ? null : Number(weightInput.value))
+        : (current?.weight_kg ?? null);
+      const repsVal = repsInput
+        ? (repsInput.value === '' ? null : Math.round(Number(repsInput.value)))
+        : (current?.reps_done ?? null);
+
       const nextCompleted = !current?.completed;
+      const patch = {
+        weight_kg: weightVal,
+        reps_done: repsVal,
+        completed: nextCompleted
+      };
 
-      await saveSetLog(weId, setNum, { completed: nextCompleted });
-
-      const item = currentWorkoutItems.find(entry => entry.id === weId);
-      if (item) {
-        const totalSets = Math.max(1, Number(item.sets) || 3);
-        let allDone = true;
-        for (let s = 1; s <= totalSets; s++) {
-          if (!workoutLogsMap.get(`${weId}:${s}`)?.completed) {
-            allDone = false;
-            break;
-          }
-        }
-        if (allDone) {
-          completedSet.add(weId);
-        } else {
-          completedSet.delete(weId);
-        }
-      }
+      // Atualiza estado e interface imediatamente (otimista) sem apagar os dados digitados
+      updateLocalSetLog(weId, setNum, patch);
+      syncExerciseCompletedState(weId);
 
       if (nextCompleted) {
         const restSecs = Number(setBtn.dataset.rest) || 60;
@@ -4191,6 +4284,7 @@
       }
 
       renderWorkoutDetail(activeDetailDayId);
+      await saveSetLog(weId, setNum, patch);
       return;
     }
 
@@ -4247,8 +4341,12 @@
     const weId = input.dataset.weId;
     const setNum = Number(input.dataset.setNum);
     const field = input.dataset.logField;
+    const val = input.value === '' ? null : Number(input.value);
 
-    if (field === 'reps') {
+    if (field === 'weight') {
+      updateLocalSetLog(weId, setNum, { weight_kg: val });
+    } else if (field === 'reps') {
+      updateLocalSetLog(weId, setNum, { reps_done: val !== null ? Math.round(val) : null });
       const item = currentWorkoutItems.find(entry => entry.id === weId);
       const badge = document.querySelector(`[data-status-badge="${weId}:${setNum}"]`);
       if (item && badge) {
