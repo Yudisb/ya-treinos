@@ -891,6 +891,163 @@
       color: var(--muted);
     }
 
+    /* ===== BADGES DE RECORDE (PR) E RESUMO PÓS-TREINO ===== */
+    .pr-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      border: 1px solid rgba(251, 191, 36, 0.28);
+      background: rgba(251, 191, 36, 0.1);
+      color: #fcd34d;
+      border-radius: 8px;
+      padding: 3px 8px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .pr-pill.empty {
+      border-color: var(--line);
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .pr-pill.new-record {
+      border-color: var(--green);
+      background: rgba(166, 242, 121, 0.18);
+      color: var(--green);
+      font-weight: 800;
+      box-shadow: 0 0 12px rgba(166, 242, 121, 0.18);
+    }
+
+    .pr-drawer-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+      background: #141c16;
+      border: 1px solid rgba(251, 191, 36, 0.28);
+      border-radius: 12px;
+      padding: 9px 12px;
+      font-size: 12px;
+    }
+
+    .pr-drawer-bar.new-record {
+      border-color: var(--green);
+      background: linear-gradient(135deg, rgba(166, 242, 121, 0.16) 0%, #141e16 100%);
+    }
+
+    .pr-drawer-bar strong {
+      color: #fcd34d;
+      font-weight: 800;
+    }
+
+    .pr-drawer-bar.new-record strong {
+      color: var(--green);
+    }
+
+    .pr-drawer-bar small {
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .summary-calorie-hero {
+      background:
+        radial-gradient(circle at top right, rgba(166, 242, 121, 0.22), transparent 55%),
+        linear-gradient(155deg, #18291d 0%, #111613 100%);
+      border: 1px solid var(--line-green);
+      border-radius: 18px;
+      padding: 16px;
+      text-align: center;
+      margin: 12px 0;
+    }
+
+    .summary-calorie-hero small {
+      display: block;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--green);
+      margin-bottom: 4px;
+    }
+
+    .summary-calorie-hero strong {
+      display: block;
+      font-size: 34px;
+      font-weight: 900;
+      color: #ffffff;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+    }
+
+    .summary-calorie-hero span {
+      display: block;
+      font-size: 12px;
+      color: #b7c6bb;
+      margin-top: 5px;
+    }
+
+    .summary-metrics-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .summary-metric-box {
+      background: #111412;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      padding: 10px 12px;
+    }
+
+    .summary-metric-box small {
+      display: block;
+      font-size: 11px;
+      color: var(--muted);
+      margin-bottom: 3px;
+    }
+
+    .summary-metric-box strong {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .summary-pr-list {
+      background: rgba(166, 242, 121, 0.08);
+      border: 1px solid var(--line-green);
+      border-radius: 14px;
+      padding: 11px 12px;
+      margin-bottom: 12px;
+    }
+
+    .summary-pr-list h4 {
+      margin: 0 0 6px;
+      font-size: 12px;
+      font-weight: 800;
+      color: var(--green);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .summary-pr-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      padding: 4px 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .summary-pr-item:first-of-type {
+      border-top: 0;
+      padding-top: 0;
+    }
+
     /* ===== CRONÔMETRO DE DESCANSO FLUTUANTE ===== */
     .rest-banner {
       position: fixed;
@@ -920,7 +1077,21 @@
 
     .rest-controls {
       display: flex;
+      align-items: center;
       gap: 6px;
+      flex-shrink: 0;
+    }
+
+    .small-btn.accent {
+      border-color: var(--green);
+      background: rgba(166, 242, 121, 0.16);
+      color: var(--green);
+      font-weight: 800;
+    }
+
+    .small-btn.accent:hover {
+      background: var(--green);
+      color: var(--green-dark);
     }
 
     /* ===== LISTAS DE GERENCIAMENTO ===== */
@@ -2105,15 +2276,16 @@
 
     <!-- CRONÔMETRO DE DESCANSO FLUTUANTE -->
     <div id="restTimerBanner" class="rest-banner hidden" role="timer" aria-live="polite">
-      <div>
-        <small id="restExerciseLabel" style="color:var(--muted);display:block;font-size:11px;font-weight:700;text-transform:uppercase">
+      <div style="min-width:0;flex:1">
+        <small id="restExerciseLabel" style="color:var(--muted);display:block;font-size:11px;font-weight:700;text-transform:uppercase;line-height:1.25">
           DESCANSO EM ANDAMENTO
         </small>
         <span class="rest-time" id="restTimerDisplay">01:00</span>
       </div>
       <div class="rest-controls">
-        <button type="button" class="small-btn" id="addRest15Btn">+15s</button>
-        <button type="button" class="small-btn danger" id="stopRestBtn">Parar</button>
+        <button type="button" class="small-btn" id="subRest15Btn" title="Reduzir 15 segundos">-15s</button>
+        <button type="button" class="small-btn" id="addRest15Btn" title="Adicionar 15 segundos">+15s</button>
+        <button type="button" class="small-btn accent" id="skipRestBtn" title="Pular descanso atual">Pular ⏭</button>
       </div>
     </div>
 
@@ -2179,6 +2351,23 @@
     <div class="modal-actions">
       <button type="button" class="btn-secondary" id="confirmModalCancel">Cancelar</button>
       <button type="button" class="btn-danger" id="confirmModalOk">Excluir</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DE RESUMO DO TREINO CONCLUÍDO -->
+<div id="workoutSummaryModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="summaryModalTitle">
+  <div class="modal-card" style="max-height:88vh;overflow-y:auto">
+    <div class="modal-head">
+      <div>
+        <div class="dashboard-kicker" style="margin-bottom:2px">Treino concluído</div>
+        <h3 class="section-title" id="summaryModalTitle" style="margin:0">Resumo da sessão</h3>
+      </div>
+      <button type="button" class="modal-close" id="summaryModalClose" aria-label="Fechar">✕</button>
+    </div>
+    <div id="workoutSummaryContent"></div>
+    <div class="modal-actions" style="margin-top:14px">
+      <button type="button" class="btn" id="summaryModalOk" style="width:100%">Concluir e voltar</button>
     </div>
   </div>
 </div>
@@ -2362,11 +2551,24 @@
     });
   }
 
+  function closeWorkoutSummaryModal() {
+    $('workoutSummaryModal')?.classList.add('hidden');
+  }
+
+  $('summaryModalClose')?.addEventListener('click', closeWorkoutSummaryModal);
+  $('summaryModalOk')?.addEventListener('click', closeWorkoutSummaryModal);
+  $('workoutSummaryModal')?.addEventListener('click', (e) => {
+    if (e.target === $('workoutSummaryModal')) closeWorkoutSummaryModal();
+  });
+
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
       if (!$('editModal').classList.contains('hidden')) closeEditModal();
       if (!$('confirmModal').classList.contains('hidden')) {
         $('confirmModalCancel').click();
+      }
+      if ($('workoutSummaryModal') && !$('workoutSummaryModal').classList.contains('hidden')) {
+        closeWorkoutSummaryModal();
       }
     }
   });
@@ -3233,6 +3435,206 @@
   let currentWorkoutItems = [];
   let exerciseMap = new Map();
   let workoutLogsMap = new Map();
+  let historicalExerciseRecordsMap = new Map();
+
+  function getLocalRecordsCache() {
+    if (!currentUser) return {};
+    try {
+      return JSON.parse(localStorage.getItem(`ya_exercise_records_${currentUser.id}`) || '{}');
+    } catch (_) {
+      return {};
+    }
+  }
+
+  function saveLocalRecordCache(exerciseId, recordObj) {
+    if (!currentUser || !exerciseId || !recordObj?.weight_kg) return;
+    try {
+      const cache = getLocalRecordsCache();
+      const prev = cache[exerciseId];
+      if (!prev || Number(recordObj.weight_kg) > Number(prev.weight_kg)) {
+        cache[exerciseId] = {
+          weight_kg: Number(recordObj.weight_kg),
+          reps: recordObj.reps ?? null,
+          updated_at: new Date().toISOString()
+        };
+        localStorage.setItem(`ya_exercise_records_${currentUser.id}`, JSON.stringify(cache));
+      }
+    } catch (_) {}
+  }
+
+  async function loadHistoricalExerciseRecords(exerciseIds) {
+    const uniqueIds = [...new Set((exerciseIds || []).filter(Boolean))];
+    const localCache = getLocalRecordsCache();
+
+    uniqueIds.forEach(exId => {
+      if (localCache[exId]?.weight_kg > 0) {
+        historicalExerciseRecordsMap.set(exId, {
+          weight_kg: Number(localCache[exId].weight_kg),
+          reps: localCache[exId].reps ?? null
+        });
+      }
+    });
+
+    if (!uniqueIds.length || !currentUser) return;
+
+    try {
+      let query = client
+        .from('workout_sets')
+        .select('exercise_id, weight_kg, repetitions, session_id')
+        .in('exercise_id', uniqueIds)
+        .gt('weight_kg', 0);
+
+      if (currentWorkoutSessionId) {
+        query = query.neq('session_id', currentWorkoutSessionId);
+      }
+
+      const { data, error } = await query;
+      if (error) throw error;
+
+      const bestFromDb = new Map();
+      (data || []).forEach(row => {
+        const w = Number(row.weight_kg) || 0;
+        const r = row.repetitions !== null && row.repetitions !== undefined ? Number(row.repetitions) : null;
+        if (w <= 0 || !row.exercise_id) return;
+        const cur = bestFromDb.get(row.exercise_id);
+        if (!cur || w > cur.weight_kg || (w === cur.weight_kg && (r || 0) > (cur.reps || 0))) {
+          bestFromDb.set(row.exercise_id, { weight_kg: w, reps: r });
+        }
+      });
+
+      uniqueIds.forEach(exId => {
+        const dbRec = bestFromDb.get(exId);
+        const cached = localCache[exId];
+        if (dbRec && (!cached || dbRec.weight_kg >= Number(cached.weight_kg || 0))) {
+          historicalExerciseRecordsMap.set(exId, dbRec);
+          saveLocalRecordCache(exId, dbRec);
+        } else if (cached?.weight_kg > 0) {
+          historicalExerciseRecordsMap.set(exId, {
+            weight_kg: Number(cached.weight_kg),
+            reps: cached.reps ?? null
+          });
+        }
+      });
+    } catch (err) {
+      console.warn('Não foi possível carregar recordes anteriores:', err.message);
+    }
+  }
+
+  function getExerciseRecordState(exerciseId) {
+    const prevBest = historicalExerciseRecordsMap.get(exerciseId) || null;
+    const prevWeight = Number(prevBest?.weight_kg) || 0;
+
+    let sessionMaxWeight = 0;
+    let sessionMaxReps = null;
+
+    currentWorkoutItems
+      .filter(it => it.exercise_id === exerciseId)
+      .forEach(it => {
+        const totalSets = Math.max(1, Number(it.sets) || 3);
+        for (let s = 1; s <= totalSets; s++) {
+          const log = workoutLogsMap.get(`${it.id}:${s}`);
+          const w = Number(log?.weight_kg) || 0;
+          const r = log?.reps_done !== null && log?.reps_done !== undefined ? Number(log.reps_done) : null;
+          if (w > sessionMaxWeight || (w > 0 && w === sessionMaxWeight && (r || 0) > (sessionMaxReps || 0))) {
+            sessionMaxWeight = w;
+            sessionMaxReps = r;
+          }
+        }
+      });
+
+    if (sessionMaxWeight > prevWeight) {
+      return {
+        hasRecord: true,
+        isNewRecord: true,
+        isFirstRecord: prevWeight === 0,
+        weight_kg: sessionMaxWeight,
+        reps: sessionMaxReps,
+        previous_weight_kg: prevWeight,
+        delta_kg: Number((sessionMaxWeight - prevWeight).toFixed(1))
+      };
+    }
+
+    if (prevWeight > 0) {
+      return {
+        hasRecord: true,
+        isNewRecord: false,
+        isFirstRecord: false,
+        weight_kg: prevWeight,
+        reps: prevBest?.reps ?? null,
+        previous_weight_kg: prevWeight,
+        delta_kg: 0
+      };
+    }
+
+    return {
+      hasRecord: false,
+      isNewRecord: false,
+      isFirstRecord: false,
+      weight_kg: 0,
+      reps: null,
+      previous_weight_kg: 0,
+      delta_kg: 0
+    };
+  }
+
+  function renderRecordPillHTML(rec) {
+    if (!rec.hasRecord) {
+      return `<span class="pr-pill empty">🏆 Recorde: —</span>`;
+    }
+    if (rec.isNewRecord && !rec.isFirstRecord) {
+      return `<span class="pr-pill new-record">🏆 Novo Recorde: ${numberBR(rec.weight_kg, 1)} kg (+${numberBR(rec.delta_kg, 1)} kg)</span>`;
+    }
+    if (rec.isNewRecord && rec.isFirstRecord) {
+      return `<span class="pr-pill new-record">🏆 Recorde: ${numberBR(rec.weight_kg, 1)} kg</span>`;
+    }
+    return `<span class="pr-pill">🏆 Recorde: ${numberBR(rec.weight_kg, 1)} kg</span>`;
+  }
+
+  function renderRecordDrawerHTML(rec) {
+    if (!rec.hasRecord) {
+      return `
+        <div>
+          <strong>🏆 Maior carga registrada</strong><br>
+          <small>Ainda sem carga registrada neste exercício — preencha a carga para criar seu recorde.</small>
+        </div>
+      `;
+    }
+    if (rec.isNewRecord && !rec.isFirstRecord) {
+      return `
+        <div>
+          <strong>🔥 NOVO RECORDE PESSOAL: ${numberBR(rec.weight_kg, 1)} kg (+${numberBR(rec.delta_kg, 1)} kg)</strong><br>
+          <small>Recorde anterior: ${numberBR(rec.previous_weight_kg, 1)} kg${rec.reps ? ` · ${rec.reps} reps nesta carga` : ''}</small>
+        </div>
+        <span class="tag">PR BATIDO!</span>
+      `;
+    }
+    if (rec.isNewRecord && rec.isFirstRecord) {
+      return `
+        <div>
+          <strong>🏆 Primeiro recorde definido: ${numberBR(rec.weight_kg, 1)} kg</strong><br>
+          <small>${rec.reps ? `${rec.reps} reps registradas` : 'Salvo como sua maior carga neste exercício'}</small>
+        </div>
+        <span class="tag">NOVO PR</span>
+      `;
+    }
+    return `
+      <div>
+        <strong>🏆 Última maior carga: ${numberBR(rec.weight_kg, 1)} kg</strong><br>
+        <small>${rec.reps ? `Feito com ${rec.reps} reps · ` : ''}Coloque mais de ${numberBR(rec.weight_kg, 1)} kg para bater o recorde</small>
+      </div>
+    `;
+  }
+
+  function refreshExerciseRecordUI(exerciseId) {
+    const rec = getExerciseRecordState(exerciseId);
+    document.querySelectorAll(`[data-pr-pill="${exerciseId}"]`).forEach(el => {
+      el.outerHTML = renderRecordPillHTML(rec).replace('<span class="pr-pill', `<span data-pr-pill="${exerciseId}" class="pr-pill`);
+    });
+    document.querySelectorAll(`[data-pr-box="${exerciseId}"]`).forEach(el => {
+      el.className = `pr-drawer-bar ${rec.isNewRecord ? 'new-record' : ''}`;
+      el.innerHTML = renderRecordDrawerHTML(rec);
+    });
+  }
   let currentWorkoutSessionId = null;
   let currentWorkoutSessionStartedAt = null;
   let currentWorkoutSessionDayId = null;
@@ -3285,6 +3687,24 @@
     }
   }
 
+  function getSessionStatsCache() {
+    if (!currentUser) return {};
+    try {
+      return JSON.parse(localStorage.getItem(`ya_workout_session_stats_${currentUser.id}`) || '{}');
+    } catch (_) {
+      return {};
+    }
+  }
+
+  function saveSessionStatsCache(sessionId, stats) {
+    if (!currentUser || !sessionId) return;
+    try {
+      const cache = getSessionStatsCache();
+      cache[sessionId] = stats;
+      localStorage.setItem(`ya_workout_session_stats_${currentUser.id}`, JSON.stringify(cache));
+    } catch (_) {}
+  }
+
   function renderRecentWorkoutSessions() {
     const container = $('recentWorkoutHistory');
     if (!container) return;
@@ -3293,15 +3713,20 @@
       container.innerHTML = '<div class="workout-empty">Nenhum treino concluído ainda. Quando finalizar seu primeiro treino, ele aparecerá aqui.</div>';
       return;
     }
+    const statsCache = getSessionStatsCache();
     container.innerHTML = recentWorkoutSessions.map(session => {
       const day = workoutDays.find(item => item.id === session.day_id);
       const plan = workoutPlans.find(item => item.id === session.plan_id);
       const date = session.finished_at ? new Date(session.finished_at) : new Date(session.started_at);
       const dateLabel = date.toLocaleString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' });
       const duration = Number(session.duration_seconds) || 0;
-      const durationLabel = duration ? `${Math.floor(duration / 60)} min` : 'Concluído';
+      const durationLabel = duration ? `${Math.max(1, Math.floor(duration / 60))} min` : 'Concluído';
+      const stats = statsCache[session.id];
+      const extraMeta = stats
+        ? ` · 🔥 ~${numberBR(stats.calories)} kcal${stats.volumeKg > 0 ? ` · 🏋 ${numberBR(stats.volumeKg)} kg` : ''}`
+        : '';
       return `<div class="history-row">
-        <div><strong>${escapeHTML(day?.name || 'Treino concluído')}</strong><small>${escapeHTML(plan?.name || 'Ficha')} · ${dateLabel}</small></div>
+        <div><strong>${escapeHTML(day?.name || 'Treino concluído')}</strong><small>${escapeHTML(plan?.name || 'Ficha')} · ${dateLabel}${extraMeta}</small></div>
         <span class="history-duration">${durationLabel}</span>
       </div>`;
     }).join('');
@@ -3756,7 +4181,10 @@
       exerciseMap = new Map((exerciseData || []).map(item => [item.id, item]));
     }
 
-    await loadWorkoutLogs(currentWorkoutItems.map(i => i.id));
+    await Promise.all([
+      loadWorkoutLogs(currentWorkoutItems.map(i => i.id)),
+      loadHistoricalExerciseRecords(exerciseIds)
+    ]);
 
     renderHeroWorkoutCards();
     renderBuilderExercisesList();
@@ -3853,7 +4281,10 @@
     try {
       await ensureWorkoutSession(dayId);
       const dayItems = currentWorkoutItems.filter(item => item.workout_day_id === dayId);
-      await loadWorkoutLogs(dayItems.map(item => item.id));
+      await Promise.all([
+        loadWorkoutLogs(dayItems.map(item => item.id)),
+        loadHistoricalExerciseRecords(dayItems.map(item => item.exercise_id))
+      ]);
       dayItems.forEach(item => {
         const totalSets = Math.max(1, Number(item.sets) || 3);
         const allDone = Array.from({ length: totalSets }, (_, index) => index + 1)
@@ -4001,6 +4432,7 @@
                 <button type="button" class="rest-trigger" data-rest="${item.rest_seconds}" data-ex-name="${escapeHTML(ex?.name || 'Exercício')}">
                   ⏱ ${item.rest_seconds}s descanso
                 </button>
+                ${renderRecordPillHTML(getExerciseRecordState(item.exercise_id)).replace('<span class="pr-pill', `<span data-pr-pill="${item.exercise_id}" class="pr-pill`)}
               </div>
               ${ex?.instructions ? `<div class="ex-tip">💡 ${escapeHTML(ex.instructions)}</div>` : ''}
             </div>
@@ -4025,6 +4457,11 @@
                   </span>
                 </div>
               </div>
+
+              ${(() => {
+                const rec = getExerciseRecordState(item.exercise_id);
+                return `<div class="pr-drawer-bar ${rec.isNewRecord ? 'new-record' : ''}" data-pr-box="${item.exercise_id}">${renderRecordDrawerHTML(rec)}</div>`;
+              })()}
 
               <div>
                 <div class="sets-table-head">
@@ -4200,6 +4637,13 @@
           completed_at: currentAfterSave ? currentAfterSave.completed_at : savedRow.completed_at
         });
 
+        if (savedRow.weight_kg && Number(savedRow.weight_kg) > 0) {
+          saveLocalRecordCache(item.exercise_id, {
+            weight_kg: Number(savedRow.weight_kg),
+            reps: savedRow.repetitions ?? null
+          });
+        }
+
         const freshStatusEl = $(`saveStatus-${workoutExerciseId}`);
         if (freshStatusEl) {
           freshStatusEl.style.color = 'var(--green)';
@@ -4219,19 +4663,226 @@
     return task;
   }
 
+  function calculateWorkoutSummaryStats(dayId, durationSeconds) {
+    const rawWeight = Number($('weight')?.value || currentProfileData?.current_weight || 0);
+    const usedDefaultWeight = !(rawWeight >= 30 && rawWeight <= 300);
+    const weightKg = usedDefaultWeight ? 75 : rawWeight;
+
+    const rawHeight = Number($('height')?.value || currentProfileData?.height_cm || 0);
+    const heightCm = (rawHeight >= 100 && rawHeight <= 230) ? rawHeight : 170;
+
+    const birthDate = $('birthDate')?.value || currentProfileData?.birth_date;
+    const age = calculateAge(birthDate);
+    const sex = $('nutritionSex')?.value || nutritionProfile?.sex || 'male';
+
+    const dayItems = currentWorkoutItems.filter(i => i.workout_day_id === dayId);
+    const compoundGroups = new Set(['Quadríceps', 'Posterior de coxa', 'Glúteos', 'Costas', 'Peito']);
+
+    let exercisesDone = 0;
+    let setsDone = 0;
+    let totalReps = 0;
+    let totalVolumeKg = 0;
+    let compoundSets = 0;
+    const brokenRecords = [];
+    const seenPrExercises = new Set();
+
+    dayItems.forEach(item => {
+      const ex = exerciseMap.get(item.exercise_id);
+      const isCompound = compoundGroups.has(ex?.muscle_group);
+      const totalSets = Math.max(1, Number(item.sets) || 3);
+      const targetNums = String(item.target_reps || '').match(/\d+/g);
+      const fallbackReps = targetNums?.length ? Number(targetNums[0]) : 10;
+
+      let itemSetsCount = 0;
+      for (let s = 1; s <= totalSets; s++) {
+        const log = workoutLogsMap.get(`${item.id}:${s}`);
+        const hasInput = (log?.weight_kg !== null && log?.weight_kg !== undefined && Number(log.weight_kg) > 0)
+          || (log?.reps_done !== null && log?.reps_done !== undefined && Number(log.reps_done) > 0);
+        if (log?.completed || hasInput) {
+          const reps = (log?.reps_done !== null && log?.reps_done !== undefined && Number(log.reps_done) > 0)
+            ? Number(log.reps_done)
+            : fallbackReps;
+          const load = Number(log?.weight_kg) || 0;
+          itemSetsCount += 1;
+          totalReps += reps;
+          totalVolumeKg += load * reps;
+          if (isCompound) compoundSets += 1;
+        }
+      }
+
+      if (itemSetsCount === 0 && completedSet.has(item.id)) {
+        itemSetsCount = totalSets;
+        totalReps += totalSets * fallbackReps;
+        if (isCompound) compoundSets += totalSets;
+      }
+
+      if (itemSetsCount > 0) {
+        exercisesDone += 1;
+        setsDone += itemSetsCount;
+      }
+
+      if (item.exercise_id && !seenPrExercises.has(item.exercise_id)) {
+        seenPrExercises.add(item.exercise_id);
+        const rec = getExerciseRecordState(item.exercise_id);
+        if (rec.isNewRecord && rec.weight_kg > 0) {
+          brokenRecords.push({
+            exerciseId: item.exercise_id,
+            name: ex?.name || 'Exercício',
+            weight_kg: rec.weight_kg,
+            previous_weight_kg: rec.previous_weight_kg,
+            delta_kg: rec.delta_kg,
+            isFirstRecord: rec.isFirstRecord,
+            reps: rec.reps
+          });
+        }
+      }
+    });
+
+    const effectiveMinutes = Math.max(1, durationSeconds / 60);
+
+    // Taxa metabólica de repouso individualizada (kcal/min) via Mifflin-St Jeor ou padrão VO2
+    let rmrPerMin = (3.5 * weightKg) / 200;
+    if (!usedDefaultWeight && rawHeight >= 100 && age) {
+      const bmr = (10 * weightKg) + (6.25 * heightCm) - (5 * age) + (sex === 'female' ? -161 : 5);
+      if (bmr > 800) rmrPerMin = bmr / 1440;
+    }
+
+    // Fator MET ajustado pela densidade de séries, carga relativa ao peso corporal e grupos musculares
+    let effectiveMET = setsDone > 0 ? 3.5 : 3.0;
+    if (setsDone > 0) {
+      const setsPerMin = Math.min(1.0, setsDone / effectiveMinutes);
+      const densityBonus = Math.min(1.3, setsPerMin * 2.2);
+      const avgLoadPerSet = totalReps > 0 ? (totalVolumeKg / totalReps) : 0;
+      const loadIntensityBonus = Math.min(1.0, (avgLoadPerSet / weightKg) * 1.4);
+      const compoundRatio = compoundSets / setsDone;
+      const compoundBonus = compoundRatio * 0.5;
+      effectiveMET = Math.min(6.8, 3.5 + densityBonus + loadIntensityBonus + compoundBonus);
+    }
+
+    // Trabalho mecânico adicional pela tonelagem deslocada ajustada pela estatura
+    const heightScale = heightCm / 175;
+    const mechanicalKcal = totalVolumeKg * 0.0012 * heightScale;
+
+    const calories = Math.max(
+      setsDone > 0 ? 10 : 5,
+      Math.round((rmrPerMin * effectiveMET * effectiveMinutes) + mechanicalKcal)
+    );
+
+    return {
+      calories,
+      durationSeconds,
+      durationMinutes: Math.max(1, Math.round(durationSeconds / 60)),
+      exercisesDone,
+      totalExercises: dayItems.length,
+      setsDone,
+      totalReps,
+      totalVolumeKg: Math.round(totalVolumeKg),
+      weightKg,
+      heightCm,
+      usedDefaultWeight,
+      brokenRecords
+    };
+  }
+
+  function showWorkoutSummaryModal(dayName, stats) {
+    $('summaryModalTitle').textContent = dayName || 'Resumo do treino';
+
+    const prSectionHTML = stats.brokenRecords.length
+      ? `
+        <div class="summary-pr-list">
+          <h4>🏆 Recordes atualizados (${stats.brokenRecords.length})</h4>
+          ${stats.brokenRecords.map(pr => `
+            <div class="summary-pr-item">
+              <span>${escapeHTML(pr.name)}</span>
+              <strong style="color:var(--green)">
+                ${pr.isFirstRecord
+                  ? `${numberBR(pr.weight_kg, 1)} kg (novo)`
+                  : `${numberBR(pr.previous_weight_kg, 1)} → ${numberBR(pr.weight_kg, 1)} kg (+${numberBR(pr.delta_kg, 1)} kg)`}
+              </strong>
+            </div>
+          `).join('')}
+        </div>
+      `
+      : '';
+
+    $('workoutSummaryContent').innerHTML = `
+      <div class="summary-calorie-hero">
+        <small>🔥 Gasto calórico estimado</small>
+        <strong>${numberBR(stats.calories)} kcal</strong>
+        <span>Baseado em ${numberBR(stats.weightKg, 1)} kg · ${numberBR(stats.heightCm)} cm · ${stats.durationMinutes} min</span>
+      </div>
+
+      <div class="summary-metrics-grid">
+        <div class="summary-metric-box">
+          <small>Exercícios feitos</small>
+          <strong>${stats.exercisesDone} / ${stats.totalExercises}</strong>
+        </div>
+        <div class="summary-metric-box">
+          <small>Séries e reps</small>
+          <strong>${stats.setsDone} séries · ${numberBR(stats.totalReps)} reps</strong>
+        </div>
+        <div class="summary-metric-box">
+          <small>Volume levantado</small>
+          <strong>${numberBR(stats.totalVolumeKg)} kg</strong>
+        </div>
+        <div class="summary-metric-box">
+          <small>Duração total</small>
+          <strong>${stats.durationMinutes} min</strong>
+        </div>
+      </div>
+
+      ${prSectionHTML}
+
+      <p class="section-desc" style="margin:0;font-size:11px">
+        ${stats.usedDefaultWeight
+          ? 'Estimativa calculada com peso padrão de 75 kg. Preencha seu peso e altura em Meu Perfil para maior precisão.'
+          : 'Estimativa fisiológica combinando seu peso, altura, tempo de treino, volume de carga e repetições realizadas.'}
+      </p>
+    `;
+
+    $('workoutSummaryModal').classList.remove('hidden');
+  }
+
   async function finishWorkoutSession() {
     if (!currentWorkoutSessionId) return;
+
+    await Promise.allSettled([...setSaveQueue.values()]);
+
+    const finishedSessionId = currentWorkoutSessionId;
+    const finishedDayId = currentWorkoutSessionDayId;
+    const dayObj = workoutDays.find(d => d.id === finishedDayId);
+
     const started = currentWorkoutSessionStartedAt
       ? new Date(currentWorkoutSessionStartedAt).getTime()
       : Date.now();
     const durationSeconds = Math.max(0, Math.floor((Date.now() - started) / 1000));
 
+    const summaryStats = calculateWorkoutSummaryStats(finishedDayId, durationSeconds);
+
     const { error } = await client
       .from('workout_sessions')
       .update({ finished_at: new Date().toISOString(), duration_seconds: durationSeconds })
-      .eq('id', currentWorkoutSessionId)
+      .eq('id', finishedSessionId)
       .eq('user_id', currentUser.id);
     if (error) throw error;
+
+    saveSessionStatsCache(finishedSessionId, {
+      calories: summaryStats.calories,
+      volumeKg: summaryStats.totalVolumeKg,
+      setsDone: summaryStats.setsDone,
+      exercisesDone: summaryStats.exercisesDone
+    });
+
+    summaryStats.brokenRecords.forEach(pr => {
+      historicalExerciseRecordsMap.set(pr.exerciseId, {
+        weight_kg: pr.weight_kg,
+        reps: pr.reps ?? null
+      });
+      saveLocalRecordCache(pr.exerciseId, {
+        weight_kg: pr.weight_kg,
+        reps: pr.reps ?? null
+      });
+    });
 
     currentWorkoutSessionId = null;
     currentWorkoutSessionStartedAt = null;
@@ -4239,9 +4890,9 @@
     workoutLogsMap.clear();
     completedSet.clear();
     stopRestTimer();
-    showMessage('addExerciseMessage', 'Treino finalizado e salvo no histórico!', 'success');
     closeWorkoutDetail();
     await loadRecentWorkoutSessions();
+    showWorkoutSummaryModal(dayObj?.name || 'Treino concluído', summaryStats);
   }
 
   $('detailExercisesList').addEventListener('click', async (e) => {
@@ -4345,6 +4996,8 @@
 
     if (field === 'weight') {
       updateLocalSetLog(weId, setNum, { weight_kg: val });
+      const item = currentWorkoutItems.find(entry => entry.id === weId);
+      if (item) refreshExerciseRecordUI(item.exercise_id);
     } else if (field === 'reps') {
       updateLocalSetLog(weId, setNum, { reps_done: val !== null ? Math.round(val) : null });
       const item = currentWorkoutItems.find(entry => entry.id === weId);
@@ -4431,8 +5084,23 @@
       clearInterval(restInterval);
       restInterval = null;
     }
+    restRemainingSeconds = 0;
     $('restTimerBanner').classList.add('hidden');
   }
+
+  function skipRestTimer() {
+    stopRestTimer();
+  }
+
+  $('subRest15Btn').addEventListener('click', () => {
+    if (!restInterval) return;
+    restRemainingSeconds -= 15;
+    if (restRemainingSeconds <= 0) {
+      skipRestTimer();
+      return;
+    }
+    updateRestDisplay();
+  });
 
   $('addRest15Btn').addEventListener('click', () => {
     if (restInterval) {
@@ -4441,7 +5109,7 @@
     }
   });
 
-  $('stopRestBtn').addEventListener('click', stopRestTimer);
+  $('skipRestBtn').addEventListener('click', skipRestTimer);
 
   // ==========================================
   // GERADOR PERSONALIZADO VIA EDGE FUNCTION (GEMINI AI)
