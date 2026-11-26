@@ -3412,23 +3412,44 @@
     const term = $('foodCatalogSearch').value;
     foodCatalogSearchTimer = setTimeout(() => searchFoodCatalog(term), 300);
   });
- $('foodCatalogResults').addEventListener('click', event => {
-  const button = event.target.closest('[data-catalog-food]');
-  if (!button) return;
+  function selectCatalogFoodById(id) {
+    if (!id) return false;
+    const food = (window._yaFoodCatalogResults || []).find(
+      item => String(item.id) === String(id)
+    );
+    if (!food) return false;
 
-  const food = (window._yaFoodCatalogResults || []).find(
-    item => String(item.id) === String(button.dataset.catalogFood)
-  );
-  if (!food) return;
+    selectedCatalogFood = food;
+    if ($('foodName')) $('foodName').value = food.name;
+    if ($('foodUnit')) $('foodUnit').value = 'g';
+    if ($('foodAmount')) $('foodAmount').value = 100;
+    if ($('foodGrams')) $('foodGrams').value = 100;
+    if ($('foodCatalogStatus')) {
+      $('foodCatalogStatus').textContent = `Selecionado: ${food.name}. Valores por 100 g; altere a quantidade para recalcular.`;
+    }
+    if ($('foodCatalogResults')) $('foodCatalogResults').innerHTML = '';
+    calculateCatalogNutrition();
+    if ($('foodGrams')) {
+      $('foodGrams').focus();
+    } else if ($('foodAmount')) {
+      $('foodAmount').focus();
+    }
+    return true;
+  }
 
-  selectedCatalogFood = food;
-  $('foodName').value = food.name;
-  $('foodAmount').value = 100;
-  $('foodGrams').value = 100;
-  $('foodCatalogStatus').textContent = `Selecionado: ${food.name}. Valores por 100 g; altere a quantidade para recalcular.`;
-  $('foodCatalogResults').innerHTML = '';
-  calculateCatalogNutrition();
-});
+  $('foodCatalogResults').addEventListener('pointerdown', event => {
+    const button = event.target.closest('[data-catalog-food]');
+    if (!button) return;
+    event.preventDefault();
+  });
+
+  $('foodCatalogResults').addEventListener('click', event => {
+    const button = event.target.closest('[data-catalog-food]');
+    if (!button) return;
+    event.preventDefault();
+    event.stopPropagation();
+    selectCatalogFoodById(button.getAttribute('data-catalog-food') || button.dataset.catalogFood);
+  });
   ['foodAmount','foodGrams'].forEach(id => $(id).addEventListener('input', calculateCatalogNutrition));
   $('foodName').addEventListener('input', () => { selectedCatalogFood = null; });
 
