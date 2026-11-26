@@ -3412,14 +3412,23 @@
     const term = $('foodCatalogSearch').value;
     foodCatalogSearchTimer = setTimeout(() => searchFoodCatalog(term), 300);
   });
-  $('foodCatalogResults').addEventListener('click', event => {
-    const button = event.target.closest('[data-catalog-food]'); if (!button) return;
-    const food = (window._yaFoodCatalogResults || []).find(item => item.id === button.dataset.catalogFood); if (!food) return;
-    selectedCatalogFood = food;
-    $('foodName').value = food.name; $('foodAmount').value = 100; $('foodGrams').value = 100;
-    $('foodCatalogStatus').textContent = `Selecionado: ${food.name}. Valores por 100 g; altere a quantidade para recalcular.`;
-    $('foodCatalogResults').innerHTML = ''; calculateCatalogNutrition();
-  });
+ $('foodCatalogResults').addEventListener('click', event => {
+  const button = event.target.closest('[data-catalog-food]');
+  if (!button) return;
+
+  const food = (window._yaFoodCatalogResults || []).find(
+    item => String(item.id) === String(button.dataset.catalogFood)
+  );
+  if (!food) return;
+
+  selectedCatalogFood = food;
+  $('foodName').value = food.name;
+  $('foodAmount').value = 100;
+  $('foodGrams').value = 100;
+  $('foodCatalogStatus').textContent = `Selecionado: ${food.name}. Valores por 100 g; altere a quantidade para recalcular.`;
+  $('foodCatalogResults').innerHTML = '';
+  calculateCatalogNutrition();
+});
   ['foodAmount','foodGrams'].forEach(id => $(id).addEventListener('input', calculateCatalogNutrition));
   $('foodName').addEventListener('input', () => { selectedCatalogFood = null; });
 
