@@ -3743,7 +3743,176 @@
     }
   });
 
-  function compressImageToBase64(file, maxWidth = 800, quality = 0.78) {
+  // ==========================================
+  // 5B. MOTOR NUTRICIONAL INSTANTÂNEO (TACO) + IA RÁPIDA
+  // ==========================================
+  const TACO_LOCAL_DB = [
+    { keys: ['arroz integral'], name: 'Arroz integral cozido', defaultGrams: 140, unitGrams: 45, unitLabel: 'colher de sopa', kcal: 124, p: 2.6, c: 25.8, f: 1.0 },
+    { keys: ['arroz'], name: 'Arroz branco cozido', defaultGrams: 150, unitGrams: 45, unitLabel: 'colher de sopa', kcal: 128, p: 2.5, c: 28.1, f: 0.2 },
+    { keys: ['feijao preto', 'feijão preto'], name: 'Feijão preto cozido', defaultGrams: 100, unitGrams: 80, unitLabel: 'concha', kcal: 77, p: 4.5, c: 14.0, f: 0.5 },
+    { keys: ['feijao', 'feijão'], name: 'Feijão carioca cozido', defaultGrams: 100, unitGrams: 80, unitLabel: 'concha', kcal: 76, p: 4.8, c: 13.6, f: 0.5 },
+    { keys: ['frango airfryer', 'frango na airfryer', 'frango feito na airfryer', 'frango feito na airfreye', 'frango em cubos', 'peito de frango', 'file de frango', 'filé de frango', 'frango grelhado', 'frango desfiado', 'frango'], name: 'Peito de frango grelhado / airfryer', defaultGrams: 150, unitGrams: 120, unitLabel: 'filé médio', kcal: 159, p: 32.0, c: 0.0, f: 2.5 },
+    { keys: ['sobrecoxa', 'coxa de frango'], name: 'Coxa/sobrecoxa de frango assada', defaultGrams: 140, unitGrams: 110, unitLabel: 'unidade', kcal: 215, p: 26.0, c: 0.0, f: 11.8 },
+    { keys: ['patinho', 'carne moida', 'carne moída'], name: 'Patinho moído refogado', defaultGrams: 130, unitGrams: 35, unitLabel: 'colher de sopa', kcal: 219, p: 35.9, c: 0.0, f: 7.3 },
+    { keys: ['carne', 'bife', 'alcatra', 'contrafile', 'contrafilé', 'acem', 'acém', 'musculo', 'músculo'], name: 'Carne bovina grelhada (bife)', defaultGrams: 140, unitGrams: 130, unitLabel: 'bife médio', kcal: 241, p: 32.4, c: 0.0, f: 11.6 },
+    { keys: ['tilapia', 'tilápia', 'peixe', 'merluza'], name: 'Filé de tilápia grelhado', defaultGrams: 140, unitGrams: 120, unitLabel: 'filé', kcal: 128, p: 26.0, c: 0.0, f: 2.7 },
+    { keys: ['salmao', 'salmão'], name: 'Salmão grelhado', defaultGrams: 130, unitGrams: 130, unitLabel: 'posta', kcal: 243, p: 26.1, c: 0.0, f: 14.5 },
+    { keys: ['atum'], name: 'Atum sólido em água', defaultGrams: 120, unitGrams: 120, unitLabel: 'lata', kcal: 116, p: 25.5, c: 0.0, f: 0.8 },
+    { keys: ['clara de ovo', 'claras'], name: 'Clara de ovo cozida', defaultGrams: 90, unitGrams: 33, unitLabel: 'clara', kcal: 52, p: 10.9, c: 0.7, f: 0.2 },
+    { keys: ['ovo mexido', 'ovos mexidos'], name: 'Ovos mexidos', defaultGrams: 100, unitGrams: 50, unitLabel: 'ovo', kcal: 155, p: 12.6, c: 1.2, f: 11.1 },
+    { keys: ['ovo frito', 'ovos fritos'], name: 'Ovo frito', defaultGrams: 100, unitGrams: 50, unitLabel: 'ovo', kcal: 196, p: 13.6, c: 0.8, f: 15.0 },
+    { keys: ['ovo cozido', 'ovos cozidos', 'ovo', 'ovos', 'omelete'], name: 'Ovo de galinha inteiro', defaultGrams: 100, unitGrams: 50, unitLabel: 'ovo (50g)', kcal: 146, p: 13.3, c: 0.6, f: 9.5 },
+    { keys: ['queijo minas', 'queijo branco'], name: 'Queijo minas frescal', defaultGrams: 40, unitGrams: 30, unitLabel: 'fatia', kcal: 264, p: 17.4, c: 3.2, f: 20.2 },
+    { keys: ['cottage'], name: 'Queijo cottage', defaultGrams: 60, unitGrams: 30, unitLabel: 'colher de sopa', kcal: 98, p: 11.1, c: 3.4, f: 4.3 },
+    { keys: ['queijo', 'mussarela', 'muçarela', 'quiejo', 'queijo prato'], name: 'Queijo muçarela', defaultGrams: 30, unitGrams: 20, unitLabel: 'fatia', kcal: 330, p: 22.6, c: 3.0, f: 25.2 },
+    { keys: ['requeijao light', 'requeijão light'], name: 'Requeijão cremoso light', defaultGrams: 30, unitGrams: 25, unitLabel: 'colher de sopa', kcal: 180, p: 9.6, c: 3.2, f: 14.0 },
+    { keys: ['requeijao', 'requeijão'], name: 'Requeijão cremoso', defaultGrams: 30, unitGrams: 25, unitLabel: 'colher de sopa', kcal: 257, p: 9.6, c: 2.4, f: 23.4 },
+    { keys: ['batata doce'], name: 'Batata-doce cozida', defaultGrams: 130, unitGrams: 130, unitLabel: 'unidade média', kcal: 77, p: 0.6, c: 18.4, f: 0.1 },
+    { keys: ['batata frita'], name: 'Batata frita', defaultGrams: 100, unitGrams: 100, unitLabel: 'porção', kcal: 267, p: 5.0, c: 35.6, f: 13.1 },
+    { keys: ['batata cozida', 'batata inglesa', 'batata na airfryer', 'pure de batata', 'purê de batata', 'batata'], name: 'Batata inglesa cozida', defaultGrams: 120, unitGrams: 110, unitLabel: 'unidade média', kcal: 52, p: 1.2, c: 11.9, f: 0.1 },
+    { keys: ['mandioca', 'aipim', 'macaxeira'], name: 'Mandioca cozida', defaultGrams: 120, unitGrams: 100, unitLabel: 'pedaço', kcal: 125, p: 0.6, c: 30.1, f: 0.3 },
+    { keys: ['macarrao', 'macarrão', 'espaguete', 'massa'], name: 'Macarrão cozido', defaultGrams: 160, unitGrams: 110, unitLabel: 'pegador', kcal: 125, p: 3.8, c: 26.2, f: 0.5 },
+    { keys: ['pao frances', 'pão francês', 'pao de sal', 'pão de sal'], name: 'Pão francês', defaultGrams: 50, unitGrams: 50, unitLabel: 'unidade (50g)', kcal: 300, p: 8.0, c: 58.6, f: 3.1 },
+    { keys: ['pao integral', 'pão integral'], name: 'Pão de forma integral', defaultGrams: 50, unitGrams: 25, unitLabel: 'fatia', kcal: 253, p: 9.4, c: 49.9, f: 3.7 },
+    { keys: ['pao de forma', 'pão de forma', 'pao', 'pão'], name: 'Pão de forma tradicional', defaultGrams: 50, unitGrams: 25, unitLabel: 'fatia', kcal: 269, p: 8.3, c: 50.6, f: 3.5 },
+    { keys: ['tapioca'], name: 'Goma de tapioca hidratada', defaultGrams: 80, unitGrams: 20, unitLabel: 'colher de sopa', kcal: 240, p: 0.1, c: 59.6, f: 0.0 },
+    { keys: ['cuscuz'], name: 'Cuscuz de milho cozido', defaultGrams: 130, unitGrams: 130, unitLabel: 'porção média', kcal: 113, p: 2.2, c: 25.3, f: 0.7 },
+    { keys: ['aveia'], name: 'Aveia em flocos', defaultGrams: 30, unitGrams: 15, unitLabel: 'colher de sopa', kcal: 394, p: 13.9, c: 66.6, f: 8.5 },
+    { keys: ['granola'], name: 'Granola tradicional', defaultGrams: 35, unitGrams: 20, unitLabel: 'colher de sopa', kcal: 421, p: 9.2, c: 68.0, f: 12.5 },
+    { keys: ['banana'], name: 'Banana prata / nanica', defaultGrams: 90, unitGrams: 90, unitLabel: 'unidade média', kcal: 98, p: 1.3, c: 26.0, f: 0.1 },
+    { keys: ['maca', 'maçã'], name: 'Maçã fresca', defaultGrams: 130, unitGrams: 130, unitLabel: 'unidade média', kcal: 56, p: 0.3, c: 15.2, f: 0.0 },
+    { keys: ['mamao', 'mamão'], name: 'Mamão papaia / formosa', defaultGrams: 150, unitGrams: 150, unitLabel: 'fatia', kcal: 40, p: 0.5, c: 10.4, f: 0.1 },
+    { keys: ['morango'], name: 'Morango fresco', defaultGrams: 100, unitGrams: 15, unitLabel: 'unidade', kcal: 30, p: 0.9, c: 6.8, f: 0.3 },
+    { keys: ['abacate'], name: 'Abacate fresco', defaultGrams: 80, unitGrams: 40, unitLabel: 'colher de sopa', kcal: 96, p: 1.2, c: 6.0, f: 8.4 },
+    { keys: ['whey'], name: 'Whey Protein concentrado', defaultGrams: 30, unitGrams: 30, unitLabel: 'scoop (30g)', kcal: 400, p: 78.0, c: 10.0, f: 5.5 },
+    { keys: ['leite desnatado'], name: 'Leite de vaca desnatado', defaultGrams: 200, unitGrams: 200, unitLabel: 'copo (200ml)', kcal: 35, p: 3.4, c: 4.9, f: 0.2 },
+    { keys: ['leite'], name: 'Leite de vaca integral', defaultGrams: 200, unitGrams: 200, unitLabel: 'copo (200ml)', kcal: 61, p: 3.2, c: 4.7, f: 3.3 },
+    { keys: ['iogurte grego'], name: 'Iogurte grego tradicional', defaultGrams: 100, unitGrams: 100, unitLabel: 'pote (100g)', kcal: 115, p: 5.4, c: 11.2, f: 5.4 },
+    { keys: ['iogurte'], name: 'Iogurte natural integral', defaultGrams: 170, unitGrams: 170, unitLabel: 'pote (170g)', kcal: 61, p: 3.5, c: 4.7, f: 3.3 },
+    { keys: ['pasta de amendoim', 'amendoim'], name: 'Pasta de amendoim integral', defaultGrams: 20, unitGrams: 15, unitLabel: 'colher de sopa', kcal: 588, p: 25.0, c: 20.0, f: 50.0 },
+    { keys: ['azeite'], name: 'Azeite de oliva extra virgem', defaultGrams: 8, unitGrams: 8, unitLabel: 'colher de sopa', kcal: 884, p: 0.0, c: 0.0, f: 100.0 },
+    { keys: ['manteiga'], name: 'Manteiga com sal', defaultGrams: 10, unitGrams: 10, unitLabel: 'ponta de faca', kcal: 726, p: 0.4, c: 0.1, f: 82.4 },
+    { keys: ['margarina'], name: 'Margarina', defaultGrams: 10, unitGrams: 10, unitLabel: 'ponta de faca', kcal: 596, p: 0.0, c: 0.0, f: 67.0 },
+    { keys: ['salada', 'alface', 'tomate', 'pepino', 'rucula', 'rúcula'], name: 'Salada verde com tomate', defaultGrams: 80, unitGrams: 80, unitLabel: 'prato de sobremesa', kcal: 16, p: 1.0, c: 3.1, f: 0.2 },
+    { keys: ['brocolis', 'brócolis'], name: 'Brócolis cozido', defaultGrams: 80, unitGrams: 40, unitLabel: 'ramo', kcal: 25, p: 2.1, c: 4.4, f: 0.5 },
+    { keys: ['cenoura'], name: 'Cenoura cozida / ralada', defaultGrams: 60, unitGrams: 30, unitLabel: 'colher de sopa', kcal: 30, p: 0.8, c: 6.7, f: 0.2 },
+    { keys: ['abobrinha'], name: 'Abobrinha refogada', defaultGrams: 80, unitGrams: 40, unitLabel: 'colher de sopa', kcal: 19, p: 1.1, c: 3.5, f: 0.2 },
+    { keys: ['legumes'], name: 'Legumes cozidos variados', defaultGrams: 100, unitGrams: 50, unitLabel: 'colher de servir', kcal: 38, p: 1.4, c: 8.1, f: 0.3 },
+    { keys: ['cafe sem acucar', 'café sem açúcar', 'cafe preto', 'café preto', 'cafe', 'café'], name: 'Café coado sem açúcar', defaultGrams: 150, unitGrams: 150, unitLabel: 'xícara', kcal: 2, p: 0.1, c: 0.3, f: 0.0 },
+    { keys: ['suco de laranja', 'suco'], name: 'Suco de laranja natural', defaultGrams: 240, unitGrams: 240, unitLabel: 'copo (240ml)', kcal: 45, p: 0.7, c: 10.4, f: 0.1 },
+    { keys: ['refrigerante zero', 'coca zero'], name: 'Refrigerante zero açúcar', defaultGrams: 350, unitGrams: 350, unitLabel: 'lata', kcal: 0, p: 0.0, c: 0.0, f: 0.0 },
+    { keys: ['refrigerante', 'coca'], name: 'Refrigerante comum', defaultGrams: 350, unitGrams: 350, unitLabel: 'lata', kcal: 42, p: 0.0, c: 10.5, f: 0.0 },
+    { keys: ['chocolate'], name: 'Chocolate ao leite / meio amargo', defaultGrams: 25, unitGrams: 25, unitLabel: 'fileira (25g)', kcal: 540, p: 6.5, c: 56.0, f: 32.0 },
+    { keys: ['bolo'], name: 'Bolo simples caseiro', defaultGrams: 70, unitGrams: 70, unitLabel: 'fatia média', kcal: 325, p: 5.5, c: 52.0, f: 10.5 },
+    { keys: ['pizza'], name: 'Pizza salgada', defaultGrams: 110, unitGrams: 110, unitLabel: 'fatia', kcal: 266, p: 11.4, c: 28.0, f: 11.8 },
+    { keys: ['hamburguer', 'hambúrguer', 'x-burguer', 'lanche'], name: 'Hambúrguer artesanal', defaultGrams: 220, unitGrams: 220, unitLabel: 'unidade', kcal: 255, p: 15.5, c: 22.0, f: 11.5 }
+  ];
+
+  function analyzeFoodLocally(rawDescription, category) {
+    const clean = String(rawDescription || '')
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/\b(comi\s*um|comi\s*uma|comi|comimum|prato\s*de|feito\s*na|feita\s*na|cortado\s*em\s*cubos|em\s*cubos|grelhado|cozido|cozida|refogado|assado|assada|porcao\s*de|porção\s*de)\b/gi, ' ');
+
+    const segments = clean
+      .split(/[,;+\n]|\be\b|\bcom\b|\bmais\b/g)
+      .map(s => s.trim())
+      .filter(Boolean);
+
+    const foundItems = [];
+    const usedNames = new Set();
+
+    for (const seg of segments) {
+      let matched = null;
+      for (const entry of TACO_LOCAL_DB) {
+        if (entry.keys.some(k => {
+          const normK = k.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+          return seg.includes(normK);
+        })) {
+          matched = entry;
+          break;
+        }
+      }
+      if (!matched || usedNames.has(matched.name)) continue;
+      usedNames.add(matched.name);
+
+      let grams = matched.defaultGrams;
+      let assumption = `Porção padrão estimada (${matched.defaultGrams}g · TACO)`;
+
+      const gramMatch = seg.match(/(\d+(?:[.,]\d+)?)\s*(g|gr|gramas|ml)\b/);
+      const unitMatch = seg.match(/\b(\d+(?:[.,]\d+)?)\s*(ovos?|fatias?|colheres?|colher|conchas?|concha|files?|filés?|unidades?|scoops?|copos?|xicaras?|xícaras?|pedacos?|pedaços?|latas?|potes?)\b/);
+      const leadingNumMatch = seg.match(/^(\d+(?:[.,]\d+)?)\b/);
+
+      if (gramMatch) {
+        grams = Math.max(1, Math.round(parseFloat(gramMatch[1].replace(',', '.'))));
+        assumption = `Peso informado (${grams}g · TACO)`;
+      } else if (unitMatch) {
+        const qty = parseFloat(unitMatch[1].replace(',', '.'));
+        grams = Math.max(5, Math.round(qty * matched.unitGrams));
+        assumption = `${qty} ${matched.unitLabel}${qty > 1 ? 's' : ''} (~${grams}g · TACO)`;
+      } else if (leadingNumMatch) {
+        const qty = parseFloat(leadingNumMatch[1].replace(',', '.'));
+        if (qty >= 15) {
+          grams = Math.round(qty);
+          assumption = `Quantidade estimada (${grams}g · TACO)`;
+        } else if (qty > 0) {
+          grams = Math.round(qty * matched.unitGrams);
+          assumption = `${qty}x ${matched.unitLabel} (~${grams}g · TACO)`;
+        }
+      }
+
+      const factor = grams / 100;
+      foundItems.push({
+        name: matched.name,
+        grams,
+        calories: Math.round(matched.kcal * factor),
+        protein_g: Number((matched.p * factor).toFixed(1)),
+        carbs_g: Number((matched.c * factor).toFixed(1)),
+        fat_g: Number((matched.f * factor).toFixed(1)),
+        confidence: 'medium',
+        assumption,
+        selected: true
+      });
+    }
+
+    if (!foundItems.length) return null;
+
+    const totalKcal = foundItems.reduce((s, i) => s + i.calories, 0);
+    const totalProt = foundItems.reduce((s, i) => s + i.protein_g, 0);
+    const totalCarb = foundItems.reduce((s, i) => s + i.carbs_g, 0);
+    const totalFat = foundItems.reduce((s, i) => s + i.fat_g, 0);
+
+    const badges = [];
+    if (totalProt >= 25) badges.push({ label: 'Alta proteína', color: '#22c55e' });
+    else if (totalProt >= 12) badges.push({ label: 'Boa proteína', color: '#a6f279' });
+    if (totalCarb >= 35 && totalProt >= 20) badges.push({ label: 'Pré/Pós-treino', color: '#60a5fa' });
+    if (totalFat <= 15 && totalKcal > 150) badges.push({ label: 'Baixa gordura', color: '#34d399' });
+    if (foundItems.length >= 3) badges.push({ label: 'Refeição completa', color: '#fbbf24' });
+    if (!badges.length) badges.push({ label: 'Cálculo TACO', color: '#a6f279' });
+
+    const score = Math.min(96, Math.max(58, Math.round(68 + Math.min(20, totalProt * 0.55) + (foundItems.length >= 3 ? 6 : 0))));
+    const titleParts = foundItems.slice(0, 3).map(i => i.name.split(' ')[0]);
+    const title = foundItems.length === 1
+      ? foundItems[0].name
+      : `${titleParts.join(', ')}${foundItems.length > 3 ? ` +${foundItems.length - 3}` : ''}`;
+
+    return {
+      analysis: {
+        title,
+        category: category || selectedAICategory,
+        note: `Cálculo instantâneo pela tabela TACO (${Math.round(totalProt)}g de proteína · ${Math.round(totalKcal)} kcal). Ajuste as gramas abaixo se precisar.`,
+        nutrition_score: {
+          score,
+          label: totalProt >= 25 ? 'Rico em proteínas' : 'Equilibrado'
+        },
+        badges
+      },
+      items: foundItems
+    };
+  }
+
+  function compressImageToBase64(file, maxWidth = 640, quality = 0.72) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -3770,80 +3939,72 @@
     });
   }
 
-  async function handleSelectedFoodFile(file) {
-    if (!file) return;
-    try {
-      showMessage('aiFoodMessage', 'Preparando imagem...');
-      const compressed = await compressImageToBase64(file);
-      pendingFoodPhoto = {
-        dataUrl: compressed.dataUrl,
-        base64: compressed.base64,
-        mimeType: compressed.mimeType
-      };
-      $('aiFoodPhotoImg').src = compressed.dataUrl;
-      $('aiFoodPhotoPreviewBox').classList.remove('hidden');
-      showMessage('aiFoodMessage', 'Imagem pronta! Clique em "Analisar prato com IA".', 'success');
-    } catch (error) {
-      showMessage('aiFoodMessage', error.message, 'error');
+  async function invokeNutritionEdgeWithTimeout(payload, timeoutMs = 12000) {
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('Tempo limite de 12s atingido na conexão com a IA.')), timeoutMs)
+    );
+    const invokePromise = client.functions.invoke('nutrition-analyze', { body: payload });
+    const { data, error } = await Promise.race([invokePromise, timeoutPromise]);
+    if (error) {
+      let detail = error.message || '';
+      try {
+        const errBody = await error.context?.json();
+        if (errBody?.error || errBody?.message) detail = errBody.error || errBody.message;
+      } catch (_) {}
+      if (/failed to send a request/i.test(detail)) {
+        detail = 'A Edge Function demorou ou oscilou no 5G.';
+      }
+      throw new Error(detail);
     }
+    return data;
   }
 
-  $('takeFoodPhotoBtn').addEventListener('click', () => {
-    $('aiFoodPhotoInput').click();
-  });
-
-  $('pickFoodGalleryBtn')?.addEventListener('click', () => {
-    $('aiFoodGalleryInput').click();
-  });
-
-  $('aiFoodPhotoInput').addEventListener('change', (event) => handleSelectedFoodFile(event.target.files?.[0]));
-  $('aiFoodGalleryInput')?.addEventListener('change', (event) => handleSelectedFoodFile(event.target.files?.[0]));
-
-  $('removeFoodPhotoBtn').addEventListener('click', () => {
-    pendingFoodPhoto = null;
-    $('aiFoodPhotoInput').value = '';
-    if ($('aiFoodGalleryInput')) $('aiFoodGalleryInput').value = '';
-    $('aiFoodPhotoImg').src = '';
-    $('aiFoodPhotoPreviewBox').classList.add('hidden');
-    showMessage('aiFoodMessage', '');
-  });
-
-  $('analyzeFoodButton').addEventListener('click', async () => {
+  async function runFoodAnalysis({ forceCloud = false } = {}) {
     if (!currentUser) return;
     const description = $('aiFoodDescription').value.trim();
 
-    if (!pendingFoodPhoto && description.length < 4) {
+    if (!pendingFoodPhoto && description.length < 3) {
       showMessage('aiFoodMessage', 'Bata uma foto do prato, escolha da galeria ou descreva os alimentos.', 'error');
       return;
     }
 
     const button = $('analyzeFoodButton');
     button.disabled = true;
-    button.textContent = pendingFoodPhoto ? 'Analisando foto...' : 'Analisando...';
+    button.textContent = pendingFoodPhoto ? 'Analisando foto...' : 'Calculando...';
     pendingAIFoods = [];
     pendingAIAnalysis = null;
     showAIAdjustPanel = false;
     renderAIFoodPreview();
-    showMessage('aiFoodMessage', 'A IA está identificando ingredientes, macros e o Nutrition Score...');
 
     try {
-      const { data, error } = await client.functions.invoke('nutrition-analyze', {
-        body: {
-          description,
-          category: selectedAICategory,
-          imageBase64: pendingFoodPhoto?.base64 || null,
-          mimeType: pendingFoodPhoto?.mimeType || null
+      // 1. Se for apenas texto (sem foto) e não forçou nuvem, calcula na hora (0,05s) pela tabela TACO!
+      if (!pendingFoodPhoto && !forceCloud) {
+        const localResult = analyzeFoodLocally(description, selectedAICategory);
+        if (localResult && localResult.items.length > 0) {
+          pendingAIAnalysis = localResult.analysis;
+          pendingAIFoods = localResult.items;
+          renderAIFoodPreview();
+          showMessage('aiFoodMessage', 'Prato calculado instantaneamente pela tabela TACO!', 'success');
+          $('aiFoodPreview').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          return;
         }
-      });
-      if (error) {
-        let detail = error.message;
-        try {
-          const errBody = await error.context?.json();
-          if (errBody?.error || errBody?.message) detail = errBody.error || errBody.message;
-        } catch (_) {}
-        throw new Error(detail);
       }
-      if (!data?.items?.length) throw new Error(data?.error || 'A IA não identificou alimentos na imagem/descrição.');
+
+      // 2. Análise por foto (ou alimento complexo) via Edge Function rápida (máx 12s)
+      showMessage('aiFoodMessage', pendingFoodPhoto
+        ? 'Lendo o prato pela foto...'
+        : 'Consultando IA nutricional...');
+
+      const data = await invokeNutritionEdgeWithTimeout({
+        description,
+        category: selectedAICategory,
+        imageBase64: pendingFoodPhoto?.base64 || null,
+        mimeType: pendingFoodPhoto?.mimeType || null
+      }, 12000);
+
+      if (!data?.items?.length) {
+        throw new Error(data?.error || 'A IA não identificou alimentos na imagem/descrição.');
+      }
 
       pendingAIAnalysis = {
         title: data.title || 'Refeição analisada',
@@ -3870,12 +4031,65 @@
       $('aiFoodPreview').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     } catch (error) {
       console.error('Erro na análise nutricional:', error);
+      // Plano B automático: se a nuvem falhar/demorar e houver descrição digitada, calcula localmente na hora!
+      if (description.length >= 3) {
+        const fallbackLocal = analyzeFoodLocally(description, selectedAICategory);
+        if (fallbackLocal && fallbackLocal.items.length > 0) {
+          pendingAIAnalysis = fallbackLocal.analysis;
+          pendingAIFoods = fallbackLocal.items;
+          renderAIFoodPreview();
+          showMessage('aiFoodMessage', 'IA instável agora — calculado na hora pela tabela TACO!', 'success');
+          $('aiFoodPreview').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+          return;
+        }
+      }
       showMessage('aiFoodMessage', 'Não foi possível analisar: ' + error.message, 'error');
     } finally {
       button.disabled = false;
       button.textContent = '✨ Analisar prato com IA';
     }
+  }
+
+  async function handleSelectedFoodFile(file) {
+    if (!file) return;
+    try {
+      showMessage('aiFoodMessage', 'Preparando foto...');
+      const compressed = await compressImageToBase64(file, 640, 0.72);
+      pendingFoodPhoto = {
+        dataUrl: compressed.dataUrl,
+        base64: compressed.base64,
+        mimeType: compressed.mimeType
+      };
+      $('aiFoodPhotoImg').src = compressed.dataUrl;
+      $('aiFoodPhotoPreviewBox').classList.remove('hidden');
+      // Disparo automático assim que a foto é tirada ou escolhida da galeria
+      await runFoodAnalysis();
+    } catch (error) {
+      showMessage('aiFoodMessage', error.message, 'error');
+    }
+  }
+
+  $('takeFoodPhotoBtn').addEventListener('click', () => {
+    $('aiFoodPhotoInput').click();
   });
+
+  $('pickFoodGalleryBtn')?.addEventListener('click', () => {
+    $('aiFoodGalleryInput').click();
+  });
+
+  $('aiFoodPhotoInput').addEventListener('change', (event) => handleSelectedFoodFile(event.target.files?.[0]));
+  $('aiFoodGalleryInput')?.addEventListener('change', (event) => handleSelectedFoodFile(event.target.files?.[0]));
+
+  $('removeFoodPhotoBtn').addEventListener('click', () => {
+    pendingFoodPhoto = null;
+    $('aiFoodPhotoInput').value = '';
+    if ($('aiFoodGalleryInput')) $('aiFoodGalleryInput').value = '';
+    $('aiFoodPhotoImg').src = '';
+    $('aiFoodPhotoPreviewBox').classList.add('hidden');
+    showMessage('aiFoodMessage', '');
+  });
+
+  $('analyzeFoodButton').addEventListener('click', () => runFoodAnalysis());
 
   // ==========================================
   // 6. DADOS DE TREINOS E REGISTRO DE SÉRIES
