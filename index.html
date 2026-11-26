@@ -1565,6 +1565,213 @@
         gap: 4px;
       }
     }
+
+    /* ===== CARD GAMIFICADO DE ANÁLISE NUTRICIONAL (ESTILO BITEPAL) ===== */
+    .ai-cat-pills {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 6px;
+      margin: 10px 0 12px;
+    }
+    .ai-cat-pill {
+      border: 1px solid var(--line);
+      background: #101412;
+      color: var(--muted);
+      border-radius: 12px;
+      padding: 8px 4px;
+      font: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s ease;
+    }
+    .ai-cat-pill.active {
+      background: rgba(166, 242, 121, 0.16);
+      border-color: var(--green);
+      color: var(--green);
+    }
+    .bite-result-card {
+      margin-top: 14px;
+      background: linear-gradient(165deg, #16231a 0%, #101412 100%);
+      border: 1px solid var(--green);
+      border-radius: 22px;
+      padding: 16px;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45);
+      animation: bitePopIn 0.24s ease-out;
+    }
+    @keyframes bitePopIn {
+      from { opacity: 0; transform: translateY(8px) scale(0.98); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    .bite-header {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .bite-thumb {
+      width: 62px;
+      height: 62px;
+      border-radius: 15px;
+      object-fit: cover;
+      border: 1px solid var(--line-green);
+      flex-shrink: 0;
+    }
+    .bite-title-wrap h3 {
+      margin: 3px 0 0;
+      font-size: 18px;
+      font-weight: 900;
+      line-height: 1.2;
+      color: #ffffff;
+    }
+    .bite-ai-bubble {
+      background: rgba(166, 242, 121, 0.08);
+      border: 1px solid rgba(166, 242, 121, 0.24);
+      border-radius: 14px;
+      padding: 10px 12px;
+      font-size: 12.5px;
+      color: #d9e7dc;
+      line-height: 1.45;
+      margin-bottom: 14px;
+    }
+    .bite-kcal-banner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #0d120f;
+      border: 1px solid #243328;
+      border-radius: 16px;
+      padding: 12px 14px;
+      margin-bottom: 10px;
+    }
+    .bite-kcal-banner small {
+      display: block;
+      font-size: 11px;
+      color: var(--muted);
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+    .bite-kcal-banner strong {
+      font-size: 28px;
+      font-weight: 900;
+      color: var(--green);
+      letter-spacing: -0.03em;
+    }
+    .bite-macros-row {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+    .bite-macro-box {
+      background: #0f1511;
+      border: 1px solid #222e25;
+      border-radius: 13px;
+      padding: 9px 8px;
+      text-align: center;
+    }
+    .bite-macro-box strong {
+      display: block;
+      font-size: 15px;
+      font-weight: 800;
+      color: #fff;
+    }
+    .bite-macro-box span {
+      font-size: 11px;
+      color: var(--muted);
+    }
+    .bite-section-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .bite-ing-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-bottom: 14px;
+    }
+    .bite-ing-pill {
+      border: 1px solid var(--line-green);
+      background: rgba(166, 242, 121, 0.14);
+      color: #eaf7ec;
+      border-radius: 999px;
+      padding: 6px 11px;
+      font: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.15s ease;
+    }
+    .bite-ing-pill.unselected {
+      background: #101311;
+      border-color: var(--line);
+      color: var(--muted);
+      text-decoration: line-through;
+      opacity: 0.65;
+    }
+    .bite-ing-add {
+      border: 1px dashed var(--green);
+      background: transparent;
+      color: var(--green);
+      border-radius: 999px;
+      padding: 6px 11px;
+      font: inherit;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .bite-score-box {
+      background: #0d120f;
+      border: 1px solid #243328;
+      border-radius: 14px;
+      padding: 11px 12px;
+      margin-bottom: 12px;
+    }
+    .bite-score-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      font-weight: 800;
+      margin-bottom: 7px;
+    }
+    .bite-score-track {
+      width: 100%;
+      height: 8px;
+      background: #1c241e;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .bite-score-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.35s ease;
+    }
+    .bite-badges-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+    .bite-badge-chip {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid currentColor;
+      background: rgba(255, 255, 255, 0.04);
+    }
   </style>
 </head>
 <body>
@@ -2061,19 +2268,29 @@
             <h2 class="section-title" style="margin:0">✨ Registrar com IA</h2>
             <span class="tag">FOTO OU TEXTO</span>
           </div>
-          <p class="section-desc">Bata uma foto do prato ou descreva o que comeu. A IA estima os nutrientes e você revisa antes de salvar.</p>
+          <p class="section-desc">Escolha o tipo, bata uma foto do prato ou pegue da galeria e veja a análise completa na hora.</p>
           
-          <label for="aiFoodMealType">Refeição</label>
+          <label for="aiFoodMealType">Salvar no diário em</label>
           <select id="aiFoodMealType">
             <option value="breakfast">Café da manhã</option>
-            <option value="lunch">Almoço</option>
+            <option value="lunch" selected>Almoço</option>
             <option value="dinner">Jantar</option>
             <option value="snack">Lanche</option>
           </select>
 
+          <label>Categoria rápida para a IA</label>
+          <div class="ai-cat-pills" id="aiCategoryPills">
+            <button type="button" class="ai-cat-pill active" data-ai-cat="Refeição">🍽️ Refeição</button>
+            <button type="button" class="ai-cat-pill" data-ai-cat="Lanche">🥪 Lanche</button>
+            <button type="button" class="ai-cat-pill" data-ai-cat="Bebida">🥤 Bebida</button>
+            <button type="button" class="ai-cat-pill" data-ai-cat="Sobremesa">🍰 Doce</button>
+          </div>
+
           <input id="aiFoodPhotoInput" type="file" accept="image/*" capture="environment" class="hidden">
+          <input id="aiFoodGalleryInput" type="file" accept="image/*" class="hidden">
           <div class="photo-capture-row">
-            <button type="button" class="btn-secondary" id="takeFoodPhotoBtn" style="flex:1">📷 Bater foto do prato</button>
+            <button type="button" class="btn-secondary" id="takeFoodPhotoBtn" style="flex:1">📷 Tirar foto</button>
+            <button type="button" class="btn-secondary" id="pickFoodGalleryBtn" style="flex:1">🖼️ Galeria</button>
           </div>
           <div id="aiFoodPhotoPreviewBox" class="photo-preview-box hidden">
             <img id="aiFoodPhotoImg" alt="Prévia do prato">
@@ -2083,7 +2300,7 @@
           <label for="aiFoodDescription">Descrição ou observação (opcional com foto)</label>
           <textarea id="aiFoodDescription" rows="2" placeholder="Ex.: 150g de frango grelhado, arroz e feijão (ou deixe em branco se enviou foto)"></textarea>
           
-          <button class="btn" id="analyzeFoodButton" type="button">Analisar refeição com IA</button>
+          <button class="btn" id="analyzeFoodButton" type="button">✨ Analisar prato com IA</button>
           <div id="aiFoodMessage" class="message" role="status" aria-live="polite"></div>
           <div id="aiFoodPreview" class="hidden"></div>
         </section>
@@ -3118,17 +3335,28 @@
       const mealCalories = items.reduce((sum, item) => sum + (Number(item.calories) || 0), 0);
       return `<section class="nutrition-meal-card">
         <div class="nutrition-meal-head"><h3>${mealLabels[meal]}</h3><span class="tag">${numberBR(mealCalories)} kcal</span></div>
-        ${items.map(item => `
+        ${items.map(item => {
+          const scoreTag = item.nutrition_score
+            ? `<span class="tag" style="margin-left:6px;font-size:10px">Score ${item.nutrition_score}/100</span>`
+            : '';
+          const badgesHTML = Array.isArray(item.badges) && item.badges.length
+            ? `<div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:5px">${item.badges.map(b =>
+                `<span class="bite-badge-chip" style="color:${escapeHTML(b.color || '#a6f279')};font-size:10px;padding:2px 7px">${escapeHTML(b.label)}</span>`
+              ).join('')}</div>`
+            : '';
+          return `
           <div class="nutrition-food-row">
             <div class="nutrition-food-info">
-              <strong>${escapeHTML(item.food_name)}</strong>
-              <small>${numberBR(item.amount, 1)} ${escapeHTML(item.unit || 'g')}${item.grams && item.unit !== 'g' ? ` · ${numberBR(item.grams, 1)} g` : ''} · ${numberBR(item.calories)} kcal<br>P ${numberBR(item.protein_g, 1)} g · C ${numberBR(item.carbs_g, 1)} g · G ${numberBR(item.fat_g, 1)} g ${item.source === 'ai' ? '· estimativa IA' : ''}</small>
+              <strong>${escapeHTML(item.food_name)}${scoreTag}</strong>
+              <small>${numberBR(item.amount, 1)} ${escapeHTML(item.unit || 'g')}${item.grams && item.unit !== 'g' ? ` · ${numberBR(item.grams, 1)} g` : ''} · ${numberBR(item.calories)} kcal<br>P ${numberBR(item.protein_g, 1)} g · C ${numberBR(item.carbs_g, 1)} g · G ${numberBR(item.fat_g, 1)} g ${item.source === 'ai' ? '· IA' : ''}</small>
+              ${badgesHTML}
             </div>
             <div class="nutrition-food-actions">
               <button type="button" class="small-btn" data-food-action="edit" data-id="${item.id}">Editar</button>
               <button type="button" class="small-btn danger" data-food-action="delete" data-id="${item.id}">Excluir</button>
             </div>
-          </div>`).join('')}
+          </div>`;
+        }).join('')}
       </section>`;
     }).join('');
   }
@@ -3224,34 +3452,149 @@
     }
   });
 
+  // ==========================================
+  // CARD GAMIFICADO DA ANÁLISE POR IA (ESTILO BITEPAL)
+  // ==========================================
+  let selectedAICategory = 'Refeição';
+  let pendingAIAnalysis = null;
+  let showAIAdjustPanel = false;
+  let pendingFoodPhoto = null; // { dataUrl, base64, mimeType }
+
+  $('aiCategoryPills')?.addEventListener('click', (event) => {
+    const pill = event.target.closest('[data-ai-cat]');
+    if (!pill) return;
+    selectedAICategory = pill.dataset.aiCat;
+    document.querySelectorAll('#aiCategoryPills .ai-cat-pill').forEach(btn => {
+      btn.classList.toggle('active', btn === pill);
+    });
+    const mapToMeal = { 'Refeição': 'lunch', 'Lanche': 'snack', 'Bebida': 'snack', 'Sobremesa': 'snack' };
+    if (mapToMeal[selectedAICategory]) $('aiFoodMealType').value = mapToMeal[selectedAICategory];
+  });
+
   function renderAIFoodPreview() {
     const container = $('aiFoodPreview');
-    if (!pendingAIFoods.length) {
+    if (!pendingAIAnalysis || !pendingAIFoods.length) {
       container.classList.add('hidden');
       container.innerHTML = '';
       return;
     }
+
+    const activeFoods = pendingAIFoods.filter(f => f.selected !== false);
+    const totals = activeFoods.reduce((acc, f) => {
+      acc.calories += Number(f.calories) || 0;
+      acc.protein += Number(f.protein_g) || 0;
+      acc.carbs += Number(f.carbs_g) || 0;
+      acc.fat += Number(f.fat_g) || 0;
+      return acc;
+    }, { calories: 0, protein: 0, carbs: 0, fat: 0 });
+
+    const scoreObj = pendingAIAnalysis.nutrition_score || { score: 80, label: 'Equilibrado' };
+    const scoreVal = Math.max(0, Math.min(100, Number(scoreObj.score) || 75));
+    const scoreColor = scoreVal >= 80 ? '#22c55e' : scoreVal >= 60 ? '#a6f279' : scoreVal >= 40 ? '#fbbf24' : '#f87171';
+    const badges = Array.isArray(pendingAIAnalysis.badges) ? pendingAIAnalysis.badges : [];
+
     container.classList.remove('hidden');
-    container.innerHTML = `<div class="nutrition-preview">
-      <div class="nutrition-preview-top"><strong>Revise os alimentos estimados</strong><span class="tag">${pendingAIFoods.length} itens</span></div>
-      <p class="nutrition-note">Confira porções e valores. Você pode ajustar os campos antes de confirmar o registro.</p>
-      ${pendingAIFoods.map((food, index) => `
-        <div class="nutrition-preview-item" data-ai-item="${index}">
-          <strong>${escapeHTML(food.name || `Alimento ${index + 1}`)} ${food.confidence === 'low' ? '<span class="tag">PORÇÃO INCERTA</span>' : ''}</strong>
-          <div class="nutrition-preview-fields">
-            <div><label>Quantidade / g</label><input type="number" min="0.1" step="0.1" data-ai-index="${index}" data-ai-field="grams" value="${Number(food.grams) || ''}"></div>
-            <div><label>Calorias</label><input type="number" min="0" step="0.1" data-ai-index="${index}" data-ai-field="calories" value="${Number(food.calories) || 0}"></div>
-            <div><label>Proteína (g)</label><input type="number" min="0" step="0.1" data-ai-index="${index}" data-ai-field="protein_g" value="${Number(food.protein_g) || 0}"></div>
-            <div><label>Carboidrato (g)</label><input type="number" min="0" step="0.1" data-ai-index="${index}" data-ai-field="carbs_g" value="${Number(food.carbs_g) || 0}"></div>
-            <div><label>Gordura (g)</label><input type="number" min="0" step="0.1" data-ai-index="${index}" data-ai-field="fat_g" value="${Number(food.fat_g) || 0}"></div>
-            <div><label>Unidade</label><input type="text" readonly value="g" aria-label="Unidade em gramas"></div>
+    container.innerHTML = `
+      <div class="bite-result-card">
+        <div class="bite-header">
+          ${pendingFoodPhoto?.dataUrl ? `<img class="bite-thumb" src="${pendingFoodPhoto.dataUrl}" alt="Prato analisado">` : ''}
+          <div class="bite-title-wrap">
+            <span class="tag">${escapeHTML(pendingAIAnalysis.category || selectedAICategory)}</span>
+            <h3>${escapeHTML(pendingAIAnalysis.title || 'Refeição analisada')}</h3>
           </div>
-          ${food.assumption ? `<p class="nutrition-note">Observação: ${escapeHTML(food.assumption)}</p>` : ''}
-          <button type="button" class="small-btn danger" data-ai-remove="${index}" style="margin-top:8px">Remover este alimento</button>
-        </div>`).join('')}
-      <button type="button" class="btn" id="confirmAIFoodButton">Confirmar e salvar no diário</button>
-      <button type="button" class="btn-secondary" id="cancelAIFoodButton" style="width:100%;margin-top:8px">Cancelar análise</button>
-    </div>`;
+        </div>
+
+        ${pendingAIAnalysis.note ? `<div class="bite-ai-bubble">✨ ${escapeHTML(pendingAIAnalysis.note)}</div>` : ''}
+
+        <div class="bite-kcal-banner">
+          <div>
+            <small>Total estimado</small>
+            <strong>${numberBR(totals.calories)} kcal</strong>
+          </div>
+          <button type="button" class="small-btn" id="toggleAIAdjustBtn">
+            ${showAIAdjustPanel ? '✕ Fechar ajuste' : '✎ Ajustar'}
+          </button>
+        </div>
+
+        <div class="bite-macros-row">
+          <div class="bite-macro-box">
+            <strong>${numberBR(totals.carbs, 1)} g</strong>
+            <span>Carboidratos</span>
+          </div>
+          <div class="bite-macro-box">
+            <strong>${numberBR(totals.fat, 1)} g</strong>
+            <span>Gorduras</span>
+          </div>
+          <div class="bite-macro-box">
+            <strong>${numberBR(totals.protein, 1)} g</strong>
+            <span>Proteínas</span>
+          </div>
+        </div>
+
+        <div class="bite-section-label">
+          <span>Ingredientes detectados (toque para ativar/remover)</span>
+          <span>${activeFoods.length}/${pendingAIFoods.length}</span>
+        </div>
+        <div class="bite-ing-pills">
+          ${pendingAIFoods.map((food, index) => `
+            <button type="button"
+              class="bite-ing-pill ${food.selected === false ? 'unselected' : ''}"
+              data-ai-toggle="${index}">
+              ${food.selected === false ? '○' : '✓'} ${escapeHTML(food.name)} · ${numberBR(food.grams)}g
+            </button>
+          `).join('')}
+          <button type="button" class="bite-ing-add" id="addAIExtraIngBtn">+ Extra</button>
+        </div>
+
+        ${showAIAdjustPanel ? `
+          <div style="margin-bottom:14px">
+            ${pendingAIFoods.map((food, index) => `
+              <div class="nutrition-preview-item" data-ai-item="${index}">
+                <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+                  <strong>${escapeHTML(food.name || `Alimento ${index + 1}`)}</strong>
+                  <button type="button" class="small-btn danger" data-ai-remove="${index}">Remover</button>
+                </div>
+                <div class="nutrition-preview-fields">
+                  <div><label>Gramas (g)</label><input type="number" min="0.1" step="0.1" data-ai-index="${index}" data-ai-field="grams" value="${Number(food.grams) || ''}"></div>
+                  <div><label>Calorias</label><input type="number" min="0" step="0.1" data-ai-index="${index}" data-ai-field="calories" value="${Number(food.calories) || 0}"></div>
+                  <div><label>Proteína (g)</label><input type="number" min="0" step="0.1" data-ai-index="${index}" data-ai-field="protein_g" value="${Number(food.protein_g) || 0}"></div>
+                  <div><label>Carbo (g)</label><input type="number" min="0" step="0.1" data-ai-index="${index}" data-ai-field="carbs_g" value="${Number(food.carbs_g) || 0}"></div>
+                  <div><label>Gordura (g)</label><input type="number" min="0" step="0.1" data-ai-index="${index}" data-ai-field="fat_g" value="${Number(food.fat_g) || 0}"></div>
+                  <div><label>Ativo</label><input type="text" readonly value="${food.selected === false ? 'Não' : 'Sim'}"></div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        ` : ''}
+
+        <div class="bite-score-box">
+          <div class="bite-score-top">
+            <span>Nutrition Score</span>
+            <span style="color:${scoreColor}">${scoreVal}/100 · ${escapeHTML(scoreObj.label || 'Equilibrado')}</span>
+          </div>
+          <div class="bite-score-track">
+            <div class="bite-score-fill" style="width:${scoreVal}%;background:${scoreColor}"></div>
+          </div>
+        </div>
+
+        ${badges.length ? `
+          <div class="bite-badges-row">
+            ${badges.map(b => `
+              <span class="bite-badge-chip" style="color:${escapeHTML(b.color || '#a6f279')}">
+                ● ${escapeHTML(b.label)}
+              </span>
+            `).join('')}
+          </div>
+        ` : ''}
+
+        <button type="button" class="btn" id="confirmAIFoodButton" ${!activeFoods.length ? 'disabled' : ''}>
+          ✓ Concluir e salvar no diário
+        </button>
+        <button type="button" class="btn-secondary" id="cancelAIFoodButton" style="width:100%;margin-top:8px">
+          Descartar análise
+        </button>
+      </div>
+    `;
   }
 
   $('aiFoodPreview').addEventListener('input', (event) => {
@@ -3264,26 +3607,97 @@
   });
 
   $('aiFoodPreview').addEventListener('click', async (event) => {
+    const toggleBtn = event.target.closest('[data-ai-toggle]');
+    if (toggleBtn) {
+      const idx = Number(toggleBtn.dataset.aiToggle);
+      if (pendingAIFoods[idx]) {
+        pendingAIFoods[idx].selected = pendingAIFoods[idx].selected === false ? true : false;
+        renderAIFoodPreview();
+      }
+      return;
+    }
+
+    if (event.target.closest('#toggleAIAdjustBtn')) {
+      showAIAdjustPanel = !showAIAdjustPanel;
+      renderAIFoodPreview();
+      return;
+    }
+
+    if (event.target.closest('#addAIExtraIngBtn')) {
+      openEditModal({
+        title: 'Adicionar ingrediente extra',
+        fieldsHTML: `
+          <label for="extraIngName">Nome (ex.: Azeite de oliva, Molho, Queijo)</label>
+          <input id="extraIngName" required placeholder="Ex.: Azeite de oliva (1 colher)">
+          <div class="form-grid">
+            <div>
+              <label for="extraIngGrams">Peso (g)</label>
+              <input id="extraIngGrams" type="number" min="1" step="0.1" value="15" required>
+            </div>
+            <div>
+              <label for="extraIngCal">Calorias (kcal)</label>
+              <input id="extraIngCal" type="number" min="0" step="0.1" value="108" required>
+            </div>
+            <div>
+              <label for="extraIngProt">Proteínas (g)</label>
+              <input id="extraIngProt" type="number" min="0" step="0.1" value="0">
+            </div>
+            <div>
+              <label for="extraIngCarbs">Carboidratos (g)</label>
+              <input id="extraIngCarbs" type="number" min="0" step="0.1" value="0">
+            </div>
+            <div class="full">
+              <label for="extraIngFat">Gorduras (g)</label>
+              <input id="extraIngFat" type="number" min="0" step="0.1" value="12">
+            </div>
+          </div>
+        `,
+        onSubmit: async () => {
+          pendingAIFoods.push({
+            name: $('extraIngName').value.trim(),
+            grams: Number($('extraIngGrams').value) || 10,
+            calories: Number($('extraIngCal').value) || 0,
+            protein_g: Number($('extraIngProt').value) || 0,
+            carbs_g: Number($('extraIngCarbs').value) || 0,
+            fat_g: Number($('extraIngFat').value) || 0,
+            confidence: 'medium',
+            assumption: 'Adicionado manualmente',
+            selected: true
+          });
+          renderAIFoodPreview();
+        }
+      });
+      return;
+    }
+
     const removeButton = event.target.closest('[data-ai-remove]');
     if (removeButton) {
       pendingAIFoods.splice(Number(removeButton.dataset.aiRemove), 1);
       renderAIFoodPreview();
       return;
     }
+
     if (event.target.closest('#cancelAIFoodButton')) {
       pendingAIFoods = [];
+      pendingAIAnalysis = null;
+      showAIAdjustPanel = false;
       renderAIFoodPreview();
       return;
     }
+
     if (event.target.closest('#confirmAIFoodButton')) {
-      if (!currentUser || !pendingAIFoods.length) return;
+      const selectedItems = pendingAIFoods.filter(f => f.selected !== false);
+      if (!currentUser || !selectedItems.length) return;
       const button = $('confirmAIFoodButton');
       button.disabled = true;
-      button.textContent = 'Salvando...';
+      button.textContent = 'Salvando no diário...';
       try {
         const selectedDate = $('nutritionSelectedDate').value || localDateKey();
         const consumedAt = new Date(`${selectedDate}T12:00:00`).toISOString();
-        const rows = pendingAIFoods.map(food => ({
+        const scoreVal = Number(pendingAIAnalysis?.nutrition_score?.score) || null;
+        const badgesList = Array.isArray(pendingAIAnalysis?.badges) ? pendingAIAnalysis.badges : [];
+
+        const rows = selectedItems.map((food, idx) => ({
           user_id: currentUser.id,
           meal_type: $('aiFoodMealType').value,
           food_name: String(food.name || 'Alimento estimado').slice(0, 120),
@@ -3296,24 +3710,38 @@
           fat_g: Math.max(0, Number(food.fat_g) || 0),
           source: 'ai',
           notes: food.assumption || null,
+          title: pendingAIAnalysis?.title || null,
+          category: pendingAIAnalysis?.category || selectedAICategory,
+          note: idx === 0 ? (pendingAIAnalysis?.note || null) : null,
+          nutrition_score: idx === 0 ? scoreVal : null,
+          badges: idx === 0 ? badgesList : [],
+          items: idx === 0 ? selectedItems : [],
           consumed_at: consumedAt
         }));
+
         const { error } = await client.from('food_entries').insert(rows);
         if (error) throw error;
+
         pendingAIFoods = [];
-        renderAIFoodPreview();
+        pendingAIAnalysis = null;
+        showAIAdjustPanel = false;
+        pendingFoodPhoto = null;
+        $('aiFoodPhotoInput').value = '';
+        if ($('aiFoodGalleryInput')) $('aiFoodGalleryInput').value = '';
+        $('aiFoodPhotoImg').src = '';
+        $('aiFoodPhotoPreviewBox').classList.add('hidden');
         $('aiFoodDescription').value = '';
-        showMessage('aiFoodMessage', 'Refeição confirmada e salva no diário!', 'success');
+        renderAIFoodPreview();
+
+        showMessage('aiFoodMessage', 'Refeição salva no diário com sucesso!', 'success');
         await loadNutritionEntries();
       } catch (error) {
         showMessage('aiFoodMessage', 'Erro ao salvar estimativas: ' + error.message, 'error');
         button.disabled = false;
-        button.textContent = 'Confirmar e salvar no diário';
+        button.textContent = '✓ Concluir e salvar no diário';
       }
     }
   });
-
-  let pendingFoodPhoto = null; // { base64, mimeType }
 
   function compressImageToBase64(file, maxWidth = 800, quality = 0.78) {
     return new Promise((resolve, reject) => {
@@ -3342,28 +3770,39 @@
     });
   }
 
+  async function handleSelectedFoodFile(file) {
+    if (!file) return;
+    try {
+      showMessage('aiFoodMessage', 'Preparando imagem...');
+      const compressed = await compressImageToBase64(file);
+      pendingFoodPhoto = {
+        dataUrl: compressed.dataUrl,
+        base64: compressed.base64,
+        mimeType: compressed.mimeType
+      };
+      $('aiFoodPhotoImg').src = compressed.dataUrl;
+      $('aiFoodPhotoPreviewBox').classList.remove('hidden');
+      showMessage('aiFoodMessage', 'Imagem pronta! Clique em "Analisar prato com IA".', 'success');
+    } catch (error) {
+      showMessage('aiFoodMessage', error.message, 'error');
+    }
+  }
+
   $('takeFoodPhotoBtn').addEventListener('click', () => {
     $('aiFoodPhotoInput').click();
   });
 
-  $('aiFoodPhotoInput').addEventListener('change', async (event) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-    try {
-      showMessage('aiFoodMessage', 'Preparando foto...');
-      const compressed = await compressImageToBase64(file);
-      pendingFoodPhoto = { base64: compressed.base64, mimeType: compressed.mimeType };
-      $('aiFoodPhotoImg').src = compressed.dataUrl;
-      $('aiFoodPhotoPreviewBox').classList.remove('hidden');
-      showMessage('aiFoodMessage', 'Foto pronta! Clique em "Analisar refeição com IA".', 'success');
-    } catch (error) {
-      showMessage('aiFoodMessage', error.message, 'error');
-    }
+  $('pickFoodGalleryBtn')?.addEventListener('click', () => {
+    $('aiFoodGalleryInput').click();
   });
+
+  $('aiFoodPhotoInput').addEventListener('change', (event) => handleSelectedFoodFile(event.target.files?.[0]));
+  $('aiFoodGalleryInput')?.addEventListener('change', (event) => handleSelectedFoodFile(event.target.files?.[0]));
 
   $('removeFoodPhotoBtn').addEventListener('click', () => {
     pendingFoodPhoto = null;
     $('aiFoodPhotoInput').value = '';
+    if ($('aiFoodGalleryInput')) $('aiFoodGalleryInput').value = '';
     $('aiFoodPhotoImg').src = '';
     $('aiFoodPhotoPreviewBox').classList.add('hidden');
     showMessage('aiFoodMessage', '');
@@ -3374,7 +3813,7 @@
     const description = $('aiFoodDescription').value.trim();
 
     if (!pendingFoodPhoto && description.length < 4) {
-      showMessage('aiFoodMessage', 'Bata uma foto do prato ou descreva os alimentos.', 'error');
+      showMessage('aiFoodMessage', 'Bata uma foto do prato, escolha da galeria ou descreva os alimentos.', 'error');
       return;
     }
 
@@ -3382,13 +3821,16 @@
     button.disabled = true;
     button.textContent = pendingFoodPhoto ? 'Analisando foto...' : 'Analisando...';
     pendingAIFoods = [];
+    pendingAIAnalysis = null;
+    showAIAdjustPanel = false;
     renderAIFoodPreview();
-    showMessage('aiFoodMessage', 'A IA está identificando os alimentos e estimando calorias...');
+    showMessage('aiFoodMessage', 'A IA está identificando ingredientes, macros e o Nutrition Score...');
 
     try {
       const { data, error } = await client.functions.invoke('nutrition-analyze', {
         body: {
           description,
+          category: selectedAICategory,
           imageBase64: pendingFoodPhoto?.base64 || null,
           mimeType: pendingFoodPhoto?.mimeType || null
         }
@@ -3403,6 +3845,14 @@
       }
       if (!data?.items?.length) throw new Error(data?.error || 'A IA não identificou alimentos na imagem/descrição.');
 
+      pendingAIAnalysis = {
+        title: data.title || 'Refeição analisada',
+        category: data.category || selectedAICategory,
+        note: data.note || '',
+        nutrition_score: data.nutrition_score || { score: 80, label: 'Equilibrado' },
+        badges: Array.isArray(data.badges) ? data.badges : []
+      };
+
       pendingAIFoods = data.items.map(item => ({
         name: String(item.name || 'Alimento').slice(0, 120),
         grams: Number(item.grams) || 0,
@@ -3411,17 +3861,19 @@
         carbs_g: Number(item.carbs_g) || 0,
         fat_g: Number(item.fat_g) || 0,
         confidence: item.confidence === 'low' ? 'low' : 'medium',
-        assumption: String(item.assumption || '').slice(0, 240)
+        assumption: String(item.assumption || '').slice(0, 240),
+        selected: item.selected !== false
       }));
 
       renderAIFoodPreview();
-      showMessage('aiFoodMessage', data.note || 'Confira os valores estimados e confirme para salvar.', 'success');
+      showMessage('aiFoodMessage', '');
+      $('aiFoodPreview').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     } catch (error) {
       console.error('Erro na análise nutricional:', error);
       showMessage('aiFoodMessage', 'Não foi possível analisar: ' + error.message, 'error');
     } finally {
       button.disabled = false;
-      button.textContent = 'Analisar refeição com IA';
+      button.textContent = '✨ Analisar prato com IA';
     }
   });
 
