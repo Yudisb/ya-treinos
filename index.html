@@ -2306,8 +2306,15 @@
         </section>
 
         <section class="panel">
-          <h2 class="section-title">Adicionar alimento manualmente</h2>
-          <p class="section-desc">Você também pode preencher os valores nutricionais conforme o rótulo ou a fonte que estiver usando.</p>
+          <h2 class="section-title">Adicionar alimento</h2>
+          <p class="section-desc">Pesquise no catálogo TACO. Ao selecionar um alimento, informe a quantidade e os nutrientes serão calculados automaticamente. Produtos de marca podem continuar sendo cadastrados pelo rótulo.</p>
+          <div style="position:relative;margin-bottom:14px">
+            <label for="foodCatalogSearch">Pesquisar alimento no catálogo</label>
+            <input id="foodCatalogSearch" type="search" maxlength="120" placeholder="Ex.: arroz branco cozido, feijão, frango..." autocomplete="off">
+            <div id="foodCatalogResults" class="nutrition-entry-list" style="margin-top:8px"></div>
+            <small id="foodCatalogStatus" class="section-desc">O catálogo será disponibilizado após importar os dados TACO para o Supabase.</small>
+          </div>
+          <h3 class="section-title" style="font-size:15px">Detalhes do alimento selecionado ou cadastro pelo rótulo</h3>
           <form id="foodEntryForm">
             <div class="nutrition-form-grid">
               <div>
@@ -3367,8 +3374,61 @@
     catch (error) { showMessage('foodEntryMessage', 'Erro ao carregar diário: ' + error.message, 'error'); }
   });
 
+  // Catálogo nutricional TACO no Supabase. O cálculo é feito no navegador, sem IA.
+  let selectedCatalogFood = null;
+  let foodCatalogSearchTimer = null;
+  function calculateCatalogNutrition() {
+    if (!selectedCatalogFood) return;
+    const grams = Number($('foodGrams').value || $('foodAmount').value || 0);
+    if (!Number.isFinite(grams) || grams <= 0) return;
+    const factor = grams / 100;
+    $('foodCalories').value = (Number(selectedCatalogFood.energy_kcal_100g || 0) * factor).toFixed(1);
+    $('foodProtein').value = (Number(selectedCatalogFood.protein_g_100g || 0) * factor).toFixed(1);
+    $('foodCarbs').value = (Number(selectedCatalogFood.carbs_g_100g || 0) * factor).toFixed(1);
+    $('foodFat').value = (Number(selectedCatalogFood.fat_g_100g || 0) * factor).toFixed(1);
+    $('foodUnit').value = 'g';
+    $('foodAmount').value = grams;
+    $('foodGrams').value = grams;
+  }
+  async function searchFoodCatalog(term) {
+    const results = $('foodCatalogResults');
+    const status = $('foodCatalogStatus');
+    if (!term || term.trim().length < 2) { results.innerHTML = ''; status.textContent = 'Digite pelo menos 2 letras para pesquisar.'; return; }
+    if (!client) { status.textContent = 'Conecte-se para pesquisar o catálogo.'; return; }
+    status.textContent = 'Pesquisando alimentos...';
+    try {
+      const { data, error } = await client.from('foods').select('id,name,category,energy_kcal_100g,protein_g_100g,carbs_g_100g,fat_g_100g,source,brand').ilike('name', `%${term.trim()}%`).order('name').limit(20);
+      if (error) throw error;
+      if (!data || !data.length) { results.innerHTML = ''; status.textContent = 'Nenhum alimento encontrado. Você pode cadastrar pelo rótulo abaixo.'; return; }
+      results.innerHTML = data.map(food => `<button type="button" class="btn-secondary" data-catalog-food="${escapeHTML(food.id)}" style="width:100%;text-align:left;margin:3px 0"><strong>${escapeHTML(food.name)}</strong><br><small>${escapeHTML(food.category || food.brand || food.source || 'Catálogo')} · ${numberBR(food.energy_kcal_100g,1)} kcal/100 g · P ${numberBR(food.protein_g_100g,1)} g · C ${numberBR(food.carbs_g_100g,1)} g · G ${numberBR(food.fat_g_100g,1)} g</small></button>`).join('');
+      status.textContent = `${data.length} resultado(s). Selecione o alimento correspondente ao preparo.`;
+      window._yaFoodCatalogResults = data;
+    } catch (error) {
+      results.innerHTML = ''; status.textContent = 'Catálogo ainda não disponível. Execute a migração e importe os dados TACO. Detalhe: ' + error.message;
+    }
+  }
+  $('foodCatalogSearch').addEventListener('input', () => {
+    clearTimeout(foodCatalogSearchTimer);
+    const term = $('foodCatalogSearch').value;
+    foodCatalogSearchTimer = setTimeout(() => searchFoodCatalog(term), 300);
+  });
+  $('foodCatalogResults').addEventListener('click', event => {
+    const button = event.target.closest('[data-catalog-food]'); if (!button) return;
+    const food = (window._yaFoodCatalogResults || []).find(item => item.id === button.dataset.catalogFood); if (!food) return;
+    selectedCatalogFood = food;
+    $('foodName').value = food.name; $('foodAmount').value = 100; $('foodGrams').value = 100;
+    $('foodCatalogStatus').textContent = `Selecionado: ${food.name}. Valores por 100 g; altere a quantidade para recalcular.`;
+    $('foodCatalogResults').innerHTML = ''; calculateCatalogNutrition();
+  });
+  ['foodAmount','foodGrams'].forEach(id => $(id).addEventListener('input', calculateCatalogNutrition));
+  $('foodName').addEventListener('input', () => { selectedCatalogFood = null; });
+
   function resetFoodForm() {
     editingFoodEntryId = null;
+    selectedCatalogFood = null;
+    if ($('foodCatalogSearch')) $('foodCatalogSearch').value = '';
+    if ($('foodCatalogResults')) $('foodCatalogResults').innerHTML = '';
+    if ($('foodCatalogStatus')) $('foodCatalogStatus').textContent = 'Pesquise no catálogo TACO ou cadastre pelo rótulo.';
     $('foodEntryForm').reset();
     $('foodMealType').value = 'breakfast';
     $('saveFoodEntryButton').textContent = 'Adicionar ao diário';
