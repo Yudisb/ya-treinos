@@ -5056,6 +5056,10 @@
       await loadRecentWorkoutSessions();
     } catch (error) {
       console.error('Erro ao carregar treinos:', error);
+      const container = $('heroWorkoutCards');
+      if (container) {
+        container.innerHTML = `<div class="workout-empty">Erro ao carregar seu treino: ${escapeHTML(error.message)}</div>`;
+      }
     }
   }
 
@@ -5097,6 +5101,7 @@
         .limit(60);
       if (error) throw error;
       recentWorkoutSessions = data || [];
+      renderHeroWorkoutCards();
       renderWeeklyCalendar();
       renderRecentWorkoutSessions();
       renderMotivationBanner();
@@ -5824,6 +5829,7 @@
 
   function renderDayFilterPills() {
     const container = $('dayFilterPills');
+    if (!container) return;
     const pills = [{ id: 'all', label: 'Todos' }];
 
     workoutDays.forEach(day => {
@@ -5840,7 +5846,7 @@
     `).join('');
   }
 
-  $('dayFilterPills').addEventListener('click', (e) => {
+  $('dayFilterPills')?.addEventListener('click', (e) => {
     const btn = e.target.closest('.pill');
     if (!btn) return;
     activeDayFilter = btn.dataset.filter;
