@@ -2698,6 +2698,17 @@
                 <label for="equipment">Equipamento</label>
                 <input id="equipment" placeholder="Ex.: Barra, Halteres">
               </div>
+
+              <div class="full">
+                <label for="movementCategory">Categoria biomecânica (cálculo de calorias)</label>
+                <select id="movementCategory">
+                  <option value="">Detectar automaticamente</option>
+                  <option value="composto">Composto (Supino, Agachamento, Remada)</option>
+                  <option value="isolado">Isolado (Elevação lateral, Rosca, Extensora)</option>
+                  <option value="peso_corporal">Peso corporal (Flexão, Salto, Abdominal, Prancha)</option>
+                  <option value="cardio">Cardio / Metabólico (Polichinelo, Corrida, Burpee)</option>
+                </select>
+              </div>
             </div>
 
             <label for="instructions">Observações</label>
@@ -5520,7 +5531,7 @@
       }
     }
 
-    // Recalcula calorias estimadas com a nova duração e esforço
+    // Recalcula calorias estimadas com o motor biomecânico (categoria + densidade + cadência)
     const rawWeight = Number($('weight')?.value || currentProfileData?.current_weight || 75);
     const weightKg = (rawWeight >= 30 && rawWeight <= 300) ? rawWeight : 75;
     const rawHeight = Number($('height')?.value || currentProfileData?.height_cm || 170);
@@ -5529,8 +5540,31 @@
     const sex = $('nutritionSex')?.value || nutritionProfile?.sex || 'male';
     const bmr = (10 * weightKg) + (6.25 * heightCm) - (5 * age) + (sex === 'female' ? -161 : 5);
     const kcalRepousoMin = Math.max(0.8, bmr / 1440);
-    const bonusVolume = Math.min(0.6, (totalVolumeKg / (weightKg * newMinutes)) * 0.4);
-    const effectiveMET = Number((effortCfg.metBase + bonusVolume).toFixed(2));
+
+    let effectiveVolKg = 0;
+    let catWeightSum = 0;
+    let countedSets = 0;
+    updatedDetails.forEach(exObj => {
+      const libEx = (exObj.exerciseId && exerciseMap.get(exObj.exerciseId)) || exObj;
+      const cat = resolveMovementCategory(libEx);
+      const catW = CATEGORY_MET_WEIGHT[cat] || 1.0;
+      const bwFactor = getBodyweightFactor(libEx.muscle_group, libEx.name);
+      (exObj.loggedSets || []).forEach(s => {
+        const reps = Math.max(0, Number(s.reps) || 0);
+        const load = Math.max(0, Number(s.weight_kg) || 0);
+        const effLoad = cat === 'peso_corporal' ? ((weightKg * bwFactor) + load) : load;
+        effectiveVolKg += effLoad * reps;
+        catWeightSum += catW;
+        countedSets += 1;
+      });
+    });
+
+    const avgCatMult = countedSets > 0 ? (catWeightSum / countedSets) : 1.0;
+    const relDensity = effectiveVolKg / Math.max(weightKg, 40);
+    const densityBonus = Math.min(relDensity * 0.012, 1.8);
+    const setsPerMin = countedSets / newMinutes;
+    const paceBonus = setsPerMin > 0.45 ? Math.min((setsPerMin - 0.45) * 2.0, 1.0) : 0;
+    const effectiveMET = Number(((effortCfg.metBase + densityBonus + paceBonus) * avgCatMult).toFixed(2));
     const calories = Math.max(15, Math.round(kcalRepousoMin * effectiveMET * newMinutes));
 
     const prevStats = getSessionStatsCache()[session.id] || {};
@@ -6726,12 +6760,76 @@
     return task;
   }
 
-  const EFFORT_CONFIG = {
-    leve: { key: 'leve', emoji: '😌', label: 'Leve', metBase: 3.8 },
-    moderado: { key: 'moderado', emoji: '💪', label: 'Moderado', metBase: 4.8 },
-    pesado: { key: 'pesado', emoji: '🔥', label: 'Pesado', metBase: 5.6 },
-    extremamente_pesado: { key: 'extremamente_pesado', emoji: '🤯', label: 'Extremamente Pesado', metBase: 6.4 }
+  const CATEGORY_MET_WEIGHT = {
+    cardio: 1.30,
+    composto: 1.15,
+    peso_corporal: 1.10,
+    isolado: 0.90
   };
+
+  const MOVEMENT_CATEGORY_LABELS = {
+    cardio: 'Cardio',
+    composto: 'Composto',
+    peso_corporal: 'Peso corporal',
+    isolado: 'Isolado'
+  };
+
+  const EFFORT_CONFIG = {
+    leve: { key: 'leve', emoji: '😌', label: 'Leve', metBase: 3.5 },
+    moderado: { key: 'moderado', emoji: '💪', label: 'Moderado', metBase: 5.0 },
+    pesado: { key: 'pesado', emoji: '🔥', label: 'Pesado', metBase: 6.5 },
+    extremamente_pesado: { key: 'extremamente_pesado', emoji: '🤯', label: 'Extremamente Pesado', metBase: 8.0 }
+  };
+
+  function getLocalExerciseCategoriesMap() {
+    if (!currentUser) return {};
+    try {
+      return JSON.parse(localStorage.getItem(`ya_exercise_categories_${currentUser.id}`) || '{}');
+    } catch (_) {
+      return {};
+    }
+  }
+
+  function saveLocalExerciseCategory(exerciseId, category) {
+    if (!currentUser || !exerciseId || !category) return;
+    try {
+      const map = getLocalExerciseCategoriesMap();
+      map[exerciseId] = category;
+      localStorage.setItem(`ya_exercise_categories_${currentUser.id}`, JSON.stringify(map));
+    } catch (_) {}
+  }
+
+  function resolveMovementCategory(exercise = {}) {
+    const valid = ['composto', 'isolado', 'peso_corporal', 'cardio'];
+    const localMap = getLocalExerciseCategoriesMap();
+    const raw = String(exercise.movement_category || (exercise.id && localMap[exercise.id]) || '').toLowerCase().trim();
+    if (valid.includes(raw)) return raw;
+
+    const group = String(exercise.muscle_group || '').toLowerCase();
+    const equipment = String(exercise.equipment || '').toLowerCase();
+    const name = String(exercise.name || '').toLowerCase();
+
+    if (group === 'cardio' || /polichinelo|corrida|esteira|bike|bicicleta|corda|burpee|aer[óo]b/.test(name)) {
+      return 'cardio';
+    }
+    if (
+      ['peso corporal', 'livre', 'nenhum', 'bodyweight'].includes(equipment) ||
+      /flex[aã]o|prancha|abdominal|v-up|salto|barra fixa|mergulho/.test(name)
+    ) {
+      return 'peso_corporal';
+    }
+    if (/eleva[cç][aã]o|rosca|extensora|flexora|crucifixo|panturrilha|encolhimento|tr[ií]ceps|peck/.test(name)) {
+      return 'isolado';
+    }
+    return 'composto';
+  }
+
+  function getBodyweightFactor(muscleGroup = '', exerciseName = '') {
+    const text = `${muscleGroup} ${exerciseName}`.toLowerCase();
+    if (/perna|quadr|posterior|gl[uú]t|agachamento|afundo|salto/.test(text)) return 0.75;
+    if (/peito|costas|ombro|bra[cç]|flex[aã]o|barra|mergulho/.test(text)) return 0.65;
+    return 0.40;
+  }
 
   function getSafeWorkoutDurationMinutes(rawMinutes, totalSets = 16) {
     const parsed = Number(rawMinutes);
@@ -6760,12 +6858,17 @@
     let setsDone = 0;
     let totalReps = 0;
     let totalVolumeKg = 0;
+    let effectiveVolumeKg = 0;
+    let categoryWeightSum = 0;
     const exerciseDetails = [];
     const brokenRecords = [];
     const seenPrExercises = new Set();
 
     dayItems.forEach(item => {
-      const ex = exerciseMap.get(item.exercise_id);
+      const ex = exerciseMap.get(item.exercise_id) || {};
+      const category = resolveMovementCategory(ex);
+      const catWeight = CATEGORY_MET_WEIGHT[category] || 1.0;
+      const bwFactor = getBodyweightFactor(ex.muscle_group, ex.name);
       const totalSets = Math.max(1, Number(item.sets) || 3);
       const targetNums = String(item.target_reps || '').match(/\d+/g);
       const fallbackReps = targetNums?.length ? Number(targetNums[0]) : 10;
@@ -6773,6 +6876,7 @@
       let itemSetsCount = 0;
       let itemReps = 0;
       let itemVolumeKg = 0;
+      let itemEffectiveVolKg = 0;
       let itemMaxLoad = 0;
       const loggedSets = [];
 
@@ -6785,9 +6889,12 @@
             ? Number(log.reps_done)
             : fallbackReps;
           const load = Number(log?.weight_kg) || 0;
+          const effLoad = category === 'peso_corporal' ? ((weightKg * bwFactor) + load) : load;
+
           itemSetsCount += 1;
           itemReps += reps;
           itemVolumeKg += load * reps;
+          itemEffectiveVolKg += effLoad * reps;
           if (load > itemMaxLoad) itemMaxLoad = load;
           loggedSets.push({ set: s, weight_kg: load, reps });
         }
@@ -6796,6 +6903,9 @@
       if (itemSetsCount === 0 && completedSet.has(item.id)) {
         itemSetsCount = totalSets;
         itemReps += totalSets * fallbackReps;
+        if (category === 'peso_corporal') {
+          itemEffectiveVolKg += (totalSets * fallbackReps) * (weightKg * bwFactor);
+        }
       }
 
       if (itemSetsCount > 0) {
@@ -6803,12 +6913,15 @@
         setsDone += itemSetsCount;
         totalReps += itemReps;
         totalVolumeKg += itemVolumeKg;
+        effectiveVolumeKg += itemEffectiveVolKg;
+        categoryWeightSum += catWeight * itemSetsCount;
       }
 
       exerciseDetails.push({
         exerciseId: item.exercise_id,
         name: ex?.name || 'Exercício',
         muscle_group: ex?.muscle_group || '',
+        movement_category: category,
         setsDone: itemSetsCount,
         totalSets,
         reps: itemReps,
@@ -6840,8 +6953,14 @@
 
     const bmr = (10 * weightKg) + (6.25 * heightCm) - (5 * age) + (sex === 'female' ? -161 : 5);
     const kcalRepousoMin = Math.max(0.8, bmr / 1440);
-    const bonusVolume = Math.min(0.6, (totalVolumeKg / (weightKg * durationMinutes)) * 0.4);
-    const effectiveMET = Number((effort.metBase + bonusVolume).toFixed(2));
+
+    const avgCategoryMultiplier = setsDone > 0 ? (categoryWeightSum / setsDone) : 1.0;
+    const relativeDensity = effectiveVolumeKg / Math.max(weightKg, 40);
+    const densityBonus = Math.min(relativeDensity * 0.012, 1.8);
+    const setsPerMinute = setsDone / durationMinutes;
+    const paceBonus = setsPerMinute > 0.45 ? Math.min((setsPerMinute - 0.45) * 2.0, 1.0) : 0;
+
+    const effectiveMET = Number(((effort.metBase + densityBonus + paceBonus) * avgCategoryMultiplier).toFixed(2));
 
     const calories = Math.max(
       setsDone > 0 ? 15 : 10,
@@ -6861,6 +6980,7 @@
       setsDone,
       totalReps,
       totalVolumeKg: Math.round(totalVolumeKg),
+      effectiveVolumeKg: Math.round(effectiveVolumeKg),
       weightKg,
       heightCm,
       usedDefaultWeight,
@@ -7669,21 +7789,26 @@
       return;
     }
 
-    container.innerHTML = filtered.map(exercise => `
-      <div class="workout-item">
-        <strong>${escapeHTML(exercise.name)}</strong>
-        <small>
-          ${escapeHTML(exercise.muscle_group || 'Grupo não definido')}
-          · ${escapeHTML(exercise.equipment || 'Sem equipamento')}
-        </small>
-        ${exercise.user_id === currentUser.id ? `
-          <div class="workout-actions">
-            <button class="small-btn" data-action="edit-exercise" data-id="${exercise.id}">Editar</button>
-            <button class="small-btn danger" data-action="delete-exercise" data-id="${exercise.id}">Excluir</button>
-          </div>
-        ` : `<small>Biblioteca pública</small>`}
-      </div>
-    `).join('');
+    container.innerHTML = filtered.map(exercise => {
+      const catKey = resolveMovementCategory(exercise);
+      const catLabel = MOVEMENT_CATEGORY_LABELS[catKey] || 'Composto';
+      return `
+        <div class="workout-item">
+          <strong>${escapeHTML(exercise.name)}</strong>
+          <small>
+            ${escapeHTML(exercise.muscle_group || 'Grupo não definido')}
+            · ${escapeHTML(exercise.equipment || 'Sem equipamento')}
+            · ${escapeHTML(catLabel)}
+          </small>
+          ${exercise.user_id === currentUser.id ? `
+            <div class="workout-actions">
+              <button class="small-btn" data-action="edit-exercise" data-id="${exercise.id}">Editar</button>
+              <button class="small-btn danger" data-action="delete-exercise" data-id="${exercise.id}">Excluir</button>
+            </div>
+          ` : `<small>Biblioteca pública</small>`}
+        </div>
+      `;
+    }).join('');
   }
 
   $('filterMuscleGroup').addEventListener('change', renderExerciseLibrary);
@@ -7705,17 +7830,39 @@
   $('exerciseForm').addEventListener('submit', async event => {
     event.preventDefault();
 
+    const nameVal = $('exerciseName').value.trim();
+    const muscleVal = $('muscleGroup').value;
+    const equipVal = $('equipment').value.trim();
+    const selectedCategory = $('movementCategory')?.value || '';
+    const resolvedCategory = resolveMovementCategory({
+      name: nameVal,
+      muscle_group: muscleVal,
+      equipment: equipVal,
+      movement_category: selectedCategory
+    });
+
     const payload = {
       user_id: currentUser.id,
-      name: $('exerciseName').value.trim(),
-      muscle_group: $('muscleGroup').value,
-      equipment: $('equipment').value.trim() || null,
+      name: nameVal,
+      muscle_group: muscleVal,
+      equipment: equipVal || null,
+      movement_category: resolvedCategory,
       instructions: $('instructions').value.trim() || null
     };
 
     try {
-      const { error } = await client.from('exercises').insert(payload);
+      let { data: inserted, error } = await client.from('exercises').insert(payload).select('id').maybeSingle();
+      if (error && String(error.message).includes('movement_category')) {
+        const { movement_category: _, ...fallbackPayload } = payload;
+        const retry = await client.from('exercises').insert(fallbackPayload).select('id').maybeSingle();
+        inserted = retry.data;
+        error = retry.error;
+      }
       if (error) throw error;
+
+      if (inserted?.id) {
+        saveLocalExerciseCategory(inserted.id, resolvedCategory);
+      }
 
       $('exerciseForm').reset();
       showMessage('exerciseMessage', 'Exercício cadastrado!', 'success');
@@ -7740,9 +7887,20 @@
       'Panturrilhas', 'Abdômen', 'Cardio', 'Outro'
     ];
 
+    const categories = [
+      { value: 'composto', label: 'Composto (Supino, Agachamento, Remada)' },
+      { value: 'isolado', label: 'Isolado (Elevação lateral, Rosca, Extensora)' },
+      { value: 'peso_corporal', label: 'Peso corporal (Flexão, Salto, Abdominal, Prancha)' },
+      { value: 'cardio', label: 'Cardio / Metabólico (Polichinelo, Corrida, Burpee)' }
+    ];
+
     if (action === 'edit-exercise') {
+      const currentCategory = resolveMovementCategory(exercise);
       const optionsHTML = groups.map(g =>
         `<option value="${g}" ${exercise.muscle_group === g ? 'selected' : ''}>${g}</option>`
+      ).join('');
+      const categoryOptionsHTML = categories.map(c =>
+        `<option value="${c.value}" ${currentCategory === c.value ? 'selected' : ''}>${c.label}</option>`
       ).join('');
 
       openEditModal({
@@ -7754,18 +7912,44 @@
           <select id="modalExMuscle" required>${optionsHTML}</select>
           <label for="modalExEquip">Equipamento</label>
           <input id="modalExEquip" value="${escapeHTML(exercise.equipment || '')}">
+          <label for="modalExCategory">Categoria biomecânica</label>
+          <select id="modalExCategory">${categoryOptionsHTML}</select>
         `,
         onSubmit: async () => {
-          const { error } = await client
+          const updatedName = $('modalExName').value.trim();
+          const updatedMuscle = $('modalExMuscle').value;
+          const updatedEquip = $('modalExEquip').value.trim() || null;
+          const updatedCategory = $('modalExCategory')?.value || resolveMovementCategory({
+            name: updatedName,
+            muscle_group: updatedMuscle,
+            equipment: updatedEquip
+          });
+
+          const updatePayload = {
+            name: updatedName,
+            muscle_group: updatedMuscle,
+            equipment: updatedEquip,
+            movement_category: updatedCategory
+          };
+
+          let { error } = await client
             .from('exercises')
-            .update({
-              name: $('modalExName').value.trim(),
-              muscle_group: $('modalExMuscle').value,
-              equipment: $('modalExEquip').value.trim() || null
-            })
+            .update(updatePayload)
             .eq('id', id)
             .eq('user_id', currentUser.id);
+
+          if (error && String(error.message).includes('movement_category')) {
+            const { movement_category: _, ...fallbackUpdate } = updatePayload;
+            const retry = await client
+              .from('exercises')
+              .update(fallbackUpdate)
+              .eq('id', id)
+              .eq('user_id', currentUser.id);
+            error = retry.error;
+          }
           if (error) throw error;
+
+          saveLocalExerciseCategory(id, updatedCategory);
           await loadExerciseLibrary();
           await loadWorkoutExercises();
         }
