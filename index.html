@@ -3168,17 +3168,17 @@
   </div>
 </div>
 
-<!-- MODAL DE PERCEPÇÃO DE ESFORÇO AO FINALIZAR -->
+<!-- MODAL DE PERCEPÇÃO DE ESFORÇO / INTENSIDADE DA ATIVIDADE -->
 <div id="effortSelectionModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="effortModalTitle">
   <div class="modal-card">
     <div class="modal-head">
       <div>
-        <div class="dashboard-kicker" style="margin-bottom:2px">Percepção de esforço</div>
+        <div class="dashboard-kicker" id="effortModalKicker" style="margin-bottom:2px">Percepção de esforço</div>
         <h3 class="section-title" id="effortModalTitle" style="margin:0">Como foi o treino hoje?</h3>
       </div>
       <button type="button" class="modal-close" id="effortModalClose" aria-label="Fechar">✕</button>
     </div>
-    <p class="section-desc" style="margin:6px 0 10px">Escolha seu nível de esforço para calibrar o gasto calórico e a duração da sessão.</p>
+    <p class="section-desc" id="effortModalSubtitle" style="margin:6px 0 10px">Escolha seu nível de esforço para calibrar o gasto calórico e a duração da sessão.</p>
     <div class="esforco-grid">
       <button type="button" class="btn-esforco" data-effort="leve">
         <span class="esforco-emoji" aria-hidden="true">😌</span>
@@ -5050,6 +5050,7 @@
   let activeDayFilter = 'all';
   let activeDetailDayId = null;
   let completedSet = new Set();
+  const exerciseEffortMap = new Map();
   let restInterval = null;
   let restRemainingSeconds = 0;
 
@@ -6268,6 +6269,7 @@
     activeFocusExerciseIndex = 0;
     showFocusExerciseDemo = false;
     completedSet.clear();
+    exerciseEffortMap.clear();
     expandedExerciseIds.clear();
     $('workoutsListView').classList.add('hidden');
     $('workoutDetailView').classList.remove('hidden');
@@ -6307,8 +6309,11 @@
   $('backToWorkoutsBtn').addEventListener('click', closeWorkoutDetail);
 
   $('finishWorkoutTopBtn')?.addEventListener('click', async () => {
-    const chosenEffort = await promptWorkoutEffort();
-    if (!chosenEffort) return;
+    let chosenEffort = null;
+    if (exerciseEffortMap.size === 0) {
+      chosenEffort = await promptWorkoutEffort();
+      if (!chosenEffort) return;
+    }
     const btn = $('finishWorkoutTopBtn');
     if (btn) {
       btn.disabled = true;
@@ -6466,6 +6471,10 @@
 
         <div class="focus-pr-center">
           ${renderRecordPillHTML(rec).replace('<span class="pr-pill', `<span data-pr-pill="${item.exercise_id}" class="pr-pill`)}
+          ${exerciseEffortMap.has(item.id) ? (() => {
+            const ef = EFFORT_CONFIG[exerciseEffortMap.get(item.id)] || EFFORT_CONFIG.moderado;
+            return `<button type="button" class="pr-pill" id="changeExerciseEffortBtn" style="cursor:pointer;border:1px solid rgba(57,255,20,0.35);background:rgba(57,255,20,0.08)">${ef.emoji} ${escapeHTML(ef.label)} · Alterar</button>`;
+          })() : ''}
           <span id="saveStatus-${item.id}" style="font-size:11px;font-weight:700;color:var(--green)"></span>
         </div>
 
@@ -6576,31 +6585,64 @@
       }
     });
 
+    $('changeExerciseEffortBtn')?.addEventListener('click', async () => {
+      const chosenEffort = await promptWorkoutEffort({
+        activityName: ex?.name || 'Atividade'
+      });
+      if (chosenEffort) {
+        exerciseEffortMap.set(item.id, chosenEffort);
+        renderWorkoutDetail(dayId);
+      }
+    });
+
     $('focusCompleteExBtn')?.addEventListener('click', async () => {
       const wasDone = completedSet.has(item.id);
-      if (wasDone) {
+      if (wasDone && exerciseEffortMap.has(item.id)) {
         completedSet.delete(item.id);
+        exerciseEffortMap.delete(item.id);
         renderWorkoutDetail(dayId);
         return;
       }
 
-      completedSet.add(item.id);
-      const restSecs = Number(item.rest_seconds) || 60;
-      if (restSecs > 0) {
-        startRestTimer(restSecs, ex?.name || 'Exercício');
+      if (!wasDone) {
+        completedSet.add(item.id);
+        const restSecs = Number(item.rest_seconds) || 60;
+        if (restSecs > 0) {
+          startRestTimer(restSecs, ex?.name || 'Exercício');
+        }
+        renderWorkoutDetail(dayId);
       }
 
-      if (activeFocusExerciseIndex < dayItems.length - 1) {
-        activeFocusExerciseIndex += 1;
-        renderWorkoutDetail(dayId);
-      } else {
-        renderWorkoutDetail(dayId);
-        const chosenEffort = await promptWorkoutEffort();
-        if (chosenEffort) {
-          await finishWorkoutSession(chosenEffort);
-        }
-      }
+      await handleActivityCompletedFlow(item, ex, dayId);
     });
+  }
+
+  async function handleActivityCompletedFlow(item, ex, dayId) {
+    if (!item || !dayId) return;
+    const dayItems = currentWorkoutItems.filter(i => i.workout_day_id === dayId);
+    const itemIdx = dayItems.findIndex(i => i.id === item.id);
+    const isLastItem = itemIdx >= 0 && itemIdx === dayItems.length - 1;
+
+    const chosenEffort = await promptWorkoutEffort({
+      activityName: ex?.name || 'Atividade'
+    });
+
+    if (chosenEffort) {
+      exerciseEffortMap.set(item.id, chosenEffort);
+    }
+
+    if (activeDetailDayId !== dayId) return;
+
+    if (!isLastItem && itemIdx >= 0) {
+      activeFocusExerciseIndex = itemIdx + 1;
+      renderWorkoutDetail(dayId);
+    } else {
+      renderWorkoutDetail(dayId);
+      const allCompleted = dayItems.length > 0 && dayItems.every(i => completedSet.has(i.id));
+      if (isLastItem && allCompleted && chosenEffort) {
+        await finishWorkoutSession(null);
+      }
+    }
   }
 
   const setSaveQueue = new Map();
@@ -6636,7 +6678,8 @@
 
   function syncExerciseCompletedState(weId) {
     const item = currentWorkoutItems.find(entry => entry.id === weId);
-    if (!item) return;
+    if (!item) return false;
+    const wasDone = completedSet.has(weId);
     const totalSets = Math.max(1, Number(item.sets) || 3);
     let allDone = true;
     for (let s = 1; s <= totalSets; s++) {
@@ -6647,8 +6690,11 @@
     }
     if (allDone) {
       completedSet.add(weId);
+      return !wasDone;
     } else {
       completedSet.delete(weId);
+      exerciseEffortMap.delete(weId);
+      return false;
     }
   }
 
@@ -6839,7 +6885,14 @@
     return Math.round(parsed);
   }
 
-  function calculateWorkoutSummaryStats(dayId, durationSeconds, effortKey = 'moderado') {
+  function resolveEffortConfigFromMet(metVal) {
+    if (metVal <= 4.25) return EFFORT_CONFIG.leve;
+    if (metVal <= 5.75) return EFFORT_CONFIG.moderado;
+    if (metVal <= 7.25) return EFFORT_CONFIG.pesado;
+    return EFFORT_CONFIG.extremamente_pesado;
+  }
+
+  function calculateWorkoutSummaryStats(dayId, durationSeconds, effortKey = null) {
     const rawWeight = Number($('weight')?.value || currentProfileData?.current_weight || 0);
     const usedDefaultWeight = !(rawWeight >= 30 && rawWeight <= 300);
     const weightKg = usedDefaultWeight ? 75 : rawWeight;
@@ -6850,7 +6903,7 @@
     const birthDate = $('birthDate')?.value || currentProfileData?.birth_date;
     const age = calculateAge(birthDate) || 25;
     const sex = $('nutritionSex')?.value || nutritionProfile?.sex || 'male';
-    const effort = EFFORT_CONFIG[effortKey] || EFFORT_CONFIG.moderado;
+    const fallbackEffort = EFFORT_CONFIG[effortKey] || EFFORT_CONFIG.moderado;
 
     const dayItems = currentWorkoutItems.filter(i => i.workout_day_id === dayId);
 
@@ -6860,6 +6913,7 @@
     let totalVolumeKg = 0;
     let effectiveVolumeKg = 0;
     let categoryWeightSum = 0;
+    let effortMetWeightSum = 0;
     const exerciseDetails = [];
     const brokenRecords = [];
     const seenPrExercises = new Set();
@@ -6908,6 +6962,9 @@
         }
       }
 
+      const itemEffortKey = exerciseEffortMap.get(item.id) || fallbackEffort.key;
+      const itemEffort = EFFORT_CONFIG[itemEffortKey] || fallbackEffort;
+
       if (itemSetsCount > 0) {
         exercisesDone += 1;
         setsDone += itemSetsCount;
@@ -6915,6 +6972,7 @@
         totalVolumeKg += itemVolumeKg;
         effectiveVolumeKg += itemEffectiveVolKg;
         categoryWeightSum += catWeight * itemSetsCount;
+        effortMetWeightSum += itemEffort.metBase * itemSetsCount;
       }
 
       exerciseDetails.push({
@@ -6922,6 +6980,9 @@
         name: ex?.name || 'Exercício',
         muscle_group: ex?.muscle_group || '',
         movement_category: category,
+        effortKey: itemEffort.key,
+        effortLabel: itemEffort.label,
+        effortEmoji: itemEffort.emoji,
         setsDone: itemSetsCount,
         totalSets,
         reps: itemReps,
@@ -6955,12 +7016,14 @@
     const kcalRepousoMin = Math.max(0.8, bmr / 1440);
 
     const avgCategoryMultiplier = setsDone > 0 ? (categoryWeightSum / setsDone) : 1.0;
+    const avgBaseMet = setsDone > 0 ? (effortMetWeightSum / setsDone) : fallbackEffort.metBase;
+    const effort = (effortKey && EFFORT_CONFIG[effortKey]) ? EFFORT_CONFIG[effortKey] : resolveEffortConfigFromMet(avgBaseMet);
     const relativeDensity = effectiveVolumeKg / Math.max(weightKg, 40);
     const densityBonus = Math.min(relativeDensity * 0.012, 1.8);
     const setsPerMinute = setsDone / durationMinutes;
     const paceBonus = setsPerMinute > 0.45 ? Math.min((setsPerMinute - 0.45) * 2.0, 1.0) : 0;
 
-    const effectiveMET = Number(((effort.metBase + densityBonus + paceBonus) * avgCategoryMultiplier).toFixed(2));
+    const effectiveMET = Number(((avgBaseMet + densityBonus + paceBonus) * avgCategoryMultiplier).toFixed(2));
 
     const calories = Math.max(
       setsDone > 0 ? 15 : 10,
@@ -7050,9 +7113,21 @@
 
   let pendingEffortResolver = null;
 
-  function promptWorkoutEffort() {
+  function promptWorkoutEffort(options = {}) {
     return new Promise((resolve) => {
       pendingEffortResolver = resolve;
+      const kickerEl = $('effortModalKicker');
+      const titleEl = $('effortModalTitle');
+      const subtitleEl = $('effortModalSubtitle');
+      if (options && options.activityName) {
+        if (kickerEl) kickerEl.textContent = 'Intensidade da atividade';
+        if (titleEl) titleEl.textContent = `Como foi: ${options.activityName}?`;
+        if (subtitleEl) subtitleEl.textContent = 'Selecione a intensidade percebida nesta atividade para calcular o gasto calórico.';
+      } else {
+        if (kickerEl) kickerEl.textContent = 'Percepção de esforço';
+        if (titleEl) titleEl.textContent = 'Como foi o treino hoje?';
+        if (subtitleEl) subtitleEl.textContent = 'Escolha seu nível de esforço para calibrar o gasto calórico e a duração da sessão.';
+      }
       $('effortSelectionModal')?.classList.remove('hidden');
     });
   }
@@ -7076,7 +7151,7 @@
     if (e.target === $('effortSelectionModal')) closeEffortModal(null);
   });
 
-  async function finishWorkoutSession(effortKey = 'moderado') {
+  async function finishWorkoutSession(effortKey = null) {
     if (!currentWorkoutSessionId) return;
 
     await Promise.allSettled([...setSaveQueue.values()]);
@@ -7168,7 +7243,7 @@
       };
 
       updateLocalSetLog(weId, setNum, patch);
-      syncExerciseCompletedState(weId);
+      const justCompletedExercise = syncExerciseCompletedState(weId);
 
       if (nextCompleted) {
         const restSecs = Number(setBtn.dataset.rest) || 60;
@@ -7178,7 +7253,15 @@
       }
 
       renderWorkoutDetail(activeDetailDayId);
-      await saveSetLog(weId, setNum, patch);
+      const savePromise = saveSetLog(weId, setNum, patch);
+
+      if (justCompletedExercise && !exerciseEffortMap.has(weId)) {
+        const completedItem = currentWorkoutItems.find(entry => entry.id === weId);
+        const completedEx = completedItem ? (exerciseMap.get(completedItem.exercise_id) || {}) : {};
+        await handleActivityCompletedFlow(completedItem, completedEx, activeDetailDayId);
+      }
+
+      await savePromise;
       return;
     }
 
