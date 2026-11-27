@@ -1870,6 +1870,484 @@
     border-left-color: #a6f279;
   }
 
+
+  /* ===== ESTILO PH.D: CALENDÁRIO SEMANAL + TREINO FOCO INDIVIDUAL ===== */
+  .phd-week-strip {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    padding: 14px 14px 16px;
+    margin-bottom: 16px;
+  }
+  .phd-week-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .phd-week-head strong {
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--text);
+  }
+  .phd-week-nav {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .phd-week-nav button {
+    border: 1px solid var(--line);
+    background: var(--surface-2);
+    color: var(--text);
+    width: 30px;
+    height: 30px;
+    border-radius: 999px;
+    font: inherit;
+    font-weight: 800;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+  }
+  .phd-week-nav button:hover {
+    border-color: var(--green);
+    color: var(--green);
+  }
+  .phd-week-days {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 6px;
+    text-align: center;
+  }
+  .phd-day-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    border: 0;
+    padding: 4px 0;
+    cursor: pointer;
+    color: var(--muted);
+    font: inherit;
+  }
+  .phd-day-cell span {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: lowercase;
+  }
+  .phd-day-bubble {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1.5px solid var(--line);
+    background: #101311;
+    color: var(--text);
+    font-size: 13px;
+    font-weight: 800;
+    display: grid;
+    place-items: center;
+    transition: all 0.15s ease;
+  }
+  .phd-day-cell.trained .phd-day-bubble {
+    background: #22c55e;
+    border-color: #22c55e;
+    color: #07190d;
+    box-shadow: 0 4px 12px rgba(34, 197, 94, 0.32);
+  }
+  .phd-day-cell.selected .phd-day-bubble {
+    background: var(--text);
+    border-color: var(--text);
+    color: #0c0d0e;
+    transform: scale(1.06);
+  }
+  .phd-day-cell.trained.selected .phd-day-bubble {
+    background: var(--green);
+    border-color: #ffffff;
+    color: var(--green-dark);
+    box-shadow: 0 0 0 2px #ffffff, 0 6px 16px rgba(166, 242, 121, 0.35);
+  }
+  .phd-day-cell.today:not(.selected):not(.trained) .phd-day-bubble {
+    border-color: var(--green);
+    color: var(--green);
+  }
+
+  /* Card único do treino selecionado (sem poluir os 3 treinos na tela) */
+  .phd-workout-selector-card {
+    background: linear-gradient(160deg, var(--surface-green) 0%, var(--surface) 100%);
+    border: 1px solid var(--line-green);
+    border-radius: 24px;
+    padding: 18px;
+    margin-bottom: 16px;
+    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.35);
+  }
+  .phd-plan-label {
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--green);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .phd-day-dropdown {
+    width: 100%;
+    background: #101412;
+    border: 1px solid var(--line-green);
+    border-radius: 14px;
+    padding: 12px 14px;
+    font-size: 15px;
+    font-weight: 800;
+    color: #ffffff;
+    margin-bottom: 10px;
+  }
+  .phd-day-muscles {
+    font-size: 12.5px;
+    color: #b7c6bb;
+    margin: 0 0 14px;
+    line-height: 1.45;
+  }
+  .phd-start-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .phd-start-actions .btn {
+    margin-top: 0;
+    font-size: 15px;
+    padding: 14px 16px;
+  }
+  .phd-secondary-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .phd-secondary-row .btn-secondary {
+    padding: 10px 12px;
+    font-size: 12.5px;
+  }
+  .phd-motivation-banner {
+    background: #111613;
+    border: 1px solid var(--line-green);
+    border-radius: 16px;
+    padding: 12px 14px;
+    font-size: 12.5px;
+    color: #d7e5da;
+    text-align: center;
+    margin-bottom: 16px;
+    line-height: 1.45;
+  }
+
+  /* ===== TELA DE EXECUÇÃO FOCADA: 1 EXERCÍCIO POR VEZ (IGUAL PH.D) ===== */
+  .focus-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .focus-back-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 18px;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+  .focus-finish-top-btn {
+    border: 1px solid var(--line-green);
+    background: var(--surface-green-2);
+    color: var(--green);
+    border-radius: 999px;
+    padding: 9px 16px;
+    font: inherit;
+    font-size: 13px;
+    font-weight: 800;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .focus-finish-top-btn:hover {
+    background: var(--green);
+    color: var(--green-dark);
+  }
+  .focus-activity-pill-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+  .focus-nav-arrow {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 15px;
+    font-weight: 800;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+  }
+  .focus-nav-arrow:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+  .focus-activity-badge {
+    border: 1.5px solid var(--green);
+    background: rgba(166, 242, 121, 0.1);
+    color: var(--green);
+    border-radius: 999px;
+    padding: 6px 18px;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .focus-exercise-card {
+    background: linear-gradient(165deg, #17211a 0%, #121513 100%);
+    border: 1px solid var(--line-green);
+    border-radius: 26px;
+    padding: 18px 16px 14px;
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+  }
+  .focus-card-meta-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .focus-muscle-tag {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--muted);
+  }
+  .focus-demo-btn {
+    border: 1px solid var(--line);
+    background: var(--surface-2);
+    color: var(--text);
+    border-radius: 10px;
+    padding: 6px 12px;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .focus-demo-btn.active {
+    border-color: var(--green);
+    color: var(--green);
+  }
+  .focus-exercise-title {
+    margin: 0 0 8px;
+    font-size: 24px;
+    font-weight: 900;
+    text-align: center;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+  }
+  .focus-pr-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+  .focus-demo-panel {
+    background: #0f1511;
+    border: 1px solid #26362b;
+    border-radius: 16px;
+    padding: 10px;
+    margin-bottom: 14px;
+    display: grid;
+    grid-template-columns: 96px 1fr;
+    gap: 10px;
+    align-items: center;
+  }
+  .focus-demo-panel img {
+    width: 96px;
+    height: 76px;
+    border-radius: 10px;
+    object-fit: cover;
+  }
+  .focus-demo-panel p {
+    margin: 4px 0 0;
+    font-size: 12px;
+    color: #c7d4ca;
+    line-height: 1.4;
+  }
+  .focus-sets-head {
+    display: grid;
+    grid-template-columns: 28px 1fr 1fr 78px 34px;
+    gap: 6px;
+    font-size: 11px;
+    font-weight: 800;
+    color: var(--muted);
+    text-align: center;
+    padding: 0 6px 6px;
+  }
+  .focus-set-row {
+    display: grid;
+    grid-template-columns: 28px 1fr 1fr 78px 34px;
+    gap: 6px;
+    align-items: center;
+    background: #0e1310;
+    border: 1px solid #222e25;
+    border-radius: 13px;
+    padding: 7px 6px;
+    margin-bottom: 7px;
+  }
+  .focus-set-row.set-done {
+    border-color: rgba(166, 242, 121, 0.5);
+    background: #162419;
+  }
+  .focus-set-num {
+    font-size: 13px;
+    font-weight: 900;
+    color: var(--text);
+    text-align: center;
+  }
+  .focus-last-pill {
+    font-size: 11px;
+    font-weight: 700;
+    color: #a9b8ad;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.04);
+    border-radius: 8px;
+    padding: 5px 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .focus-history-footer-btn {
+    width: 100%;
+    margin-top: 8px;
+    padding: 11px;
+    border: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+    background: transparent;
+    color: #c7d5cb;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .focus-history-footer-btn:hover {
+    color: var(--green);
+  }
+  .focus-progress-section {
+    margin-top: 16px;
+  }
+  .focus-progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .focus-segments {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 14px;
+  }
+  .focus-segment-btn {
+    flex: 1;
+    height: 7px;
+    border: 0;
+    border-radius: 999px;
+    background: #242c26;
+    cursor: pointer;
+    padding: 0;
+    transition: all 0.15s ease;
+  }
+  .focus-segment-btn.done {
+    background: #22c55e;
+  }
+  .focus-segment-btn.current {
+    background: var(--green);
+    transform: scaleY(1.35);
+  }
+  .focus-bottom-controls {
+    display: grid;
+    grid-template-columns: 0.85fr 1.45fr;
+    gap: 10px;
+  }
+  .focus-skip-btn {
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--text);
+    border-radius: 16px;
+    padding: 14px 12px;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .focus-complete-btn {
+    border: 0;
+    background: var(--green);
+    color: var(--green-dark);
+    border-radius: 16px;
+    padding: 14px 14px;
+    font: inherit;
+    font-size: 14px;
+    font-weight: 900;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    box-shadow: 0 10px 24px rgba(166, 242, 121, 0.25);
+  }
+  .focus-complete-btn.is-done {
+    background: #22c55e;
+    color: #06180c;
+  }
+
+  /* Edição dentro do modal de histórico */
+  .hist-edit-ex-card {
+    background: #111513;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 10px 12px;
+    margin-bottom: 10px;
+  }
+  .hist-edit-set-grid {
+    display: grid;
+    grid-template-columns: 44px 1fr 1fr;
+    gap: 6px;
+    align-items: center;
+    margin-top: 6px;
+  }
+
 </style>
 </head>
 <body>
@@ -1952,7 +2430,7 @@
     ====================================== -->
     <div id="workoutsTab" class="tab-view">
 
-      <!-- LISTA DE TREINOS DO DIA -->
+      <!-- LISTA DE TREINOS DO DIA (LIMPA + CALENDÁRIO SEMANAL PH.D) -->
       <div id="workoutsListView">
 
         <div class="app-header">
@@ -1960,7 +2438,7 @@
             <div class="avatar" id="userAvatar">Y</div>
             <div class="greeting-text">
               <span id="welcomeName">Olá!</span>
-              <small>Bem-vindo de volta.</small>
+              <small id="dashboardPlanSummary">Bem-vindo de volta.</small>
             </div>
           </div>
 
@@ -1969,41 +2447,34 @@
           </select>
         </div>
 
-        <h1 class="screen-title">Treinos</h1>
+        <h1 class="screen-title">Meu treino</h1>
 
-        <section class="dashboard-hero" aria-labelledby="dashboardWelcomeTitle">
-          <div class="dashboard-hero-top">
-            <div>
-              <div class="dashboard-kicker">Seu espaço de evolução</div>
-              <h2 id="dashboardWelcomeTitle">Um passo de cada vez.</h2>
-              <p id="dashboardPlanSummary">Organize sua rotina e acompanhe sua consistência.</p>
+        <!-- CALENDÁRIO SEMANAL DE TREINOS CONCLUÍDOS -->
+        <section class="phd-week-strip" aria-label="Calendário semanal de treinos">
+          <div class="phd-week-head">
+            <strong id="phdWeekMonthLabel">Meu progresso</strong>
+            <div class="phd-week-nav">
+              <button type="button" id="phdPrevWeekBtn" aria-label="Semana anterior">‹</button>
+              <button type="button" id="phdTodayWeekBtn" style="width:auto;padding:0 10px;font-size:11px">Hoje</button>
+              <button type="button" id="phdNextWeekBtn" aria-label="Próxima semana">›</button>
             </div>
-            <span class="tag">YA ACTIVE</span>
           </div>
-          <div class="dashboard-stats" aria-label="Resumo das suas fichas">
-            <div class="dashboard-stat"><strong id="dashboardPlanCount">0</strong><span>Fichas</span></div>
-            <div class="dashboard-stat"><strong id="dashboardDayCount">0</strong><span>Dias de treino</span></div>
-            <div class="dashboard-stat"><strong id="dashboardExerciseCount">0</strong><span>Exercícios</span></div>
-          </div>
-          <div class="dashboard-actions">
-            <button type="button" class="btn btn-ai" id="dashboardAiButton">✨ Criar treino com IA</button>
-            <button type="button" class="btn-secondary" id="dashboardManageButton">Gerenciar fichas</button>
-          </div>
+          <div id="phdWeekDaysGrid" class="phd-week-days"></div>
         </section>
 
-        <div id="dayFilterPills" class="filter-pills">
-          <button type="button" class="pill active" data-filter="all">Todos</button>
+        <!-- CARD ÚNICO DO TREINO DO DIA (SEM POLUIR COM TODOS OS TREINOS NA TELA) -->
+        <div id="heroWorkoutCards">
+          <div class="workout-empty">Carregando seu treino...</div>
         </div>
 
-        <div id="heroWorkoutCards" class="hero-cards">
-          <div class="workout-empty">Carregando seus treinos...</div>
-        </div>
+        <div id="phdMotivationBanner" class="phd-motivation-banner hidden"></div>
 
+        <!-- ATIVIDADE DO DIA SELECIONADO NO CALENDÁRIO + HISTÓRICO RECENTE -->
         <section class="panel recent-history-panel" aria-labelledby="recentHistoryTitle">
           <div class="history-heading">
             <div>
-              <h2 class="section-title" id="recentHistoryTitle">Histórico recente</h2>
-              <p class="section-desc" style="margin:0">Seus últimos treinos concluídos.</p>
+              <h2 class="section-title" id="recentHistoryTitle">Atividade e histórico</h2>
+              <p class="section-desc" id="selectedCalendarDateLabel" style="margin:0">Toque em um dia no calendário ou clique para ver e editar.</p>
             </div>
             <span class="tag" id="recentWorkoutCount">0 concluídos</span>
           </div>
@@ -2014,30 +2485,21 @@
 
       </div>
 
-      <!-- DETALHE / EXECUÇÃO DE UM DIA DE TREINO -->
+      <!-- DETALHE / EXECUÇÃO FOCADA: 1 EXERCÍCIO POR VEZ (ESTILO PH.D) -->
       <div id="workoutDetailView" class="hidden">
 
-        <div class="detail-hero">
-          <div class="detail-hero-bg" id="detailHeroBg"></div>
-          <div class="detail-hero-overlay"></div>
-          <button type="button" class="back-circle-btn" id="backToWorkoutsBtn" aria-label="Voltar">
+        <div class="focus-topbar">
+          <button type="button" class="focus-back-btn" id="backToWorkoutsBtn" aria-label="Voltar">
             ←
+          </button>
+          <span class="progress-pill" id="detailProgressPill">0/0 concluídos</span>
+          <button type="button" class="focus-finish-top-btn" id="finishWorkoutTopBtn">
+            ✓ Encerrar Treino
           </button>
         </div>
 
-        <div class="detail-header">
-          <h2 id="detailDayTitle">Treino</h2>
-          <div class="detail-badges">
-            <div class="detail-meta-group">
-              <span><strong class="meta-icon">⏱</strong> <span id="detailDuration">0 MIN</span></span>
-              <span><strong class="meta-icon">🏋</strong> <span id="detailExerciseCount">0 EXERCÍCIOS</span></span>
-            </div>
-            <span class="progress-pill" id="detailProgressPill">0/0 concluídos</span>
-          </div>
-        </div>
-
-        <div id="detailExercisesList" class="checklist-stack"></div>
-        <div id="finishWorkoutArea" style="margin-top:18px"></div>
+        <div id="detailExercisesList"></div>
+        <div id="finishWorkoutArea"></div>
 
       </div>
 
@@ -2739,7 +3201,7 @@
   </div>
 </div>
 
-<!-- MODAL DE DETALHES DO HISTÓRICO -->
+<!-- MODAL DE DETALHES E EDIÇÃO DO HISTÓRICO -->
 <div id="historyDetailModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="historyDetailTitle">
   <div class="modal-card" style="max-height:88vh;overflow-y:auto">
     <div class="modal-head">
@@ -2747,10 +3209,13 @@
         <div class="dashboard-kicker" id="historyDetailDate" style="margin-bottom:2px">TREINO CONCLUÍDO</div>
         <h3 class="section-title" id="historyDetailTitle" style="margin:0">Detalhes da sessão</h3>
       </div>
-      <button type="button" class="modal-close" id="historyDetailClose" aria-label="Fechar">✕</button>
+      <div style="display:flex;align-items:center;gap:6px">
+        <button type="button" class="small-btn accent" id="historyEditToggleBtn">✎ Editar</button>
+        <button type="button" class="modal-close" id="historyDetailClose" aria-label="Fechar">✕</button>
+      </div>
     </div>
     <div id="historyDetailContent" style="margin-top:10px"></div>
-    <div class="modal-actions" style="margin-top:14px">
+    <div class="modal-actions" id="historyDetailActions" style="margin-top:14px">
       <button type="button" class="btn" id="historyDetailOk" style="width:100%">Fechar</button>
     </div>
   </div>
@@ -4594,6 +5059,30 @@
     }
   }
 
+    // ==========================================
+  // HISTÓRICO, CALENDÁRIO SEMANAL PH.D E EDIÇÃO DE SESSÕES
+  // ==========================================
+  let selectedCalendarDateKey = null;
+  let calendarWeekOffset = 0; // 0 = semana atual, -1 = semana passada, etc.
+  let editingHistorySessionId = null;
+  let isHistoryEditMode = false;
+  let lastSessionExerciseSetsMap = new Map(); // exercise_id -> Map(set_number -> {weight_kg, repetitions})
+
+  function toLocalDateKey(dateInput) {
+    const d = dateInput instanceof Date ? dateInput : new Date(dateInput);
+    if (Number.isNaN(d.getTime())) return '';
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${y}-${m}-${day}`;
+  }
+
+  function getStartOfWeekSunday(baseDate, weekOffset = 0) {
+    const d = new Date(baseDate.getFullYear(), baseDate.getMonth(), baseDate.getDate());
+    d.setDate(d.getDate() - d.getDay() + (weekOffset * 7));
+    return d;
+  }
+
   async function loadRecentWorkoutSessions() {
     const container = $('recentWorkoutHistory');
     if (!container || !currentUser) return;
@@ -4605,19 +5094,126 @@
         .eq('user_id', currentUser.id)
         .not('finished_at', 'is', null)
         .order('finished_at', { ascending: false })
-        .limit(5);
+        .limit(60);
       if (error) throw error;
       recentWorkoutSessions = data || [];
+      renderWeeklyCalendar();
       renderRecentWorkoutSessions();
+      renderMotivationBanner();
     } catch (error) {
       recentWorkoutSessions = [];
+      renderWeeklyCalendar();
       if (container) {
-        container.innerHTML = '<div class="workout-empty">O histórico será habilitado após aplicar a migração do banco de dados e concluir seu primeiro treino.</div>';
+        container.innerHTML = '<div class="workout-empty">O histórico será habilitado após concluir seu primeiro treino.</div>';
       }
       if ($('recentWorkoutCount')) $('recentWorkoutCount').textContent = 'Aguardando';
       console.warn('Não foi possível carregar o histórico:', error.message);
     }
   }
+
+  function renderMotivationBanner() {
+    const banner = $('phdMotivationBanner');
+    if (!banner) return;
+    const now = new Date();
+    const curMonth = now.getMonth();
+    const curYear = now.getFullYear();
+    const prevDate = new Date(curYear, curMonth - 1, 1);
+    const prevMonth = prevDate.getMonth();
+    const prevYear = prevDate.getFullYear();
+
+    let curCount = 0;
+    let prevCount = 0;
+    recentWorkoutSessions.forEach(s => {
+      const d = new Date(s.finished_at || s.started_at);
+      if (d.getFullYear() === curYear && d.getMonth() === curMonth) curCount++;
+      if (d.getFullYear() === prevYear && d.getMonth() === prevMonth) prevCount++;
+    });
+
+    if (curCount > 0 && curCount >= prevCount) {
+      banner.textContent = prevCount > 0
+        ? `Parabéns! Você já treinou ${curCount}x neste mês (superando os ${prevCount} treinos do mês passado). Continue assim!`
+        : `Parabéns! Você já concluiu ${curCount} ${curCount === 1 ? 'treino' : 'treinos'} neste mês. Continue firme!`;
+      banner.classList.remove('hidden');
+    } else if (curCount > 0) {
+      banner.textContent = `Você já completou ${curCount} ${curCount === 1 ? 'treino' : 'treinos'} neste mês. Mantenha a constância!`;
+      banner.classList.remove('hidden');
+    } else {
+      banner.classList.add('hidden');
+    }
+  }
+
+  function renderWeeklyCalendar() {
+    const grid = $('phdWeekDaysGrid');
+    const monthLabel = $('phdWeekMonthLabel');
+    if (!grid) return;
+
+    const today = new Date();
+    const todayKey = toLocalDateKey(today);
+    const weekStart = getStartOfWeekSunday(today, calendarWeekOffset);
+    const weekEnd = new Date(weekStart);
+    weekEnd.setDate(weekStart.getDate() + 6);
+
+    if (monthLabel) {
+      const startMonth = weekStart.toLocaleDateString('pt-BR', { month: 'long' });
+      const endMonth = weekEnd.toLocaleDateString('pt-BR', { month: 'long' });
+      const cap = (str) => str.charAt(0).toUpperCase() + str.slice(1);
+      monthLabel.textContent = startMonth === endMonth
+        ? `${cap(startMonth)} · ${weekStart.getFullYear()}`
+        : `${cap(startMonth)} / ${cap(endMonth)} · ${weekEnd.getFullYear()}`;
+    }
+
+    const trainedDateKeys = new Set(
+      recentWorkoutSessions.map(s => toLocalDateKey(s.finished_at || s.started_at)).filter(Boolean)
+    );
+
+    const dayNames = ['dom.', 'seg.', 'ter.', 'qua.', 'qui.', 'sex.', 'sáb.'];
+    let cellsHTML = '';
+
+    for (let i = 0; i < 7; i++) {
+      const cellDate = new Date(weekStart);
+      cellDate.setDate(weekStart.getDate() + i);
+      const dateKey = toLocalDateKey(cellDate);
+      const isTrained = trainedDateKeys.has(dateKey);
+      const isSelected = selectedCalendarDateKey === dateKey;
+      const isToday = dateKey === todayKey;
+
+      cellsHTML += `
+        <button
+          type="button"
+          class="phd-day-cell ${isTrained ? 'trained' : ''} ${isSelected ? 'selected' : ''} ${isToday ? 'today' : ''}"
+          data-cal-date="${dateKey}"
+          aria-label="${cellDate.toLocaleDateString('pt-BR')}${isTrained ? ' - treino concluído' : ''}">
+          <span>${dayNames[i]}</span>
+          <div class="phd-day-bubble">${cellDate.getDate()}</div>
+        </button>
+      `;
+    }
+
+    grid.innerHTML = cellsHTML;
+  }
+
+  $('phdPrevWeekBtn')?.addEventListener('click', () => {
+    calendarWeekOffset -= 1;
+    renderWeeklyCalendar();
+  });
+  $('phdNextWeekBtn')?.addEventListener('click', () => {
+    calendarWeekOffset += 1;
+    renderWeeklyCalendar();
+  });
+  $('phdTodayWeekBtn')?.addEventListener('click', () => {
+    calendarWeekOffset = 0;
+    selectedCalendarDateKey = null;
+    renderWeeklyCalendar();
+    renderRecentWorkoutSessions();
+  });
+  $('phdWeekDaysGrid')?.addEventListener('click', (e) => {
+    const cell = e.target.closest('[data-cal-date]');
+    if (!cell) return;
+    const clickedKey = cell.dataset.calDate;
+    selectedCalendarDateKey = (selectedCalendarDateKey === clickedKey) ? null : clickedKey;
+    renderWeeklyCalendar();
+    renderRecentWorkoutSessions();
+  });
 
   function getSessionStatsCache() {
     if (!currentUser) return {};
@@ -4637,70 +5233,329 @@
     } catch (_) {}
   }
 
-  function openHistorySessionModal(sessionId) {
+  function removeSessionStatsCache(sessionId) {
+    if (!currentUser || !sessionId) return;
+    try {
+      const cache = getSessionStatsCache();
+      delete cache[sessionId];
+      localStorage.setItem(`ya_workout_session_stats_${currentUser.id}`, JSON.stringify(cache));
+    } catch (_) {}
+  }
+
+  async function buildEditableSessionDetails(session) {
+    const statsCache = getSessionStatsCache();
+    const cached = statsCache[session.id] || {};
+    if (Array.isArray(cached.exerciseDetails) && cached.exerciseDetails.length) {
+      return JSON.parse(JSON.stringify(cached.exerciseDetails));
+    }
+
+    // Fallback: buscar séries diretamente do banco para sessões antigas sem cache local
+    const { data: rows, error } = await client
+      .from('workout_sets')
+      .select('exercise_id, set_number, repetitions, weight_kg, completed_at')
+      .eq('session_id', session.id)
+      .order('set_number', { ascending: true });
+
+    if (error || !rows?.length) return [];
+
+    const grouped = new Map();
+    rows.forEach(r => {
+      if (!grouped.has(r.exercise_id)) {
+        const ex = exerciseMap.get(r.exercise_id) || exerciseLibrary.find(e => e.id === r.exercise_id);
+        grouped.set(r.exercise_id, {
+          exerciseId: r.exercise_id,
+          name: ex?.name || 'Exercício',
+          muscle_group: ex?.muscle_group || '',
+          setsDone: 0,
+          totalSets: 0,
+          reps: 0,
+          volumeKg: 0,
+          maxLoadKg: 0,
+          loggedSets: []
+        });
+      }
+      const entry = grouped.get(r.exercise_id);
+      const load = Number(r.weight_kg) || 0;
+      const reps = Number(r.repetitions) || 0;
+      entry.totalSets += 1;
+      entry.setsDone += 1;
+      entry.reps += reps;
+      entry.volumeKg += Math.round(load * reps);
+      if (load > entry.maxLoadKg) entry.maxLoadKg = load;
+      entry.loggedSets.push({ set: r.set_number, weight_kg: load, reps });
+    });
+
+    return [...grouped.values()];
+  }
+
+  async function openHistorySessionModal(sessionId, startInEdit = false) {
     const session = recentWorkoutSessions.find(s => String(s.id) === String(sessionId));
     if (!session) return;
+
+    editingHistorySessionId = session.id;
+    isHistoryEditMode = Boolean(startInEdit);
+
     const statsCache = getSessionStatsCache();
     const cached = statsCache[session.id] || {};
     const day = workoutDays.find(item => item.id === session.day_id);
     const plan = workoutPlans.find(item => item.id === session.plan_id);
     const date = session.finished_at ? new Date(session.finished_at) : new Date(session.started_at);
     const dateLabel = date.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' });
+    const timeLabel = date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
 
     const rawMin = session.duration_seconds ? Math.round(Number(session.duration_seconds) / 60) : cached.durationMinutes;
     const safeMin = getSafeWorkoutDurationMinutes(rawMin, cached.setsDone || 16);
-    const effortText = cached.effortLabel ? `${cached.effortEmoji || '💪'} ${cached.effortLabel}` : '💪 Moderado';
+    const effortKey = cached.effortKey || 'moderado';
+    const effortCfg = EFFORT_CONFIG[effortKey] || EFFORT_CONFIG.moderado;
+    const effortText = `${cached.effortEmoji || effortCfg.emoji} ${cached.effortLabel || effortCfg.label}`;
 
-    $('historyDetailDate').textContent = `${dateLabel.toUpperCase()} · ${escapeHTML(plan?.name || 'FICHA')}`;
+    $('historyDetailDate').textContent = `${dateLabel.toUpperCase()} ÀS ${timeLabel} · ${escapeHTML(plan?.name || 'FICHA')}`;
     $('historyDetailTitle').textContent = day?.name || 'Treino concluído';
 
-    const detailsList = Array.isArray(cached.exerciseDetails) && cached.exerciseDetails.length
-      ? cached.exerciseDetails.map(ex => {
-          const setsText = ex.loggedSets && ex.loggedSets.length
-            ? ex.loggedSets.map(s => `S${s.set}: ${numberBR(s.weight_kg, 1)}kg×${s.reps}`).join(' · ')
-            : `${ex.setsDone}/${ex.totalSets} séries`;
-          return `
-            <div class="workout-item" style="margin-bottom:8px">
-              <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
-                <strong>${escapeHTML(ex.name)}</strong>
-                ${ex.maxLoadKg > 0 ? `<span class="tag">Máx ${numberBR(ex.maxLoadKg, 1)} kg</span>` : ''}
-              </div>
-              <small>${escapeHTML(setsText)}${ex.volumeKg > 0 ? ` · Vol: ${numberBR(ex.volumeKg)} kg` : ''}</small>
-            </div>
-          `;
-        }).join('')
-      : `<div class="workout-empty">Resumo salvo no cache local desta sessão.<br>Novos treinos concluídos exibem cada série, carga e repetição aqui.</div>`;
+    const toggleBtn = $('historyEditToggleBtn');
+    if (toggleBtn) {
+      toggleBtn.textContent = isHistoryEditMode ? 'Cancelar edição' : '✎ Editar';
+    }
 
-    $('historyDetailContent').innerHTML = `
-      <div class="summary-metrics-grid">
-        <div class="summary-metric-box">
-          <small>Duração estimada</small>
-          <strong>${safeMin} min</strong>
+    const exerciseDetails = await buildEditableSessionDetails(session);
+
+    if (!isHistoryEditMode) {
+      const detailsList = exerciseDetails.length
+        ? exerciseDetails.map(ex => {
+            const setsText = ex.loggedSets && ex.loggedSets.length
+              ? ex.loggedSets.map(s => `S${s.set}: ${numberBR(s.weight_kg, 1)}kg×${s.reps}`).join(' · ')
+              : `${ex.setsDone}/${ex.totalSets} séries`;
+            return `
+              <div class="workout-item" style="margin-bottom:8px">
+                <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+                  <strong>${escapeHTML(ex.name)}</strong>
+                  ${ex.maxLoadKg > 0 ? `<span class="tag">Máx ${numberBR(ex.maxLoadKg, 1)} kg</span>` : ''}
+                </div>
+                <small>${escapeHTML(setsText)}${ex.volumeKg > 0 ? ` · Vol: ${numberBR(ex.volumeKg)} kg` : ''}</small>
+              </div>
+            `;
+          }).join('')
+        : `<div class="workout-empty">Nenhum detalhe de séries registrado nesta sessão. Clique em <b>✎ Editar</b> para ajustar duração ou esforço.</div>`;
+
+      $('historyDetailContent').innerHTML = `
+        <div class="summary-metrics-grid">
+          <div class="summary-metric-box">
+            <small>Duração</small>
+            <strong>${safeMin} min</strong>
+          </div>
+          <div class="summary-metric-box">
+            <small>Esforço</small>
+            <strong>${escapeHTML(effortText)}</strong>
+          </div>
+          <div class="summary-metric-box">
+            <small>Calorias</small>
+            <strong>${cached.calories ? `~${numberBR(cached.calories)} kcal` : '—'}</strong>
+          </div>
+          <div class="summary-metric-box">
+            <small>Volume total</small>
+            <strong>${cached.volumeKg ? `${numberBR(cached.volumeKg)} kg` : '—'}</strong>
+          </div>
         </div>
-        <div class="summary-metric-box">
-          <small>Esforço</small>
-          <strong>${escapeHTML(effortText)}</strong>
+        <div class="section-title" style="font-size:14px;margin:10px 0 6px">Exercícios da sessão</div>
+        <div>${detailsList}</div>
+      `;
+
+      $('historyDetailActions').innerHTML = `
+        <button type="button" class="btn-secondary" id="historyStartEditBtn" style="flex:1">✎ Editar treino</button>
+        <button type="button" class="btn" id="historyDetailOk" style="flex:1">Fechar</button>
+      `;
+      $('historyStartEditBtn')?.addEventListener('click', () => openHistorySessionModal(session.id, true));
+      $('historyDetailOk')?.addEventListener('click', closeHistorySessionModal);
+    } else {
+      const effortOptionsHTML = Object.values(EFFORT_CONFIG).map(opt => `
+        <option value="${opt.key}" ${opt.key === effortKey ? 'selected' : ''}>${opt.emoji} ${opt.label}</option>
+      `).join('');
+
+      const editableExercisesHTML = exerciseDetails.length
+        ? exerciseDetails.map((ex, exIdx) => {
+            const setsToRender = (ex.loggedSets && ex.loggedSets.length)
+              ? ex.loggedSets
+              : [{ set: 1, weight_kg: 0, reps: 10 }];
+            return `
+              <div class="hist-edit-ex-card" data-edit-ex-idx="${exIdx}">
+                <strong style="font-size:13.5px;display:block;margin-bottom:4px">${escapeHTML(ex.name)}</strong>
+                <div class="hist-edit-set-grid" style="font-size:10px;color:var(--muted);font-weight:800">
+                  <span>SÉRIE</span>
+                  <span>CARGA (KG)</span>
+                  <span>REPS</span>
+                </div>
+                ${setsToRender.map((s, sIdx) => `
+                  <div class="hist-edit-set-grid" data-edit-set-row="${exIdx}:${sIdx}">
+                    <span style="font-size:12px;font-weight:800;color:var(--green)">S${s.set}</span>
+                    <input type="number" step="0.5" min="0" class="set-input" data-hist-field="weight" value="${Number(s.weight_kg) || 0}">
+                    <input type="number" min="0" class="set-input" data-hist-field="reps" value="${Number(s.reps) || 0}">
+                  </div>
+                `).join('')}
+              </div>
+            `;
+          }).join('')
+        : `<div class="workout-empty" style="margin-bottom:10px">Esta sessão não possui séries individuais gravadas; você pode editar a duração, o esforço ou excluir o registro.</div>`;
+
+      $('historyDetailContent').innerHTML = `
+        <div class="form-grid" style="margin-bottom:12px">
+          <div>
+            <label for="histEditDuration">Duração (minutos)</label>
+            <input id="histEditDuration" type="number" min="1" max="300" value="${safeMin}">
+          </div>
+          <div>
+            <label for="histEditEffort">Esforço percebido</label>
+            <select id="histEditEffort">${effortOptionsHTML}</select>
+          </div>
         </div>
-        <div class="summary-metric-box">
-          <small>Calorias</small>
-          <strong>${cached.calories ? `~${numberBR(cached.calories)} kcal` : '—'}</strong>
-        </div>
-        <div class="summary-metric-box">
-          <small>Volume total</small>
-          <strong>${cached.volumeKg ? `${numberBR(cached.volumeKg)} kg` : '—'}</strong>
-        </div>
-      </div>
-      <div class="section-title" style="font-size:14px;margin:10px 0 6px">Exercícios da sessão</div>
-      <div>${detailsList}</div>
-    `;
+        <div class="section-title" style="font-size:14px;margin:8px 0 6px">Editar cargas e repetições</div>
+        <div id="histEditExercisesContainer">${editableExercisesHTML}</div>
+      `;
+
+      $('historyDetailActions').innerHTML = `
+        <button type="button" class="small-btn danger" id="histDeleteSessionBtn" style="padding:12px 14px">Excluir</button>
+        <button type="button" class="btn" id="histSaveChangesBtn" style="flex:1">Salvar alterações</button>
+      `;
+
+      $('histSaveChangesBtn')?.addEventListener('click', async () => {
+        const btn = $('histSaveChangesBtn');
+        btn.disabled = true;
+        btn.textContent = 'Salvando...';
+        try {
+          await saveEditedHistorySession(session, exerciseDetails);
+        } catch (err) {
+          btn.disabled = false;
+          btn.textContent = 'Salvar alterações';
+          showToast('Erro ao salvar edição: ' + err.message, 'error');
+        }
+      });
+
+      $('histDeleteSessionBtn')?.addEventListener('click', async () => {
+        const confirmed = await openConfirmModal({
+          title: 'Excluir treino do histórico',
+          text: 'Tem certeza que deseja apagar este treino concluído do histórico e do calendário?'
+        });
+        if (!confirmed) return;
+        try {
+          await client.from('workout_sets').delete().eq('session_id', session.id);
+          const { error } = await client
+            .from('workout_sessions')
+            .delete()
+            .eq('id', session.id)
+            .eq('user_id', currentUser.id);
+          if (error) throw error;
+          removeSessionStatsCache(session.id);
+          closeHistorySessionModal();
+          await loadRecentWorkoutSessions();
+          showToast('Treino removido do histórico.', 'success');
+        } catch (err) {
+          showToast('Erro ao excluir: ' + err.message, 'error');
+        }
+      });
+    }
 
     $('historyDetailModal')?.classList.remove('hidden');
   }
 
+  async function saveEditedHistorySession(session, originalExerciseDetails) {
+    const newMinutes = Math.max(1, Number($('histEditDuration')?.value) || 40);
+    const newEffortKey = $('histEditEffort')?.value || 'moderado';
+    const effortCfg = EFFORT_CONFIG[newEffortKey] || EFFORT_CONFIG.moderado;
+
+    const updatedDetails = JSON.parse(JSON.stringify(originalExerciseDetails));
+    let totalVolumeKg = 0;
+    let totalSetsDone = 0;
+
+    document.querySelectorAll('#histEditExercisesContainer [data-edit-ex-idx]').forEach(card => {
+      const exIdx = Number(card.dataset.editExIdx);
+      const exObj = updatedDetails[exIdx];
+      if (!exObj) return;
+
+      let exVol = 0;
+      let exMax = 0;
+      const newLogged = [];
+
+      card.querySelectorAll('[data-edit-set-row]').forEach((row, sIdx) => {
+        const weightVal = Math.max(0, Number(row.querySelector('[data-hist-field="weight"]')?.value) || 0);
+        const repsVal = Math.max(0, Math.round(Number(row.querySelector('[data-hist-field="reps"]')?.value) || 0));
+        const setNum = exObj.loggedSets?.[sIdx]?.set || (sIdx + 1);
+        newLogged.push({ set: setNum, weight_kg: weightVal, reps: repsVal });
+        exVol += weightVal * repsVal;
+        if (weightVal > exMax) exMax = weightVal;
+        totalSetsDone += 1;
+      });
+
+      exObj.loggedSets = newLogged;
+      exObj.volumeKg = Math.round(exVol);
+      exObj.maxLoadKg = exMax;
+      exObj.setsDone = newLogged.length;
+      totalVolumeKg += exVol;
+    });
+
+    // Atualiza duração no Supabase
+    const { error } = await client
+      .from('workout_sessions')
+      .update({ duration_seconds: newMinutes * 60 })
+      .eq('id', session.id)
+      .eq('user_id', currentUser.id);
+    if (error) throw error;
+
+    // Atualiza workout_sets no Supabase quando houver exerciseId
+    for (const exObj of updatedDetails) {
+      if (!exObj.exerciseId) continue;
+      for (const s of exObj.loggedSets || []) {
+        await client
+          .from('workout_sets')
+          .update({ weight_kg: s.weight_kg, repetitions: s.reps })
+          .eq('session_id', session.id)
+          .eq('exercise_id', exObj.exerciseId)
+          .eq('set_number', s.set);
+      }
+      if (exObj.maxLoadKg > 0) {
+        saveLocalRecordCache(exObj.exerciseId, { weight_kg: exObj.maxLoadKg, reps: null });
+      }
+    }
+
+    // Recalcula calorias estimadas com a nova duração e esforço
+    const rawWeight = Number($('weight')?.value || currentProfileData?.current_weight || 75);
+    const weightKg = (rawWeight >= 30 && rawWeight <= 300) ? rawWeight : 75;
+    const rawHeight = Number($('height')?.value || currentProfileData?.height_cm || 170);
+    const heightCm = (rawHeight >= 100 && rawHeight <= 230) ? rawHeight : 170;
+    const age = calculateAge($('birthDate')?.value || currentProfileData?.birth_date) || 25;
+    const sex = $('nutritionSex')?.value || nutritionProfile?.sex || 'male';
+    const bmr = (10 * weightKg) + (6.25 * heightCm) - (5 * age) + (sex === 'female' ? -161 : 5);
+    const kcalRepousoMin = Math.max(0.8, bmr / 1440);
+    const bonusVolume = Math.min(0.6, (totalVolumeKg / (weightKg * newMinutes)) * 0.4);
+    const effectiveMET = Number((effortCfg.metBase + bonusVolume).toFixed(2));
+    const calories = Math.max(15, Math.round(kcalRepousoMin * effectiveMET * newMinutes));
+
+    const prevStats = getSessionStatsCache()[session.id] || {};
+    saveSessionStatsCache(session.id, {
+      ...prevStats,
+      calories,
+      volumeKg: Math.round(totalVolumeKg),
+      setsDone: totalSetsDone || prevStats.setsDone || 12,
+      durationMinutes: newMinutes,
+      effortKey: effortCfg.key,
+      effortLabel: effortCfg.label,
+      effortEmoji: effortCfg.emoji,
+      exerciseDetails: updatedDetails
+    });
+
+    await loadRecentWorkoutSessions();
+    await openHistorySessionModal(session.id, false);
+    showToast('Histórico atualizado com sucesso!', 'success');
+  }
+
   function closeHistorySessionModal() {
+    editingHistorySessionId = null;
+    isHistoryEditMode = false;
     $('historyDetailModal')?.classList.add('hidden');
   }
 
+  $('historyEditToggleBtn')?.addEventListener('click', () => {
+    if (!editingHistorySessionId) return;
+    openHistorySessionModal(editingHistorySessionId, !isHistoryEditMode);
+  });
   $('historyDetailClose')?.addEventListener('click', closeHistorySessionModal);
   $('historyDetailOk')?.addEventListener('click', closeHistorySessionModal);
   $('historyDetailModal')?.addEventListener('click', (e) => {
@@ -4710,23 +5565,52 @@
   $('recentWorkoutHistory')?.addEventListener('click', (e) => {
     const row = e.target.closest('[data-history-session-id]');
     if (!row) return;
-    openHistorySessionModal(row.dataset.historySessionId);
+    openHistorySessionModal(row.dataset.historySessionId, false);
   });
 
   function renderRecentWorkoutSessions() {
     const container = $('recentWorkoutHistory');
+    const dateSubLabel = $('selectedCalendarDateLabel');
     if (!container) return;
-    if ($('recentWorkoutCount')) $('recentWorkoutCount').textContent = `${recentWorkoutSessions.length} recentes`;
-    if (!recentWorkoutSessions.length) {
-      container.innerHTML = '<div class="workout-empty">Nenhum treino concluído ainda. Quando finalizar seu primeiro treino, ele aparecerá aqui.</div>';
+
+    let sessionsToShow = recentWorkoutSessions;
+    if (selectedCalendarDateKey) {
+      sessionsToShow = recentWorkoutSessions.filter(
+        s => toLocalDateKey(s.finished_at || s.started_at) === selectedCalendarDateKey
+      );
+      const [yy, mm, dd] = selectedCalendarDateKey.split('-');
+      if (dateSubLabel) {
+        dateSubLabel.innerHTML = `Atividades de <strong>${dd}/${mm}/${yy}</strong> · <button type="button" id="clearCalFilterInline" style="border:0;background:none;color:var(--green);font-weight:800;cursor:pointer;padding:0">Ver todos</button>`;
+        $('clearCalFilterInline')?.addEventListener('click', () => {
+          selectedCalendarDateKey = null;
+          renderWeeklyCalendar();
+          renderRecentWorkoutSessions();
+        });
+      }
+    } else if (dateSubLabel) {
+      dateSubLabel.textContent = 'Toque em um dia no calendário ou clique no treino para ver e editar.';
+    }
+
+    if ($('recentWorkoutCount')) {
+      $('recentWorkoutCount').textContent = selectedCalendarDateKey
+        ? `${sessionsToShow.length} no dia`
+        : `${recentWorkoutSessions.length} concluídos`;
+    }
+
+    if (!sessionsToShow.length) {
+      container.innerHTML = selectedCalendarDateKey
+        ? '<div class="workout-empty">Nenhum treino registrado nesta data.</div>'
+        : '<div class="workout-empty">Nenhum treino concluído ainda. Quando finalizar seu primeiro treino, ele aparecerá aqui e no calendário acima.</div>';
       return;
     }
+
     const statsCache = getSessionStatsCache();
-    container.innerHTML = recentWorkoutSessions.map(session => {
+    container.innerHTML = sessionsToShow.slice(0, 10).map(session => {
       const day = workoutDays.find(item => item.id === session.day_id);
       const plan = workoutPlans.find(item => item.id === session.plan_id);
       const date = session.finished_at ? new Date(session.finished_at) : new Date(session.started_at);
       const dateLabel = date.toLocaleString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' });
+      const timeLabel = date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
       const stats = statsCache[session.id];
       const rawMin = session.duration_seconds ? Math.round(Number(session.duration_seconds) / 60) : stats?.durationMinutes;
       const safeMin = getSafeWorkoutDurationMinutes(rawMin, stats?.setsDone || 16);
@@ -4736,7 +5620,7 @@
         ? ` · 🔥 ~${numberBR(stats.calories)} kcal${stats.volumeKg > 0 ? ` · 🏋 ${numberBR(stats.volumeKg)} kg` : ''}`
         : '';
       return `<button type="button" class="history-row" data-history-session-id="${escapeHTML(session.id)}">
-        <div><strong>${escapeHTML(day?.name || 'Treino concluído')}${effortBadge}</strong><small>${escapeHTML(plan?.name || 'Ficha')} · ${dateLabel}${extraMeta} · Ver detalhes ›</small></div>
+        <div><strong>${escapeHTML(day?.name || 'Treino concluído')}${effortBadge}</strong><small>${escapeHTML(plan?.name || 'Ficha')} · ${dateLabel} (${timeLabel})${extraMeta} · Ver / Editar ›</small></div>
         <span class="history-duration">${durationLabel}</span>
       </button>`;
     }).join('');
@@ -4936,7 +5820,6 @@
 
     renderDays();
     renderDaySelect();
-    renderDayFilterPills();
   }
 
   function renderDayFilterPills() {
@@ -4961,7 +5844,6 @@
     const btn = e.target.closest('.pill');
     if (!btn) return;
     activeDayFilter = btn.dataset.filter;
-    renderDayFilterPills();
     renderHeroWorkoutCards();
   });
 
@@ -5204,22 +6086,41 @@
     }
   }
 
+  let selectedHomeDayId = null;
+  let activeFocusExerciseIndex = 0;
+  let showFocusExerciseDemo = false;
+
+  function getSuggestedNextWorkoutDayId() {
+    if (!workoutDays.length) return null;
+    if (selectedHomeDayId && workoutDays.some(d => d.id === selectedHomeDayId)) {
+      return selectedHomeDayId;
+    }
+    const planId = $('selectedPlan')?.value;
+    const lastPlanSession = recentWorkoutSessions.find(s => s.plan_id === planId && s.day_id);
+    if (lastPlanSession) {
+      const lastIdx = workoutDays.findIndex(d => d.id === lastPlanSession.day_id);
+      if (lastIdx >= 0) {
+        const nextIdx = (lastIdx + 1) % workoutDays.length;
+        return workoutDays[nextIdx].id;
+      }
+    }
+    return workoutDays[0].id;
+  }
+
   function renderDashboardSummary() {
-    if ($('dashboardPlanCount')) $('dashboardPlanCount').textContent = workoutPlans.length;
-    if ($('dashboardDayCount')) $('dashboardDayCount').textContent = workoutDays.length;
-    if ($('dashboardExerciseCount')) $('dashboardExerciseCount').textContent = currentWorkoutItems.length;
     const activePlan = workoutPlans.find(plan => plan.id === $('selectedPlan')?.value);
     const summary = $('dashboardPlanSummary');
     if (summary) {
       summary.textContent = activePlan
-        ? `Ficha ativa: ${activePlan.name}. Continue de onde parou.`
-        : 'Crie sua primeira ficha ou peça para a IA montar um plano personalizado.';
+        ? `${activePlan.name} · ${workoutDays.length} ${workoutDays.length === 1 ? 'treino' : 'treinos'}`
+        : 'Organize sua rotina de treinos.';
     }
   }
 
   function renderHeroWorkoutCards() {
     renderDashboardSummary();
     const container = $('heroWorkoutCards');
+    if (!container) return;
 
     if (!$('selectedPlan').value || !workoutDays.length) {
       container.innerHTML = `
@@ -5231,57 +6132,101 @@
           </button>
         </div>
       `;
-      const goBtn = $('emptyGoBuilderBtn');
-      if (goBtn) {
-        goBtn.addEventListener('click', () => setAppTab('builderTab'));
-      }
+      $('emptyGoBuilderBtn')?.addEventListener('click', () => setAppTab('builderTab'));
       return;
     }
 
-    const visibleDays = activeDayFilter === 'all'
-      ? workoutDays
-      : workoutDays.filter(d => d.id === activeDayFilter);
+    const chosenDayId = getSuggestedNextWorkoutDayId();
+    selectedHomeDayId = chosenDayId;
+    const day = workoutDays.find(d => d.id === chosenDayId) || workoutDays[0];
+    const activePlan = workoutPlans.find(p => p.id === $('selectedPlan').value);
+    const dayItems = currentWorkoutItems.filter(i => i.workout_day_id === day.id);
+    const dayExDetails = dayItems.map(i => exerciseMap.get(i.exercise_id)).filter(Boolean);
+    const uniqueMuscles = [...new Set(dayExDetails.map(e => e.muscle_group).filter(Boolean))];
+    const minutes = estimateWorkoutMinutes(dayItems);
 
-    container.innerHTML = visibleDays.map(day => {
-      const dayItems = currentWorkoutItems.filter(i => i.workout_day_id === day.id);
-      const dayExDetails = dayItems.map(i => exerciseMap.get(i.exercise_id)).filter(Boolean);
-      const cover = getCoverForWorkout(day.name, dayExDetails);
-      const minutes = estimateWorkoutMinutes(dayItems);
+    const dayOptionsHTML = workoutDays.map(d => `
+      <option value="${d.id}" ${d.id === day.id ? 'selected' : ''}>
+        ${escapeHTML(d.name)}
+      </option>
+    `).join('');
 
-      return `
-        <article class="workout-hero-card" data-open-day="${day.id}" tabindex="0" role="button" aria-label="Abrir ${escapeHTML(day.name)}">
-          <div class="workout-hero-bg" style="background-image:url('${cover}')"></div>
-          <div class="workout-hero-overlay"></div>
-          <div class="workout-hero-content">
-            <div class="workout-hero-info">
-              <h3>${escapeHTML(day.name)}</h3>
-              <div class="workout-hero-meta">
-                <span><strong class="meta-icon">⏱</strong> ${minutes} MIN</span>
-                <span><strong class="meta-icon">🏋</strong> ${dayItems.length} EXERCÍCIOS</span>
-              </div>
-            </div>
-            <button type="button" class="go-circle-btn" aria-label="Abrir treino">→</button>
-          </div>
-        </article>
-      `;
-    }).join('');
+    container.innerHTML = `
+      <section class="phd-workout-selector-card" aria-label="Treino selecionado">
+        <div class="phd-plan-label">
+          <span>${escapeHTML(activePlan?.name || 'FICHA ATIVA')}</span>
+          <span>⏱ ${minutes} MIN · ${dayItems.length} EXERCÍCIOS</span>
+        </div>
+
+        <select id="phdDayDropdownSelect" class="phd-day-dropdown" aria-label="Escolher treino do dia">
+          ${dayOptionsHTML}
+        </select>
+
+        <p class="phd-day-muscles">
+          ${uniqueMuscles.length
+            ? `Foco: <strong>${escapeHTML(uniqueMuscles.join(', '))}</strong>`
+            : 'Toque abaixo para iniciar os exercícios um por um.'}
+        </p>
+
+        <div class="phd-start-actions">
+          <button type="button" class="btn" id="phdStartWorkoutBtn">
+            ▶ Iniciar treino
+          </button>
+        </div>
+
+        <div class="phd-secondary-row">
+          <button type="button" class="btn-secondary" id="phdManageWorkoutsBtn">✎ Editar ficha</button>
+          <button type="button" class="btn-secondary" id="phdAiWorkoutBtn">✨ Treino com IA</button>
+        </div>
+      </section>
+    `;
+
+    $('phdDayDropdownSelect')?.addEventListener('change', (e) => {
+      selectedHomeDayId = e.target.value;
+      renderHeroWorkoutCards();
+    });
+    $('phdStartWorkoutBtn')?.addEventListener('click', () => {
+      openWorkoutDetail(day.id);
+    });
+    $('phdManageWorkoutsBtn')?.addEventListener('click', () => {
+      setAppTab('builderTab');
+    });
+    $('phdAiWorkoutBtn')?.addEventListener('click', () => {
+      setAppTab('builderTab');
+      $('autoGeneratorForm')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
   }
 
-  $('heroWorkoutCards').addEventListener('click', (e) => {
-    const card = e.target.closest('[data-open-day]');
-    if (!card) return;
-    openWorkoutDetail(card.dataset.openDay);
-  });
-  $('heroWorkoutCards').addEventListener('keydown', (e) => {
-    if (e.key !== 'Enter' && e.key !== ' ') return;
-    const card = e.target.closest('[data-open-day]');
-    if (!card) return;
-    e.preventDefault();
-    openWorkoutDetail(card.dataset.openDay);
-  });
+  async function loadLastSessionSetsForDay(dayId) {
+    lastSessionExerciseSetsMap = new Map();
+    if (!currentUser || !dayId) return;
+
+    const prevSession = recentWorkoutSessions.find(s => s.day_id === dayId);
+    if (!prevSession) return;
+
+    const { data, error } = await client
+      .from('workout_sets')
+      .select('exercise_id, set_number, weight_kg, repetitions')
+      .eq('session_id', prevSession.id)
+      .order('set_number', { ascending: true });
+
+    if (error || !data) return;
+
+    data.forEach(row => {
+      if (!lastSessionExerciseSetsMap.has(row.exercise_id)) {
+        lastSessionExerciseSetsMap.set(row.exercise_id, new Map());
+      }
+      lastSessionExerciseSetsMap.get(row.exercise_id).set(Number(row.set_number), {
+        weight_kg: row.weight_kg,
+        repetitions: row.repetitions
+      });
+    });
+  }
 
   async function openWorkoutDetail(dayId) {
     activeDetailDayId = dayId;
+    activeFocusExerciseIndex = 0;
+    showFocusExerciseDemo = false;
     completedSet.clear();
     expandedExerciseIds.clear();
     $('workoutsListView').classList.add('hidden');
@@ -5293,7 +6238,8 @@
       const dayItems = currentWorkoutItems.filter(item => item.workout_day_id === dayId);
       await Promise.all([
         loadWorkoutLogs(dayItems.map(item => item.id)),
-        loadHistoricalExerciseRecords(dayItems.map(item => item.exercise_id))
+        loadHistoricalExerciseRecords(dayItems.map(item => item.exercise_id)),
+        loadLastSessionSetsForDay(dayId)
       ]);
       dayItems.forEach(item => {
         const totalSets = Math.max(1, Number(item.sets) || 3);
@@ -5301,6 +6247,8 @@
           .every(setNumber => workoutLogsMap.get(`${item.id}:${setNumber}`)?.completed);
         if (allDone) completedSet.add(item.id);
       });
+      const firstPendingIdx = dayItems.findIndex(item => !completedSet.has(item.id));
+      activeFocusExerciseIndex = firstPendingIdx >= 0 ? firstPendingIdx : 0;
       renderWorkoutDetail(dayId);
     } catch (error) {
       $('detailExercisesList').innerHTML = `<div class="workout-empty">Não foi possível abrir o treino: ${escapeHTML(error.message)}</div>`;
@@ -5317,6 +6265,26 @@
   }
 
   $('backToWorkoutsBtn').addEventListener('click', closeWorkoutDetail);
+
+  $('finishWorkoutTopBtn')?.addEventListener('click', async () => {
+    const chosenEffort = await promptWorkoutEffort();
+    if (!chosenEffort) return;
+    const btn = $('finishWorkoutTopBtn');
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = 'Finalizando...';
+    }
+    try {
+      await finishWorkoutSession(chosenEffort);
+    } catch (error) {
+      showToast('Não foi possível finalizar: ' + error.message, 'error');
+    } finally {
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = '✓ Encerrar Treino';
+      }
+    }
+  });
 
   function evaluateTargetReps(targetStr, repsDone) {
     if (repsDone === null || repsDone === undefined || repsDone === '') {
@@ -5347,20 +6315,12 @@
     }
 
     const dayItems = currentWorkoutItems.filter(i => i.workout_day_id === day.id);
-    const dayExDetails = dayItems.map(i => exerciseMap.get(i.exercise_id)).filter(Boolean);
-    const cover = getCoverForWorkout(day.name, dayExDetails);
-    const minutes = estimateWorkoutMinutes(dayItems);
-
-    $('detailHeroBg').style.backgroundImage = `url('${cover}')`;
-    $('detailDayTitle').textContent = day.name;
-    $('detailDuration').textContent = `${minutes} MIN`;
-    $('detailExerciseCount').textContent = `${dayItems.length} EXERCÍCIOS`;
-
     const doneCount = dayItems.filter(i => completedSet.has(i.id)).length;
-    $('detailProgressPill').textContent = `${doneCount}/${dayItems.length} concluídos`;
+    if ($('detailProgressPill')) {
+      $('detailProgressPill').textContent = `${doneCount}/${dayItems.length} concluídos`;
+    }
 
     const list = $('detailExercisesList');
-
     if (!dayItems.length) {
       list.innerHTML = `
         <div class="workout-empty">
@@ -5371,148 +6331,234 @@
       return;
     }
 
-    list.innerHTML = dayItems.map(item => {
-      const ex = exerciseMap.get(item.exercise_id);
-      const isDone = completedSet.has(item.id);
-      const isExpanded = expandedExerciseIds.has(item.id);
-      const imgUrl = getExerciseImage(ex);
-      const totalSets = Math.max(1, Number(item.sets) || 3);
+    if (activeFocusExerciseIndex < 0) activeFocusExerciseIndex = 0;
+    if (activeFocusExerciseIndex >= dayItems.length) activeFocusExerciseIndex = dayItems.length - 1;
 
-      let setsRowsHTML = '';
-      for (let s = 1; s <= totalSets; s++) {
-        const log = workoutLogsMap.get(`${item.id}:${s}`);
-        const weightVal = log?.weight_kg ?? '';
-        const repsVal = log?.reps_done ?? '';
-        const setChecked = Boolean(log?.completed);
-        const evalRes = evaluateTargetReps(item.target_reps, repsVal);
+    const item = dayItems[activeFocusExerciseIndex];
+    const ex = exerciseMap.get(item.exercise_id);
+    const isDone = completedSet.has(item.id);
+    const imgUrl = getExerciseImage(ex);
+    const totalSets = Math.max(1, Number(item.sets) || 3);
+    const rec = getExerciseRecordState(item.exercise_id);
+    const prevSetsMap = lastSessionExerciseSetsMap.get(item.exercise_id);
 
-        setsRowsHTML += `
-          <div class="set-log-row ${setChecked ? 'set-done' : ''}" data-set-row="${item.id}:${s}">
-            <span class="set-badge">Série ${s}</span>
-            <input
-              type="number"
-              step="0.5"
-              min="0"
-              class="set-input"
-              placeholder="0 kg"
-              value="${weightVal}"
-              data-log-field="weight"
-              data-we-id="${item.id}"
-              data-set-num="${s}"
-            >
-            <input
-              type="number"
-              min="0"
-              class="set-input"
-              placeholder="${escapeHTML(item.target_reps)}"
-              value="${repsVal}"
-              data-log-field="reps"
-              data-we-id="${item.id}"
-              data-set-num="${s}"
-            >
-            <span class="target-status ${evalRes.cls}" data-status-badge="${item.id}:${s}">
-              ${escapeHTML(evalRes.label)}
-            </span>
-            <button
-              type="button"
-              class="set-check-btn ${setChecked ? 'checked' : ''}"
-              data-toggle-set="${item.id}"
-              data-set-num="${s}"
-              data-rest="${item.rest_seconds}"
-              data-ex-name="${escapeHTML(ex?.name || 'Exercício')}"
-              aria-label="Concluir série ${s}">
-              ${setChecked ? '✓' : ''}
-            </button>
-          </div>
-        `;
+    let setsRowsHTML = '';
+    for (let s = 1; s <= totalSets; s++) {
+      const log = workoutLogsMap.get(`${item.id}:${s}`);
+      const weightVal = log?.weight_kg ?? '';
+      const repsVal = log?.reps_done ?? '';
+      const setChecked = Boolean(log?.completed);
+
+      const prevSet = prevSetsMap?.get(s);
+      let lastTrainText = '—';
+      if (prevSet && (prevSet.weight_kg || prevSet.repetitions)) {
+        const wPart = prevSet.weight_kg ? `${numberBR(prevSet.weight_kg, 1)} kg` : '';
+        const rPart = prevSet.repetitions ? `${prevSet.repetitions}×` : '';
+        lastTrainText = wPart && rPart ? `${rPart}${wPart}` : (wPart || rPart);
       }
 
-      return `
-        <div class="exercise-check-card ${isDone ? 'done' : ''} ${isExpanded ? 'expanded' : ''}">
-          <div class="exercise-card-top" data-toggle-expand="${item.id}">
-            <img class="ex-thumb" src="${imgUrl}" alt="${escapeHTML(ex?.name || 'Exercício')}" loading="lazy">
-
-            <div class="ex-info-col">
-              <div class="ex-title-row">
-                <span class="ex-title">${escapeHTML(ex?.name || 'Exercício')}</span>
-                <span class="expand-chevron">▼</span>
-              </div>
-              <div class="ex-sub">
-                <span>${item.sets} × ${escapeHTML(item.target_reps)} reps</span>
-                <button type="button" class="rest-trigger" data-rest="${item.rest_seconds}" data-ex-name="${escapeHTML(ex?.name || 'Exercício')}">
-                  ⏱ ${item.rest_seconds}s descanso
-                </button>
-                ${renderRecordPillHTML(getExerciseRecordState(item.exercise_id)).replace('<span class="pr-pill', `<span data-pr-pill="${item.exercise_id}" class="pr-pill`)}
-              </div>
-              ${ex?.instructions ? `<div class="ex-tip">💡 ${escapeHTML(ex.instructions)}</div>` : ''}
-            </div>
-
-            <button type="button"
-              class="check-box-btn ${isDone ? 'checked' : ''}"
-              data-toggle-check="${item.id}"
-              aria-label="Marcar exercício como concluído">
-              ${isDone ? '✓' : ''}
-            </button>
-          </div>
-
-          ${isExpanded ? `
-            <div class="exercise-drawer">
-              <div class="demo-box">
-                <img class="demo-img" src="${imgUrl}" alt="Execução de ${escapeHTML(ex?.name || 'Exercício')}">
-                <div class="demo-details">
-                  <strong>Como executar · ${escapeHTML(ex?.muscle_group || 'Musculação')}</strong>
-                  <p>${escapeHTML(ex?.instructions || 'Mantenha a postura firme, controle a descida e execute a amplitude completa do movimento.')}</p>
-                  <span class="demo-meta-chip">
-                    Recomendado: ${item.sets} séries de ${escapeHTML(item.target_reps)} reps · ${escapeHTML(ex?.equipment || 'Livre')}
-                  </span>
-                </div>
-              </div>
-
-              ${(() => {
-                const rec = getExerciseRecordState(item.exercise_id);
-                return `<div class="pr-drawer-bar ${rec.isNewRecord ? 'new-record' : ''}" data-pr-box="${item.exercise_id}">${renderRecordDrawerHTML(rec)}</div>`;
-              })()}
-
-              <div>
-                <div class="sets-table-head">
-                  <span>Série</span>
-                  <span style="text-align:center">Carga (kg)</span>
-                  <span style="text-align:center">Reps feitas</span>
-                  <span style="text-align:center">Meta</span>
-                  <span style="text-align:center">Ok</span>
-                </div>
-                <div style="display:grid;gap:7px;margin-top:6px">
-                  ${setsRowsHTML}
-                </div>
-              </div>
-
-              <div class="log-save-hint">
-                <span>💾 Cargas e repetições salvas automaticamente</span>
-                <span id="saveStatus-${item.id}" style="color:var(--green)"></span>
-              </div>
-            </div>
-          ` : ''}
+      setsRowsHTML += `
+        <div class="focus-set-row ${setChecked ? 'set-done' : ''}" data-set-row="${item.id}:${s}">
+          <span class="focus-set-num">${s}</span>
+          <input
+            type="number"
+            min="0"
+            class="set-input"
+            placeholder="${escapeHTML(item.target_reps)}"
+            value="${repsVal}"
+            data-log-field="reps"
+            data-we-id="${item.id}"
+            data-set-num="${s}"
+          >
+          <input
+            type="number"
+            step="0.5"
+            min="0"
+            class="set-input"
+            placeholder="0"
+            value="${weightVal}"
+            data-log-field="weight"
+            data-we-id="${item.id}"
+            data-set-num="${s}"
+          >
+          <span class="focus-last-pill" title="Último treino">${escapeHTML(lastTrainText)}</span>
+          <button
+            type="button"
+            class="set-check-btn ${setChecked ? 'checked' : ''}"
+            data-toggle-set="${item.id}"
+            data-set-num="${s}"
+            data-rest="${item.rest_seconds}"
+            data-ex-name="${escapeHTML(ex?.name || 'Exercício')}"
+            aria-label="Concluir série ${s}">
+            ${setChecked ? '✓' : ''}
+          </button>
         </div>
       `;
+    }
+
+    const segmentsHTML = dayItems.map((segItem, idx) => {
+      const segDone = completedSet.has(segItem.id);
+      const isCurrent = idx === activeFocusExerciseIndex;
+      return `<button type="button" class="focus-segment-btn ${segDone ? 'done' : ''} ${isCurrent ? 'current' : ''}" data-jump-ex="${idx}" aria-label="Ir para atividade ${idx + 1}"></button>`;
     }).join('');
 
-    $('finishWorkoutArea').innerHTML = `
-      <button type="button" class="btn" id="finishWorkoutBtn" style="width:100%">
-        Finalizar treino
-      </button>
+    list.innerHTML = `
+      <div class="focus-activity-pill-wrap">
+        <button type="button" class="focus-nav-arrow" id="focusPrevExBtn" ${activeFocusExerciseIndex === 0 ? 'disabled' : ''} aria-label="Exercício anterior">‹</button>
+        <span class="focus-activity-badge">ATIVIDADE ${activeFocusExerciseIndex + 1} DE ${dayItems.length}</span>
+        <button type="button" class="focus-nav-arrow" id="focusNextExBtn" ${activeFocusExerciseIndex === dayItems.length - 1 ? 'disabled' : ''} aria-label="Próximo exercício">›</button>
+      </div>
+
+      <article class="focus-exercise-card">
+        <div class="focus-card-meta-row">
+          <span class="focus-muscle-tag">${escapeHTML(ex?.muscle_group || 'Musculação')} · ${item.sets}×${escapeHTML(item.target_reps)}</span>
+          <div style="display:flex;gap:6px;align-items:center">
+            <button type="button" class="rest-trigger" data-rest="${item.rest_seconds}" data-ex-name="${escapeHTML(ex?.name || 'Exercício')}">
+              ⏱ ${item.rest_seconds}s
+            </button>
+            <button type="button" class="focus-demo-btn ${showFocusExerciseDemo ? 'active' : ''}" id="toggleFocusDemoBtn">
+              ${showFocusExerciseDemo ? '✕ Fechar guia' : '▶ Ver execução'}
+            </button>
+          </div>
+        </div>
+
+        <h2 class="focus-exercise-title">${escapeHTML(ex?.name || 'Exercício')}</h2>
+
+        <div class="focus-pr-center">
+          ${renderRecordPillHTML(rec).replace('<span class="pr-pill', `<span data-pr-pill="${item.exercise_id}" class="pr-pill`)}
+          <span id="saveStatus-${item.id}" style="font-size:11px;font-weight:700;color:var(--green)"></span>
+        </div>
+
+        ${showFocusExerciseDemo ? `
+          <div class="focus-demo-panel">
+            <img src="${imgUrl}" alt="${escapeHTML(ex?.name || 'Exercício')}">
+            <div>
+              <strong style="font-size:12.5px;color:var(--green)">Como executar</strong>
+              <p>${escapeHTML(ex?.instructions || 'Mantenha a postura firme, controle a descida e execute a amplitude completa do movimento.')}</p>
+            </div>
+          </div>
+        ` : ''}
+
+        <div class="focus-sets-head">
+          <span>#</span>
+          <span>Reps</span>
+          <span>Carga (Kg)</span>
+          <span>Último treino</span>
+          <span>Ok</span>
+        </div>
+
+        <div>
+          ${setsRowsHTML}
+        </div>
+
+        <button type="button" class="focus-history-footer-btn" id="openExerciseHistoryQuickBtn">
+          🕒 HISTÓRICO DA ATIVIDADE
+        </button>
+      </article>
+
+      <div class="focus-progress-section">
+        <div class="focus-progress-header">
+          <span>${escapeHTML(day.name)}</span>
+          <span>${activeFocusExerciseIndex + 1} / ${dayItems.length}</span>
+        </div>
+        <div class="focus-segments">
+          ${segmentsHTML}
+        </div>
+        <div class="focus-bottom-controls">
+          <button type="button" class="focus-skip-btn" id="focusSkipExBtn">
+            ✕ Pular
+          </button>
+          <button type="button" class="focus-complete-btn ${isDone ? 'is-done' : ''}" id="focusCompleteExBtn">
+            ${isDone ? '✓ Atividade concluída' : '✓ Completar atividade'}
+          </button>
+        </div>
+      </div>
     `;
-    $('finishWorkoutBtn').addEventListener('click', async () => {
-      const chosenEffort = await promptWorkoutEffort();
-      if (!chosenEffort) return;
-      const button = $('finishWorkoutBtn');
-      button.disabled = true;
-      button.textContent = 'Finalizando...';
-      try {
-        await finishWorkoutSession(chosenEffort);
-      } catch (error) {
-        button.disabled = false;
-        button.textContent = 'Finalizar treino';
-        showToast('Não foi possível finalizar: ' + error.message, 'error');
+
+    $('finishWorkoutArea').innerHTML = '';
+
+    $('focusPrevExBtn')?.addEventListener('click', () => {
+      if (activeFocusExerciseIndex > 0) {
+        activeFocusExerciseIndex -= 1;
+        renderWorkoutDetail(dayId);
+      }
+    });
+
+    $('focusNextExBtn')?.addEventListener('click', () => {
+      if (activeFocusExerciseIndex < dayItems.length - 1) {
+        activeFocusExerciseIndex += 1;
+        renderWorkoutDetail(dayId);
+      }
+    });
+
+    $('toggleFocusDemoBtn')?.addEventListener('click', () => {
+      showFocusExerciseDemo = !showFocusExerciseDemo;
+      renderWorkoutDetail(dayId);
+    });
+
+    $('openExerciseHistoryQuickBtn')?.addEventListener('click', () => {
+      const recState = getExerciseRecordState(item.exercise_id);
+      const prevMap = lastSessionExerciseSetsMap.get(item.exercise_id);
+      const prevLines = prevMap && prevMap.size
+        ? [...prevMap.entries()].map(([sNum, data]) => `Série ${sNum}: ${numberBR(data.weight_kg || 0, 1)} kg × ${data.repetitions || 0} reps`).join('<br>')
+        : 'Nenhuma série registrada na sessão anterior deste treino.';
+      showToast(
+        recState.hasRecord
+          ? `Recorde em ${ex?.name || 'exercício'}: ${numberBR(recState.weight_kg, 1)} kg`
+          : `Ainda sem recorde anterior em ${ex?.name || 'exercício'}.`,
+        'info'
+      );
+      const existingBox = document.getElementById('focusInlineHistoryBox');
+      if (existingBox) {
+        existingBox.remove();
+        return;
+      }
+      const card = document.querySelector('.focus-exercise-card');
+      if (card) {
+        const div = document.createElement('div');
+        div.id = 'focusInlineHistoryBox';
+        div.className = 'workout-item';
+        div.style.marginTop = '10px';
+        div.innerHTML = `
+          <strong>Último treino · ${escapeHTML(ex?.name || 'Exercício')}</strong>
+          <small style="margin-top:4px;line-height:1.5">${prevLines}</small>
+        `;
+        card.appendChild(div);
+      }
+    });
+
+    $('focusSkipExBtn')?.addEventListener('click', () => {
+      if (activeFocusExerciseIndex < dayItems.length - 1) {
+        activeFocusExerciseIndex += 1;
+        renderWorkoutDetail(dayId);
+      } else {
+        showToast('Este já é o último exercício do treino.', 'info');
+      }
+    });
+
+    $('focusCompleteExBtn')?.addEventListener('click', async () => {
+      const wasDone = completedSet.has(item.id);
+      if (wasDone) {
+        completedSet.delete(item.id);
+        renderWorkoutDetail(dayId);
+        return;
+      }
+
+      completedSet.add(item.id);
+      const restSecs = Number(item.rest_seconds) || 60;
+      if (restSecs > 0) {
+        startRestTimer(restSecs, ex?.name || 'Exercício');
+      }
+
+      if (activeFocusExerciseIndex < dayItems.length - 1) {
+        activeFocusExerciseIndex += 1;
+        renderWorkoutDetail(dayId);
+      } else {
+        renderWorkoutDetail(dayId);
+        const chosenEffort = await promptWorkoutEffort();
+        if (chosenEffort) {
+          await finishWorkoutSession(chosenEffort);
+        }
       }
     });
   }
@@ -5665,7 +6711,7 @@
         const freshStatusEl = $(`saveStatus-${workoutExerciseId}`);
         if (freshStatusEl) {
           freshStatusEl.style.color = 'var(--danger)';
-          freshStatusEl.textContent = 'Erro ao salvar: ' + (error?.message || 'falha no banco');
+          freshStatusEl.textContent = 'Erro ao salvar';
         }
       }
     });
@@ -5754,6 +6800,7 @@
       }
 
       exerciseDetails.push({
+        exerciseId: item.exercise_id,
         name: ex?.name || 'Exercício',
         muscle_group: ex?.muscle_group || '',
         setsDone: itemSetsCount,
@@ -5785,11 +6832,8 @@
     const durationMinutes = getSafeWorkoutDurationMinutes(rawMinutes, setsDone || dayItems.length * 3);
     const safeDurationSeconds = durationMinutes * 60;
 
-    // Taxa metabólica basal individual (Mifflin-St Jeor) -> kcal por minuto em repouso
     const bmr = (10 * weightKg) + (6.25 * heightCm) - (5 * age) + (sex === 'female' ? -161 : 5);
     const kcalRepousoMin = Math.max(0.8, bmr / 1440);
-
-    // MET calibrado pela percepção de esforço escolhida + leve ajuste pela densidade de carga
     const bonusVolume = Math.min(0.6, (totalVolumeKg / (weightKg * durationMinutes)) * 0.4);
     const effectiveMET = Number((effort.metBase + bonusVolume).toFixed(2));
 
@@ -5871,7 +6915,7 @@
       <p class="section-desc" style="margin:0;font-size:11px">
         ${stats.usedDefaultWeight
           ? 'Estimativa calculada com peso padrão de 75 kg. Preencha seu peso e altura em Meu Perfil para maior precisão.'
-          : `Estimativa fisiológica (Mifflin-St Jeor + esforço ${escapeHTML(stats.effortLabel)}) com ${stats.durationMinutes} min estimados sem cronômetro.`}
+          : `Estimativa fisiológica (Mifflin-St Jeor + esforço ${escapeHTML(stats.effortLabel)}) com ${stats.durationMinutes} min estimados.`}
       </p>
     `;
 
@@ -5964,6 +7008,13 @@
   }
 
   $('detailExercisesList').addEventListener('click', async (e) => {
+    const jumpBtn = e.target.closest('[data-jump-ex]');
+    if (jumpBtn) {
+      activeFocusExerciseIndex = Number(jumpBtn.dataset.jumpEx) || 0;
+      renderWorkoutDetail(activeDetailDayId);
+      return;
+    }
+
     const setBtn = e.target.closest('[data-toggle-set]');
     if (setBtn) {
       e.stopPropagation();
@@ -5971,7 +7022,6 @@
       const setNum = Number(setBtn.dataset.setNum);
       const key = `${weId}:${setNum}`;
 
-      // Lê diretamente os valores atuais dos inputs da linha para evitar qualquer atraso de blur/change
       const rowEl = setBtn.closest('[data-set-row]');
       const weightInput = rowEl?.querySelector('[data-log-field="weight"]');
       const repsInput = rowEl?.querySelector('[data-log-field="reps"]');
@@ -5991,7 +7041,6 @@
         completed: nextCompleted
       };
 
-      // Atualiza estado e interface imediatamente (otimista) sem apagar os dados digitados
       updateLocalSetLog(weId, setNum, patch);
       syncExerciseCompletedState(weId);
 
@@ -6007,30 +7056,6 @@
       return;
     }
 
-    const checkBtn = e.target.closest('[data-toggle-check]');
-    if (checkBtn) {
-      e.stopPropagation();
-      const id = checkBtn.dataset.toggleCheck;
-      const wasDone = completedSet.has(id);
-
-      if (wasDone) {
-        completedSet.delete(id);
-      } else {
-        completedSet.add(id);
-        const item = currentWorkoutItems.find(entry => entry.id === id);
-        if (item) {
-          const ex = exerciseMap.get(item.exercise_id);
-          const restSecs = Number(item.rest_seconds) || 60;
-          if (restSecs > 0) {
-            startRestTimer(restSecs, ex?.name || 'Exercício');
-          }
-        }
-      }
-
-      renderWorkoutDetail(activeDetailDayId);
-      return;
-    }
-
     const restBtn = e.target.closest('[data-rest]');
     if (restBtn) {
       e.stopPropagation();
@@ -6039,17 +7064,6 @@
         restBtn.dataset.exName || 'Exercício'
       );
       return;
-    }
-
-    const expandTop = e.target.closest('[data-toggle-expand]');
-    if (expandTop) {
-      const id = expandTop.dataset.toggleExpand;
-      if (expandedExerciseIds.has(id)) {
-        expandedExerciseIds.delete(id);
-      } else {
-        expandedExerciseIds.add(id);
-      }
-      renderWorkoutDetail(activeDetailDayId);
     }
   });
 
@@ -6068,13 +7082,6 @@
       if (item) refreshExerciseRecordUI(item.exercise_id);
     } else if (field === 'reps') {
       updateLocalSetLog(weId, setNum, { reps_done: val !== null ? Math.round(val) : null });
-      const item = currentWorkoutItems.find(entry => entry.id === weId);
-      const badge = document.querySelector(`[data-status-badge="${weId}:${setNum}"]`);
-      if (item && badge) {
-        const evalRes = evaluateTargetReps(item.target_reps, input.value);
-        badge.className = `target-status ${evalRes.cls}`;
-        badge.textContent = evalRes.label;
-      }
     }
   });
 
