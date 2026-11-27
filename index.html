@@ -1375,6 +1375,63 @@
     .ai-preview-actions .btn, .ai-preview-actions .btn-secondary { margin-top: 0; }
     .recent-history-panel { margin-top: 18px; }
     .history-heading { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 10px; }
+
+    .esforco-grid {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .btn-esforco {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      width: 100%;
+      padding: 12px 14px;
+      background: #141b16;
+      border: 1px solid #28352c;
+      border-radius: 14px;
+      color: var(--text);
+      text-align: left;
+      cursor: pointer;
+      transition: border-color 0.15s ease, background 0.15s ease, transform 0.12s ease;
+    }
+    .btn-esforco:hover, .btn-esforco:active {
+      border-color: var(--green);
+      background: #1b281e;
+      transform: scale(0.99);
+    }
+    .btn-esforco .esforco-emoji {
+      font-size: 24px;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+    .btn-esforco strong {
+      display: block;
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text);
+    }
+    .btn-esforco:hover strong, .btn-esforco:active strong {
+      color: var(--green);
+    }
+    .btn-esforco small {
+      display: block;
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+    .history-row {
+      width: 100%;
+      cursor: pointer;
+      text-align: left;
+      transition: border-color 0.15s ease, background 0.15s ease, transform 0.12s ease;
+    }
+    .history-row:hover, .history-row:active {
+      border-color: var(--green);
+      background: var(--surface-green);
+      transform: scale(0.99);
+    }
+
     .history-row {
       display: flex;
       justify-content: space-between;
@@ -1772,9 +1829,51 @@
       border: 1px solid currentColor;
       background: rgba(255, 255, 255, 0.04);
     }
-  </style>
+  
+  /* Global Toast Notification */
+  .global-toast-container {
+    position: fixed;
+    top: calc(16px + env(safe-area-inset-top));
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: min(92vw, 420px);
+    pointer-events: none;
+  }
+  .global-toast {
+    background: #171a1e;
+    color: #f3f5f7;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-left: 4px solid #a6f279;
+    border-radius: 14px;
+    padding: 12px 16px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    box-shadow: 0 14px 32px rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(12px);
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity 0.22s ease, transform 0.22s ease;
+  }
+  .global-toast.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .global-toast.error {
+    border-left-color: #ff6b6b;
+    color: #ffd6d6;
+  }
+  .global-toast.success {
+    border-left-color: #a6f279;
+  }
+
+</style>
 </head>
 <body>
+  <div id="globalToastContainer" class="global-toast-container" aria-live="polite"></div>
 
 <main>
 
@@ -2596,6 +2695,67 @@
   </div>
 </div>
 
+<!-- MODAL DE PERCEPÇÃO DE ESFORÇO AO FINALIZAR -->
+<div id="effortSelectionModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="effortModalTitle">
+  <div class="modal-card">
+    <div class="modal-head">
+      <div>
+        <div class="dashboard-kicker" style="margin-bottom:2px">Percepção de esforço</div>
+        <h3 class="section-title" id="effortModalTitle" style="margin:0">Como foi o treino hoje?</h3>
+      </div>
+      <button type="button" class="modal-close" id="effortModalClose" aria-label="Fechar">✕</button>
+    </div>
+    <p class="section-desc" style="margin:6px 0 10px">Escolha seu nível de esforço para calibrar o gasto calórico e a duração da sessão.</p>
+    <div class="esforco-grid">
+      <button type="button" class="btn-esforco" data-effort="leve">
+        <span class="esforco-emoji" aria-hidden="true">😌</span>
+        <div>
+          <strong>Leve</strong>
+          <small>Ritmo tranquilo, longe da falha</small>
+        </div>
+      </button>
+      <button type="button" class="btn-esforco" data-effort="moderado">
+        <span class="esforco-emoji" aria-hidden="true">💪</span>
+        <div>
+          <strong>Moderado</strong>
+          <small>Cadência firme, esforço controlado</small>
+        </div>
+      </button>
+      <button type="button" class="btn-esforco" data-effort="pesado">
+        <span class="esforco-emoji" aria-hidden="true">🔥</span>
+        <div>
+          <strong>Pesado</strong>
+          <small>Cargas altas, descansos curtos</small>
+        </div>
+      </button>
+      <button type="button" class="btn-esforco" data-effort="extremamente_pesado">
+        <span class="esforco-emoji" aria-hidden="true">🤯</span>
+        <div>
+          <strong>Extremamente Pesado</strong>
+          <small>No limite, falha e exaustão total</small>
+        </div>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DE DETALHES DO HISTÓRICO -->
+<div id="historyDetailModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="historyDetailTitle">
+  <div class="modal-card" style="max-height:88vh;overflow-y:auto">
+    <div class="modal-head">
+      <div>
+        <div class="dashboard-kicker" id="historyDetailDate" style="margin-bottom:2px">TREINO CONCLUÍDO</div>
+        <h3 class="section-title" id="historyDetailTitle" style="margin:0">Detalhes da sessão</h3>
+      </div>
+      <button type="button" class="modal-close" id="historyDetailClose" aria-label="Fechar">✕</button>
+    </div>
+    <div id="historyDetailContent" style="margin-top:10px"></div>
+    <div class="modal-actions" style="margin-top:14px">
+      <button type="button" class="btn" id="historyDetailOk" style="width:100%">Fechar</button>
+    </div>
+  </div>
+</div>
+
 <script>
 (() => {
 
@@ -2741,7 +2901,7 @@
       await editModalSubmitHandler();
       closeEditModal();
     } catch (error) {
-      alert('Erro ao salvar: ' + error.message);
+      showToast('Erro ao salvar: ' + error.message, 'error');
     } finally {
       submitBtn.disabled = false;
     }
@@ -2804,6 +2964,21 @@
     const element = $(id);
     element.textContent = message;
     element.className = 'message ' + type;
+  }
+
+
+  function showToast(message, type = 'info', duration = 3400) {
+    const container = $('globalToastContainer');
+    if (!container) return;
+    const toast = document.createElement('div');
+    toast.className = `global-toast ${type}`;
+    toast.textContent = message;
+    container.appendChild(toast);
+    requestAnimationFrame(() => toast.classList.add('show'));
+    setTimeout(() => {
+      toast.classList.remove('show');
+      setTimeout(() => toast.remove(), 250);
+    }, duration);
   }
 
   function setAppTab(tabId) {
@@ -3529,14 +3704,15 @@
       return;
     }
     if (button.dataset.foodAction === 'delete') {
-      if (!confirm(`Excluir ${item.food_name} do diário?`)) return;
+      const confirmedDeleteFood = await openConfirmModal({ title: 'Excluir refeição', text: `Excluir ${item.food_name} do diário?` });
+      if (!confirmedDeleteFood) return;
       button.disabled = true;
       try {
         const { error } = await client.from('food_entries').delete().eq('id', item.id).eq('user_id', currentUser.id);
         if (error) throw error;
         await loadNutritionEntries();
       } catch (error) {
-        alert('Não foi possível excluir: ' + error.message);
+        showToast('Não foi possível excluir: ' + error.message, 'error');
         button.disabled = false;
       }
     }
@@ -4461,6 +4637,82 @@
     } catch (_) {}
   }
 
+  function openHistorySessionModal(sessionId) {
+    const session = recentWorkoutSessions.find(s => String(s.id) === String(sessionId));
+    if (!session) return;
+    const statsCache = getSessionStatsCache();
+    const cached = statsCache[session.id] || {};
+    const day = workoutDays.find(item => item.id === session.day_id);
+    const plan = workoutPlans.find(item => item.id === session.plan_id);
+    const date = session.finished_at ? new Date(session.finished_at) : new Date(session.started_at);
+    const dateLabel = date.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' });
+
+    const rawMin = session.duration_seconds ? Math.round(Number(session.duration_seconds) / 60) : cached.durationMinutes;
+    const safeMin = getSafeWorkoutDurationMinutes(rawMin, cached.setsDone || 16);
+    const effortText = cached.effortLabel ? `${cached.effortEmoji || '💪'} ${cached.effortLabel}` : '💪 Moderado';
+
+    $('historyDetailDate').textContent = `${dateLabel.toUpperCase()} · ${escapeHTML(plan?.name || 'FICHA')}`;
+    $('historyDetailTitle').textContent = day?.name || 'Treino concluído';
+
+    const detailsList = Array.isArray(cached.exerciseDetails) && cached.exerciseDetails.length
+      ? cached.exerciseDetails.map(ex => {
+          const setsText = ex.loggedSets && ex.loggedSets.length
+            ? ex.loggedSets.map(s => `S${s.set}: ${numberBR(s.weight_kg, 1)}kg×${s.reps}`).join(' · ')
+            : `${ex.setsDone}/${ex.totalSets} séries`;
+          return `
+            <div class="workout-item" style="margin-bottom:8px">
+              <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
+                <strong>${escapeHTML(ex.name)}</strong>
+                ${ex.maxLoadKg > 0 ? `<span class="tag">Máx ${numberBR(ex.maxLoadKg, 1)} kg</span>` : ''}
+              </div>
+              <small>${escapeHTML(setsText)}${ex.volumeKg > 0 ? ` · Vol: ${numberBR(ex.volumeKg)} kg` : ''}</small>
+            </div>
+          `;
+        }).join('')
+      : `<div class="workout-empty">Resumo salvo no cache local desta sessão.<br>Novos treinos concluídos exibem cada série, carga e repetição aqui.</div>`;
+
+    $('historyDetailContent').innerHTML = `
+      <div class="summary-metrics-grid">
+        <div class="summary-metric-box">
+          <small>Duração estimada</small>
+          <strong>${safeMin} min</strong>
+        </div>
+        <div class="summary-metric-box">
+          <small>Esforço</small>
+          <strong>${escapeHTML(effortText)}</strong>
+        </div>
+        <div class="summary-metric-box">
+          <small>Calorias</small>
+          <strong>${cached.calories ? `~${numberBR(cached.calories)} kcal` : '—'}</strong>
+        </div>
+        <div class="summary-metric-box">
+          <small>Volume total</small>
+          <strong>${cached.volumeKg ? `${numberBR(cached.volumeKg)} kg` : '—'}</strong>
+        </div>
+      </div>
+      <div class="section-title" style="font-size:14px;margin:10px 0 6px">Exercícios da sessão</div>
+      <div>${detailsList}</div>
+    `;
+
+    $('historyDetailModal')?.classList.remove('hidden');
+  }
+
+  function closeHistorySessionModal() {
+    $('historyDetailModal')?.classList.add('hidden');
+  }
+
+  $('historyDetailClose')?.addEventListener('click', closeHistorySessionModal);
+  $('historyDetailOk')?.addEventListener('click', closeHistorySessionModal);
+  $('historyDetailModal')?.addEventListener('click', (e) => {
+    if (e.target === $('historyDetailModal')) closeHistorySessionModal();
+  });
+
+  $('recentWorkoutHistory')?.addEventListener('click', (e) => {
+    const row = e.target.closest('[data-history-session-id]');
+    if (!row) return;
+    openHistorySessionModal(row.dataset.historySessionId);
+  });
+
   function renderRecentWorkoutSessions() {
     const container = $('recentWorkoutHistory');
     if (!container) return;
@@ -4475,16 +4727,18 @@
       const plan = workoutPlans.find(item => item.id === session.plan_id);
       const date = session.finished_at ? new Date(session.finished_at) : new Date(session.started_at);
       const dateLabel = date.toLocaleString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' });
-      const duration = Number(session.duration_seconds) || 0;
-      const durationLabel = duration ? `${Math.max(1, Math.floor(duration / 60))} min` : 'Concluído';
       const stats = statsCache[session.id];
+      const rawMin = session.duration_seconds ? Math.round(Number(session.duration_seconds) / 60) : stats?.durationMinutes;
+      const safeMin = getSafeWorkoutDurationMinutes(rawMin, stats?.setsDone || 16);
+      const durationLabel = `${safeMin} min`;
+      const effortBadge = stats?.effortEmoji ? ` ${stats.effortEmoji}` : '';
       const extraMeta = stats
         ? ` · 🔥 ~${numberBR(stats.calories)} kcal${stats.volumeKg > 0 ? ` · 🏋 ${numberBR(stats.volumeKg)} kg` : ''}`
         : '';
-      return `<div class="history-row">
-        <div><strong>${escapeHTML(day?.name || 'Treino concluído')}</strong><small>${escapeHTML(plan?.name || 'Ficha')} · ${dateLabel}${extraMeta}</small></div>
+      return `<button type="button" class="history-row" data-history-session-id="${escapeHTML(session.id)}">
+        <div><strong>${escapeHTML(day?.name || 'Treino concluído')}${effortBadge}</strong><small>${escapeHTML(plan?.name || 'Ficha')} · ${dateLabel}${extraMeta} · Ver detalhes ›</small></div>
         <span class="history-duration">${durationLabel}</span>
-      </div>`;
+      </button>`;
     }).join('');
   }
 
@@ -4651,7 +4905,7 @@
         await loadWorkoutExercises();
       }
     } catch (error) {
-      alert('Erro: ' + error.message);
+      showToast('Erro: ' + error.message, 'error');
     }
   });
 
@@ -4829,7 +5083,7 @@
         await loadWorkoutExercises();
       }
     } catch (error) {
-      alert('Erro: ' + error.message);
+      showToast('Erro: ' + error.message, 'error');
     }
   });
 
@@ -5248,16 +5502,17 @@
       </button>
     `;
     $('finishWorkoutBtn').addEventListener('click', async () => {
-      if (!confirm('Deseja finalizar este treino? Os registros serão mantidos no histórico.')) return;
+      const chosenEffort = await promptWorkoutEffort();
+      if (!chosenEffort) return;
       const button = $('finishWorkoutBtn');
       button.disabled = true;
       button.textContent = 'Finalizando...';
       try {
-        await finishWorkoutSession();
+        await finishWorkoutSession(chosenEffort);
       } catch (error) {
         button.disabled = false;
         button.textContent = 'Finalizar treino';
-        alert('Não foi possível finalizar: ' + error.message);
+        showToast('Não foi possível finalizar: ' + error.message, 'error');
       }
     });
   }
@@ -5419,7 +5674,22 @@
     return task;
   }
 
-  function calculateWorkoutSummaryStats(dayId, durationSeconds) {
+  const EFFORT_CONFIG = {
+    leve: { key: 'leve', emoji: '😌', label: 'Leve', metBase: 3.8 },
+    moderado: { key: 'moderado', emoji: '💪', label: 'Moderado', metBase: 4.8 },
+    pesado: { key: 'pesado', emoji: '🔥', label: 'Pesado', metBase: 5.6 },
+    extremamente_pesado: { key: 'extremamente_pesado', emoji: '🤯', label: 'Extremamente Pesado', metBase: 6.4 }
+  };
+
+  function getSafeWorkoutDurationMinutes(rawMinutes, totalSets = 16) {
+    const parsed = Number(rawMinutes);
+    if (!Number.isFinite(parsed) || parsed <= 0 || parsed > 240) {
+      return Math.max(12, Math.round(Math.max(1, Number(totalSets) || 16) * 2.6));
+    }
+    return Math.round(parsed);
+  }
+
+  function calculateWorkoutSummaryStats(dayId, durationSeconds, effortKey = 'moderado') {
     const rawWeight = Number($('weight')?.value || currentProfileData?.current_weight || 0);
     const usedDefaultWeight = !(rawWeight >= 30 && rawWeight <= 300);
     const weightKg = usedDefaultWeight ? 75 : rawWeight;
@@ -5428,28 +5698,32 @@
     const heightCm = (rawHeight >= 100 && rawHeight <= 230) ? rawHeight : 170;
 
     const birthDate = $('birthDate')?.value || currentProfileData?.birth_date;
-    const age = calculateAge(birthDate);
+    const age = calculateAge(birthDate) || 25;
     const sex = $('nutritionSex')?.value || nutritionProfile?.sex || 'male';
+    const effort = EFFORT_CONFIG[effortKey] || EFFORT_CONFIG.moderado;
 
     const dayItems = currentWorkoutItems.filter(i => i.workout_day_id === dayId);
-    const compoundGroups = new Set(['Quadríceps', 'Posterior de coxa', 'Glúteos', 'Costas', 'Peito']);
 
     let exercisesDone = 0;
     let setsDone = 0;
     let totalReps = 0;
     let totalVolumeKg = 0;
-    let compoundSets = 0;
+    const exerciseDetails = [];
     const brokenRecords = [];
     const seenPrExercises = new Set();
 
     dayItems.forEach(item => {
       const ex = exerciseMap.get(item.exercise_id);
-      const isCompound = compoundGroups.has(ex?.muscle_group);
       const totalSets = Math.max(1, Number(item.sets) || 3);
       const targetNums = String(item.target_reps || '').match(/\d+/g);
       const fallbackReps = targetNums?.length ? Number(targetNums[0]) : 10;
 
       let itemSetsCount = 0;
+      let itemReps = 0;
+      let itemVolumeKg = 0;
+      let itemMaxLoad = 0;
+      const loggedSets = [];
+
       for (let s = 1; s <= totalSets; s++) {
         const log = workoutLogsMap.get(`${item.id}:${s}`);
         const hasInput = (log?.weight_kg !== null && log?.weight_kg !== undefined && Number(log.weight_kg) > 0)
@@ -5460,22 +5734,35 @@
             : fallbackReps;
           const load = Number(log?.weight_kg) || 0;
           itemSetsCount += 1;
-          totalReps += reps;
-          totalVolumeKg += load * reps;
-          if (isCompound) compoundSets += 1;
+          itemReps += reps;
+          itemVolumeKg += load * reps;
+          if (load > itemMaxLoad) itemMaxLoad = load;
+          loggedSets.push({ set: s, weight_kg: load, reps });
         }
       }
 
       if (itemSetsCount === 0 && completedSet.has(item.id)) {
         itemSetsCount = totalSets;
-        totalReps += totalSets * fallbackReps;
-        if (isCompound) compoundSets += totalSets;
+        itemReps += totalSets * fallbackReps;
       }
 
       if (itemSetsCount > 0) {
         exercisesDone += 1;
         setsDone += itemSetsCount;
+        totalReps += itemReps;
+        totalVolumeKg += itemVolumeKg;
       }
+
+      exerciseDetails.push({
+        name: ex?.name || 'Exercício',
+        muscle_group: ex?.muscle_group || '',
+        setsDone: itemSetsCount,
+        totalSets,
+        reps: itemReps,
+        volumeKg: Math.round(itemVolumeKg),
+        maxLoadKg: itemMaxLoad,
+        loggedSets
+      });
 
       if (item.exercise_id && !seenPrExercises.has(item.exercise_id)) {
         seenPrExercises.add(item.exercise_id);
@@ -5494,40 +5781,31 @@
       }
     });
 
-    const effectiveMinutes = Math.max(1, durationSeconds / 60);
+    const rawMinutes = durationSeconds > 0 ? (durationSeconds / 60) : 0;
+    const durationMinutes = getSafeWorkoutDurationMinutes(rawMinutes, setsDone || dayItems.length * 3);
+    const safeDurationSeconds = durationMinutes * 60;
 
-    // Taxa metabólica de repouso individualizada (kcal/min) via Mifflin-St Jeor ou padrão VO2
-    let rmrPerMin = (3.5 * weightKg) / 200;
-    if (!usedDefaultWeight && rawHeight >= 100 && age) {
-      const bmr = (10 * weightKg) + (6.25 * heightCm) - (5 * age) + (sex === 'female' ? -161 : 5);
-      if (bmr > 800) rmrPerMin = bmr / 1440;
-    }
+    // Taxa metabólica basal individual (Mifflin-St Jeor) -> kcal por minuto em repouso
+    const bmr = (10 * weightKg) + (6.25 * heightCm) - (5 * age) + (sex === 'female' ? -161 : 5);
+    const kcalRepousoMin = Math.max(0.8, bmr / 1440);
 
-    // Fator MET ajustado pela densidade de séries, carga relativa ao peso corporal e grupos musculares
-    let effectiveMET = setsDone > 0 ? 3.5 : 3.0;
-    if (setsDone > 0) {
-      const setsPerMin = Math.min(1.0, setsDone / effectiveMinutes);
-      const densityBonus = Math.min(1.3, setsPerMin * 2.2);
-      const avgLoadPerSet = totalReps > 0 ? (totalVolumeKg / totalReps) : 0;
-      const loadIntensityBonus = Math.min(1.0, (avgLoadPerSet / weightKg) * 1.4);
-      const compoundRatio = compoundSets / setsDone;
-      const compoundBonus = compoundRatio * 0.5;
-      effectiveMET = Math.min(6.8, 3.5 + densityBonus + loadIntensityBonus + compoundBonus);
-    }
-
-    // Trabalho mecânico adicional pela tonelagem deslocada ajustada pela estatura
-    const heightScale = heightCm / 175;
-    const mechanicalKcal = totalVolumeKg * 0.0012 * heightScale;
+    // MET calibrado pela percepção de esforço escolhida + leve ajuste pela densidade de carga
+    const bonusVolume = Math.min(0.6, (totalVolumeKg / (weightKg * durationMinutes)) * 0.4);
+    const effectiveMET = Number((effort.metBase + bonusVolume).toFixed(2));
 
     const calories = Math.max(
-      setsDone > 0 ? 10 : 5,
-      Math.round((rmrPerMin * effectiveMET * effectiveMinutes) + mechanicalKcal)
+      setsDone > 0 ? 15 : 10,
+      Math.round(kcalRepousoMin * effectiveMET * durationMinutes)
     );
 
     return {
       calories,
-      durationSeconds,
-      durationMinutes: Math.max(1, Math.round(durationSeconds / 60)),
+      durationSeconds: safeDurationSeconds,
+      durationMinutes,
+      effectiveMET,
+      effortKey: effort.key,
+      effortLabel: effort.label,
+      effortEmoji: effort.emoji,
       exercisesDone,
       totalExercises: dayItems.length,
       setsDone,
@@ -5536,7 +5814,8 @@
       weightKg,
       heightCm,
       usedDefaultWeight,
-      brokenRecords
+      brokenRecords,
+      exerciseDetails
     };
   }
 
@@ -5563,9 +5842,9 @@
 
     $('workoutSummaryContent').innerHTML = `
       <div class="summary-calorie-hero">
-        <small>🔥 Gasto calórico estimado</small>
+        <small>🔥 Gasto calórico estimado · ${escapeHTML(stats.effortEmoji)} ${escapeHTML(stats.effortLabel)}</small>
         <strong>${numberBR(stats.calories)} kcal</strong>
-        <span>Baseado em ${numberBR(stats.weightKg, 1)} kg · ${numberBR(stats.heightCm)} cm · ${stats.durationMinutes} min</span>
+        <span>Baseado em ${numberBR(stats.weightKg, 1)} kg · ${numberBR(stats.heightCm)} cm · ${stats.durationMinutes} min · ${stats.effectiveMET} METs</span>
       </div>
 
       <div class="summary-metrics-grid">
@@ -5582,7 +5861,7 @@
           <strong>${numberBR(stats.totalVolumeKg)} kg</strong>
         </div>
         <div class="summary-metric-box">
-          <small>Duração total</small>
+          <small>Duração estimada</small>
           <strong>${stats.durationMinutes} min</strong>
         </div>
       </div>
@@ -5592,14 +5871,42 @@
       <p class="section-desc" style="margin:0;font-size:11px">
         ${stats.usedDefaultWeight
           ? 'Estimativa calculada com peso padrão de 75 kg. Preencha seu peso e altura em Meu Perfil para maior precisão.'
-          : 'Estimativa fisiológica combinando seu peso, altura, tempo de treino, volume de carga e repetições realizadas.'}
+          : `Estimativa fisiológica (Mifflin-St Jeor + esforço ${escapeHTML(stats.effortLabel)}) com ${stats.durationMinutes} min estimados sem cronômetro.`}
       </p>
     `;
 
     $('workoutSummaryModal').classList.remove('hidden');
   }
 
-  async function finishWorkoutSession() {
+  let pendingEffortResolver = null;
+
+  function promptWorkoutEffort() {
+    return new Promise((resolve) => {
+      pendingEffortResolver = resolve;
+      $('effortSelectionModal')?.classList.remove('hidden');
+    });
+  }
+
+  function closeEffortModal(chosenEffort = null) {
+    $('effortSelectionModal')?.classList.add('hidden');
+    if (pendingEffortResolver) {
+      const resolver = pendingEffortResolver;
+      pendingEffortResolver = null;
+      resolver(chosenEffort);
+    }
+  }
+
+  document.querySelectorAll('#effortSelectionModal .btn-esforco').forEach(btn => {
+    btn.addEventListener('click', () => {
+      closeEffortModal(btn.dataset.effort || 'moderado');
+    });
+  });
+  $('effortModalClose')?.addEventListener('click', () => closeEffortModal(null));
+  $('effortSelectionModal')?.addEventListener('click', (e) => {
+    if (e.target === $('effortSelectionModal')) closeEffortModal(null);
+  });
+
+  async function finishWorkoutSession(effortKey = 'moderado') {
     if (!currentWorkoutSessionId) return;
 
     await Promise.allSettled([...setSaveQueue.values()]);
@@ -5611,13 +5918,13 @@
     const started = currentWorkoutSessionStartedAt
       ? new Date(currentWorkoutSessionStartedAt).getTime()
       : Date.now();
-    const durationSeconds = Math.max(0, Math.floor((Date.now() - started) / 1000));
+    const rawDurationSeconds = Math.max(0, Math.floor((Date.now() - started) / 1000));
 
-    const summaryStats = calculateWorkoutSummaryStats(finishedDayId, durationSeconds);
+    const summaryStats = calculateWorkoutSummaryStats(finishedDayId, rawDurationSeconds, effortKey);
 
     const { error } = await client
       .from('workout_sessions')
-      .update({ finished_at: new Date().toISOString(), duration_seconds: durationSeconds })
+      .update({ finished_at: new Date().toISOString(), duration_seconds: summaryStats.durationSeconds })
       .eq('id', finishedSessionId)
       .eq('user_id', currentUser.id);
     if (error) throw error;
@@ -5626,7 +5933,12 @@
       calories: summaryStats.calories,
       volumeKg: summaryStats.totalVolumeKg,
       setsDone: summaryStats.setsDone,
-      exercisesDone: summaryStats.exercisesDone
+      exercisesDone: summaryStats.exercisesDone,
+      durationMinutes: summaryStats.durationMinutes,
+      effortKey: summaryStats.effortKey,
+      effortLabel: summaryStats.effortLabel,
+      effortEmoji: summaryStats.effortEmoji,
+      exerciseDetails: summaryStats.exerciseDetails
     });
 
     summaryStats.brokenRecords.forEach(pr => {
@@ -6205,7 +6517,7 @@
         if (failed) throw failed.error;
         await loadWorkoutExercises();
       } catch (error) {
-        alert('Erro ao reordenar: ' + error.message);
+        showToast('Erro ao reordenar: ' + error.message, 'error');
       }
       return;
     }
@@ -6470,7 +6782,7 @@
   $('logoutButton').addEventListener('click', async () => {
     const { error } = await client.auth.signOut();
     if (error) {
-      alert('Não foi possível sair: ' + error.message);
+      showToast('Não foi possível sair: ' + error.message, 'error');
       return;
     }
 
